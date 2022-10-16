@@ -199,7 +199,8 @@ $(document).ready(function () {
 
 
 
-    $("#guardar").click(function () {
+    $("#guardar").click(function (e) {
+        e.preventDefault();
         let url = $("#url").val();
         var response = validar();
         if (response) {
@@ -385,7 +386,8 @@ $(document).ready(function () {
         });
     });
 
-    $(".modificarButtonModal").click(function () {
+    $(".modificarButtonModal").click(function (e) {
+        e.preventDefault();
         let url = $("#url").val();
         var id = $(this).val();
         // alert(id);
@@ -610,6 +612,18 @@ $(document).ready(function () {
         });
     });
 });
+
+const cerrarmodal = () => {
+    $("#modalAgregarProf").modal('hide');
+    $("#formAgregar").trigger('reset');
+    $("#formAgregar #cedulaS").html("");
+    $("#formAgregar #nombreS").html("");
+    $("#formAgregar #apellidoS").html("");
+    $("#formAgregar #telefonoS").html("");
+
+}  
+$('#cerrarM').click(cerrarmodal);
+$('#salirM').click(cerrarmodal);
 
 
 function validar(modificar = false, id = "") {

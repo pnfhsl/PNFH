@@ -295,7 +295,7 @@
                                 <div id="modalModificarAlum<?= $data['cedula_alumno'] ?>" class="modalModificarAlum modal fade modalModificarAlum<?= $data['cedula_alumno'] ?>" role="dialog">
                                   <div class="modal-dialog tamModals" style="text-align:left;">
                                     <div class="modal-content">
-
+                                    <form role="form" method="post" id="formModificar" enctype="multipart/form-data">
                                       <div class="modal-header" style="background:#3c8dbc; color:white">
                                         <button type="button" class="close" data-dismiss="modal" style="top:25px;">&times;</button>
                                         <h4 class="modal-title" style="text-align: left;">Modificar Alumno</h4>
@@ -389,9 +389,9 @@
 
                                       <div class="modal-footer">
                                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Salir</button>
-                                        <button type="submit" class="btn btn-primary modificarButtonModal" value="<?= $data['cedula_alumno'] ?>" id="modificar">Modificar</button>
+                                        <button type="button" class="btn btn-primary modificarButtonModal" value="<?= $data['cedula_alumno'] ?>" id="modificar">Modificar</button>
                                       </div>
-
+                                    </form>
                                     </div>
 
                                   </div>
