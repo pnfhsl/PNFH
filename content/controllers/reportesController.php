@@ -27,7 +27,6 @@ use Utility;
 			$objModel = new homeModel;
 			$_css = new headElement;
 			$_css->Heading();	
-			$reportes = $this->reportes->validarConsultar("Consultar");		
 			$url = $this->url;
 			require_once("view/reportesView.php");
 		}
