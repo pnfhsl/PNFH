@@ -135,7 +135,8 @@ $(document).ready(function(){
     }
   });
 
-  $("#guardar").click(function(){
+  $("#guardar").click(function(e){
+    e.preventDefault();
     var url = $("#url").val();
     var response = validar();
     if(response){
@@ -305,7 +306,8 @@ $(document).ready(function(){
   });
 
 
-  $(".modificarButtonModal").click(function(){
+  $(".modificarButtonModal").click(function(e){
+    e.preventDefault();
     var url = $("#url").val();
     var id = $(this).val();
     // alert(id);
@@ -494,6 +496,18 @@ $(document).ready(function(){
   });
 }); 
 
+const cerrarmodal = () => {
+  $("#modalAgregarPeriodo").modal('hide')
+  $("#formAgregar").trigger('reset');
+  $("#formAgregar #yearP").html("");
+  $("#formAgregar #nombreP").html("");
+  $("#formAgregar #fechaAP").html("");
+  $("#formAgregar #fechaCP").html("");
+  $("#formAgregar #fechaV").html("");
+
+}  
+$('#cerrarM').click(cerrarmodal);
+$('#salirM').click(cerrarmodal);
 
 function validar(modificar = false, id=""){
     var form = "";

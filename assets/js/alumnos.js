@@ -370,7 +370,8 @@ $(document).ready(function () {
         });
     });
 
-    $(".modificarButtonModal").click(function () {
+    $(".modificarButtonModal").click(function (e) {
+        e.preventDefault();
         var id = $(this).val();
         let url = $("#url").val();
 

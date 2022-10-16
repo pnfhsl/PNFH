@@ -27,7 +27,8 @@ $(document).ready(function(){
   });
   console.clear();
 
-  $("#guardar").click(function(){
+  $("#guardar").click(function(e){
+    e.preventDefault();
     var url = $("#url").val();
     var response = validar();
     if(response){
@@ -224,7 +225,8 @@ $(document).ready(function(){
     }
   });
 
-  $(".modificarBtn").click(function(){
+  $(".modificarBtn").click(function(e){
+    e.preventDefault();
     var url = $("#url").val();
     swal.fire({ 
           title: "¿Desea modificar los datos?",
@@ -392,6 +394,18 @@ $(document).ready(function(){
 
 });
 
+const cerrarmodal = () => {
+  $("#modalAgregarSC #trayectoSC").val('').trigger('change');
+  $("#modalAgregarSC #faseSC").val('').trigger('change');
+  $("#modalAgregarSC").modal('hide');
+  $("#formAgregar").trigger('reset');
+  $("#formAgregar #nombreS").html("");
+  $("#formAgregar #trayectoS").html("");
+  $("#formAgregar #faseS").html("");
+}  
+$('#cerrarM').click(cerrarmodal);
+$('#salirM').click(cerrarmodal);
+
 function validar(modificar = false, id=""){
   var form = "";
   if(!modificar){
@@ -412,6 +426,7 @@ function validar(modificar = false, id=""){
   
 
   var trayecto = $(form+" #trayectoSC"+id).val();
+  console.log(trayecto);
   var rtrayecto = false;
   if(trayecto == ""){
     $(form+" #trayectoS"+id).html("Seleccione un trayecto");

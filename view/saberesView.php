@@ -49,11 +49,12 @@
                   <div id="modalAgregarSC" class="modalAgregarSC modal fade" role="dialog">
                     <div class="modal-dialog tamModals" style="text-align:left;">
                       <div class="modal-content">
+                      <form role="form" method="post" id="formAgregar" enctype="multipart/form-data">
                         <!--=====================================
                         CABEZA DEL MODAL
                         ======================================-->
                         <div class="modal-header" style="background:#3c8dbc; color:white">
-                          <button type="button" class="close" data-dismiss="modal" style="top:25px;" >&times;</button>
+                          <button type="button" class="close" data-dismiss="modal" style="top:25px;" id="cerrarM">&times;</button>
                           <h4 class="modal-title" style="text-align: left;">Agregar Saber Complementario</h4>
                         </div>
                         <!--=====================================
@@ -115,9 +116,10 @@
                         PIE DEL MODAL
                         ======================================-->
                         <div class="modal-footer">
-                          <span type="button" class="btn btn-default pull-left" data-dismiss="modal">Salir</span>
-                          <span type="submit" class="btn btn-primary" id="guardar">Guardar</span>
+                          <span type="button" class="btn btn-default pull-left" data-dismiss="modal" id="salirM">Salir</span>
+                          <span type="button" class="btn btn-primary" id="guardar">Guardar</span>
                         </div>
+                        </form>
                       </div>
                     </div>
                   </div>
@@ -209,7 +211,7 @@
                             <div class="modal-dialog tamModals" style="text-align:left;">
                               <div class="modal-content">
 
-                                <!-- <form role="form" method="post" enctype="multipart/form-data"> -->
+                                <form role="form" method="post" id="formModificar" enctype="multipart/form-data">
 
                                   <!--=====================================
                                   CABEZA DEL MODAL
@@ -300,7 +302,7 @@
                                   </div>
 
 
-                                <!-- </form> -->
+                                </form>
 
                               </div>
 

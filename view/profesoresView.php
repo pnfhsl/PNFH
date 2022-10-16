@@ -125,8 +125,9 @@
                     <div id="modalAgregarProf" class="#modalAgregarProf modal fade" role="dialog">
                       <div class="modal-dialog tamModals" style="text-align:left;">
                         <div class="modal-content">
+                        <form role="form" method="post" id="formAgregar" enctype="multipart/form-data">
                           <div class="modal-header" style="background:#3c8dbc; color:white">
-                            <button type="button" class="close" data-dismiss="modal" style="top:25px;">&times;</button>
+                            <button type="button" class="close" data-dismiss="modal" style="top:25px;" id="cerrarM">&times;</button>
                             <h4 class="modal-title" style="text-align: left;">Agregar Profesor</h4>
                           </div>
                           <div class="modal-body" style="max-height:70vh;overflow:auto;">
@@ -185,9 +186,10 @@
                           </div>
 
                           <div class="modal-footer">
-                            <span type="button" class="btn btn-default pull-left" data-dismiss="modal">Salir</span>
-                            <span type="submit" class="btn btn-primary" id="guardar">Guardar</span>
+                            <span type="button" class="btn btn-default pull-left" data-dismiss="modal" id="salirM">Salir</span>
+                            <span type="button" class="btn btn-primary" id="guardar">Guardar</span>
                           </div>
+                          </form>
                         </div>
                       </div>
                     </div>

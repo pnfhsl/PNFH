@@ -52,6 +52,7 @@
                   <div id="modalAgregarSeccion" class="modal fade" role="dialog" style="text-align:left;">
                     <div class="modal-dialog tamModals" style="text-align:left;">
                       <div class="modal-content">
+                      <form role="form" method="post" id="formAgregar" enctype="multipart/form-data">
                         <!--=====================================
                         CABEZA DEL MODAL
                         ======================================-->
@@ -150,9 +151,10 @@
                         PIE DEL MODAL
                         ======================================-->
                         <div class="modal-footer">
-                          <span type="button" class="btn btn-default pull-left" data-dismiss="modal">Salir</span>
-                          <span type="submit" class="btn btn-primary" id="guardar">Guardar</span>
+                          <span type="button" class="btn btn-default pull-left" data-dismiss="modal" id="salirM">Salir</span>
+                          <span type="button" class="btn btn-primary" id="guardar">Guardar</span>
                         </div>
+                        </form>
                       </div>
                     </div>
                   </div>
