@@ -161,7 +161,8 @@ $(document).ready(function(){
     }
   });
 
-  $("#cargarAlumnosNotas").click(function(){
+  $("#cargarAlumnosNotas").click(function(e){
+    e.preventDefault();
     var url = $("#url").val();
     var seccion = $("#seccion").val();
     var saber = $("#saber").val();
@@ -306,7 +307,8 @@ $(document).ready(function(){
     }
   });
 
-  $(".cargarAlumnosNotasModif").click(function(){
+  $(".cargarAlumnosNotasModif").click(function(e){
+    e.preventDefault();
     var url = $("#url").val();
     var id = $(this).attr("name");
     var seccion = $("#seccion"+id).val();
