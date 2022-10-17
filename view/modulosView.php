@@ -44,15 +44,13 @@
               <input type="hidden" id="url" value="<?= $this->encriptar($this->url); ?>">
               <div class="col-xs-12 col-sm-6" style="text-align:right">
                 <?php if($amModulosR=="1"): ?>
-                  <!--=====================================
-                  MODAL AGREGAR PROF
-                  ======================================-->
                   <button type="button" class="btn enviar2 btn-next btn-fill btn btn-primary btn-wd btn-sm" data-toggle="modal" data-target="#modalAgregarModulo">Agregar Nuevo</button>
                   <div id="modalAgregarModulo" class="modalAgregarModulo modal fade" role="dialog">
                     <div class="modal-dialog tamModals" style="text-align:left;">
                       <div class="modal-content">
+                      <form role="form" method="post" id="formAgregar" enctype="multipart/form-data">
                         <div class="modal-header" style="background:#3c8dbc; color:white">
-                          <button type="button" class="close" data-dismiss="modal" style="top:25px;" >&times;</button>
+                          <button type="button" class="close" data-dismiss="modal" style="top:25px;"  id="cerrarM">&times;</button>
                           <h4 class="modal-title" style="text-align: left;">Agregar Módulo</h4>
                         </div>
 
@@ -72,9 +70,10 @@
                         </div>
 
                         <div class="modal-footer">
-                          <span type="button" class="btn btn-default pull-left" data-dismiss="modal">Salir</span>
-                          <span type="submit" class="btn btn-primary" id="guardar">Guardar</span>
+                          <span type="button" class="btn btn-default pull-left" data-dismiss="modal" id="salirM">Salir</span>
+                          <span type="button" class="btn btn-primary" id="guardar">Guardar</span>
                         </div>
+                      </form>
                       </div>
                     </div>
                   </div>
@@ -132,11 +131,7 @@
                         <div class="modal-dialog tamModals" style="text-align:left;">
                           <div class="modal-content">
 
-                            <!-- <form role="form" method="post" enctype="multipart/form-data"> -->
-
-                              <!--=====================================
-                              CABEZA DEL MODAL
-                              ======================================-->
+                            <form role="form" method="post" id="formModificar" enctype="multipart/form-data">
 
                               <div class="modal-header" style="background:#3c8dbc; color:white">
 
@@ -145,10 +140,6 @@
                                 <h4 class="modal-title" style="text-align: left;">Modificar Módulo</h4>
 
                               </div>
-
-                              <!--=====================================
-                              CUERPO DEL MODAL
-                              ======================================-->
 
                               <div class="modal-body">
 
@@ -173,23 +164,12 @@
 
                               </div>
 
-                              <!--=====================================
-                              PIE DEL MODAL
-                              ======================================-->
-
                               <div class="modal-footer">
-
                                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Salir</button>
-
-                                <button type="submit" class="btn btn-primary modificarButtonModal" value="<?=$data['id_modulo']?>" id="modificar">Modificar</button>
-
+                                <button type="button" class="btn btn-primary modificarButtonModal" value="<?=$data['id_modulo']?>" id="modificar">Modificar</button>
                               </div>
-
-
-                            <!-- </form> -->
-
+                            </form>
                           </div>
-
                         </div>
                       </div>
                       <!-- Modificar -->

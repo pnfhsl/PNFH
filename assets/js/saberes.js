@@ -62,7 +62,7 @@ $(document).ready(function(){
                       },
 
                 success: function(resp){
-                   // alert(resp);
+                  //  alert(resp);
                 /*window.alert("Hola mundo");   
                 console.log(resp); 
                   window.alert(resp);*/
@@ -126,7 +126,8 @@ $(document).ready(function(){
     }
   });
    
-  $(".modificarButtonModal").click(function(){
+  $(".modificarButtonModal").click(function(e){
+    e.preventDefault();
     var url = $("#url").val();
     var id = $(this).val();
 
@@ -225,8 +226,7 @@ $(document).ready(function(){
     }
   });
 
-  $(".modificarBtn").click(function(e){
-    e.preventDefault();
+  $(".modificarBtn").click(function(){
     var url = $("#url").val();
     swal.fire({ 
           title: "¿Desea modificar los datos?",
