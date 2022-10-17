@@ -136,7 +136,7 @@
 											$cod_Grupo = $this->proyecto->ExtraerPKGrupo($codGrupo); // "C2Y2022LDR5PED83P327"	
 											$data['cod_grupo'] = $cod_Grupo;
 											$data['id_SA'] = $id_SA;
-											$exec = $this->proyecto->ValidarAgregarOModificar("AgregarGrupo", $data); 
+											$exec = $this->proyecto->ValidarAgregarOModificar($data, "AgregarGrupo"); 
 										}
 										echo json_encode($exec);
 									}else{
@@ -160,7 +160,7 @@
 										$cod_Grupo = $this->proyecto->ExtraerPKGrupo($codGrupo); // "C2Y2022LDR5PED83P327"	
 										$data['cod_grupo'] = $cod_Grupo;
 										$data['id_SA'] = $id_SA;
-										$exec = $this->proyecto->EliminarGrupos("AgregarGrupo", $data); 
+										$exec = $this->proyecto->EliminarGrupos($data, "AgregarGrupo"); 
 									}
 									echo json_encode($exec);
 								}else{
@@ -212,7 +212,7 @@
 											$cod_Grupo = $this->proyecto->ExtraerPKGrupo($codGrupo); // "C2Y2022LDR5PED83P327"	
 											$data['cod_grupo'] = $cod_Grupo;
 											$data['id_SA'] = $id_SA;
-											$exec = $this->proyecto->ValidarAgregarOModificar("AgregarGrupo", $data); 
+											$exec = $this->proyecto->ValidarAgregarOModificar($data, "AgregarGrupo"); 
 										}
 										echo json_encode($exec);
 									}else{
@@ -236,7 +236,7 @@
 										$cod_Grupo = $this->proyecto->ExtraerPKGrupo($codGrupo); // "C2Y2022LDR5PED83P327"	
 										$data['cod_grupo'] = $cod_Grupo;
 										$data['id_SA'] = $id_SA;
-										$exec = $this->proyecto->ValidarAgregarOModificar("AgregarGrupo", $data); 
+										$exec = $this->proyecto->ValidarAgregarOModificar($data, "AgregarGrupo"); 
 									}
 									echo json_encode($exec);
 								}else{

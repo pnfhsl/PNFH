@@ -412,7 +412,7 @@
 
                                               <!-- ENTRADA PARA LA SECCION -->
                                               <div class="form-group col-xs-12 col-sm-12" style="margin-top:2%;">
-                                                <label for="seccion<?= $data['cod_proyecto'] ?>">sección</label>
+                                                <label for="seccion<?= $data['cod_proyecto'] ?>">Sección</label>
                                                 <div class="input-group " style="width:100%;">
                                                   <span class="input-group-addon" style="width:5%;"><i class="fa fa-address-card"></i></span>
                                                   <select class="form-control select2 input-lg seccionModificar" style="width:100%;" name="<?= $data['cod_proyecto'] ?>" placeholder="Ingresar seccion" id="seccion<?= $data['cod_proyecto'] ?>" required>
