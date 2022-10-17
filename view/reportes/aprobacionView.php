@@ -24,7 +24,7 @@ $info = '<!DOCTYPE html>
         <div style="width:100%;margin:auto;text-align:center;">
           <p style="width:100%;">
             <b style="font-family:arial;">
-              REPÚBLICA BOLIVARIANA DE VENEUELA<br>MINISTERIO DEL PODER POPULAR PARA LA EDUCACIÓN<br>UNIVERSIDAD POLITECNICA TERRITORIAL ANDRÉS ELOY BLANCO
+              REPÚBLICA BOLIVARIANA DE VENEUELA<br>MINISTERIO DEL PODER POPULAR PARA LA EDUCACIÓN<br>UNIVERSIDAD POLITÉCNICA TERRITORIAL ANDRÉS ELOY BLANCO
 
             </b>
           </p>
@@ -73,6 +73,6 @@ $info = '<!DOCTYPE html>
   // echo $info;
   $this->dompdf->loadHtml($info);
   $this->dompdf->render();
-  $this->dompdf->stream("Nota de entrega N. StyleCollection", array("Attachment" => false));
+  $this->dompdf->stream("", array("Attachment" => false));
 
 ?>

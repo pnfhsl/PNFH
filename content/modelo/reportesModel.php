@@ -4,6 +4,7 @@
 
 	use mysqli as mysqli;
 	use content\config\conection\database as database;
+	use PDOException;
 
 	class reportesModel extends database{
 
