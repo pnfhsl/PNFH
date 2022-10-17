@@ -80,6 +80,109 @@ $(document).ready(function(){
     $("#alumnos").html(html2);
   });
 
+  $("#guardar").click(function(e){
+    e.preventDefault();
+    var url = $("#url").val();
+    var response = validar();
+    if(response){
+
+      swal.fire({ 
+            title: "¿Desea guardar los datos?",
+            text: "Se guardaran los datos, ¿desea continuar?",
+            type: "question",
+            showCancelButton: true,
+            confirmButtonText: "¡Guardar!",
+            cancelButtonText: "No", 
+            closeOnConfirm: false,
+            closeOnCancel: false 
+      }).then((isConfirm) => {
+          if (isConfirm.value){ 
+
+
+            let nombre = $("#nombre").val();     
+            let periodo = $("#periodo").val();     
+            let trayecto = $("#trayecto").val();   
+            let alumnos = $("#alumnos").val();
+
+            //alert(nombre + ' ' + periodo + ' ' + trayecto + ' '+ alumnos);
+              $.ajax({
+                url: url+'/Agregar',    
+                type: 'POST',   
+                data: {
+                  Agregar: true,   
+                  nombre: nombre,       
+                  periodo: periodo,       
+                  trayecto: trayecto,
+                  alumnos: alumnos,
+
+                },
+                success: function(resp){
+                  // alert(resp);
+                /*window.alert("Hola mundo");   
+                console.log(resp); 
+                  window.alert(resp);*/
+                  var datos = JSON.parse(resp);     
+                    if (datos.msj === "Good") {   
+                      Swal.fire({
+                        type: 'success',
+                        title: '¡Registro Exitoso!',
+                        text: 'Se ha agregado la seccion ' + nombre + ' al sistema',
+                        footer: 'SCHSL', timer: 3000, showCloseButton: false, showConfirmButton: false,
+                      }).then((isConfirm) => {
+                          location.reload();
+                      } );
+                    } 
+                    if (datos.msj === "Invalido") {
+                      Swal.fire({
+                          type: 'warning',
+                          title: '¡Datos invalidos!',
+                          text: 'Los datos ingresados son invalido',
+                          footer: 'SCHSL', timer: 3000, showCloseButton: false, showConfirmButton: false,
+                      });
+                    }
+                    if (datos.msj === "Repetido") {   
+                      Swal.fire({
+                        type: 'warning',
+                        title: '¡Registro repetido!',
+                        text: 'El profesor ' + nombre + ' ' + apellido + ' ya esta agregado al sistema',
+                        footer: 'SCHSL', timer: 3000, showCloseButton: false, showConfirmButton: false,
+                      });
+                    }
+                    if (datos.msj === "Error") {   
+                      Swal.fire({
+                        type: 'error',
+                        title: '¡Error al guardar los cambio!',
+                        text: 'Intente de nuevo, si el error persiste por favor contacte con el soporte',
+                        footer: 'SCHSL', timer: 3000, showCloseButton: false, showConfirmButton: false,
+                      });
+                    }     
+                    if (datos.msj === "Vacio") {   
+                      Swal.fire({
+                        type: 'warning',
+                        title: '¡Debe rellenar todos los campos!',
+                        footer: 'SCHSL', timer: 3000, showCloseButton: false, showConfirmButton: false,
+                      });
+                    }     
+                },
+                error: function(respuesta){       
+                  var datos = JSON.parse(respuesta);
+                  console.log(datos);
+
+                }
+
+              });
+          }else { 
+                swal.fire({
+                    type: 'error',
+                    title: '¡Proceso cancelado!',
+                });
+          } 
+      });
+
+    }
+
+  });
+
   $('#trayecto').change(function(){
     var url = $("#url").val();
     var trayecto = $(this).val();
@@ -219,7 +322,8 @@ $(document).ready(function(){
     }
   });
 
-  $(".modificarButtonModal").click(function(){
+  $(".modificarButtonModal").click(function(e){
+    e.preventDefault();
     var url = $("#url").val();
     var id = $(this).val();
     var response = validar(true, id);
@@ -510,108 +614,22 @@ $(document).ready(function(){
       });
   });
 
-  $("#guardar").click(function(){
-    var url = $("#url").val();
-    var response = validar();
-    if(response){
-
-      swal.fire({ 
-            title: "¿Desea guardar los datos?",
-            text: "Se guardaran los datos, ¿desea continuar?",
-            type: "question",
-            showCancelButton: true,
-            confirmButtonText: "¡Guardar!",
-            cancelButtonText: "No", 
-            closeOnConfirm: false,
-            closeOnCancel: false 
-      }).then((isConfirm) => {
-          if (isConfirm.value){ 
-
-
-            let nombre = $("#nombre").val();     
-            let periodo = $("#periodo").val();     
-            let trayecto = $("#trayecto").val();   
-            let alumnos = $("#alumnos").val();
-
-            //alert(nombre + ' ' + periodo + ' ' + trayecto + ' '+ alumnos);
-              $.ajax({
-                url: url+'/Agregar',    
-                type: 'POST',   
-                data: {
-                  Agregar: true,   
-                  nombre: nombre,       
-                  periodo: periodo,       
-                  trayecto: trayecto,
-                  alumnos: alumnos,
-
-                },
-                success: function(resp){
-                  alert(resp);
-                /*window.alert("Hola mundo");   
-                console.log(resp); 
-                  window.alert(resp);*/
-                  var datos = JSON.parse(resp);     
-                    if (datos.msj === "Good") {   
-                      Swal.fire({
-                        type: 'success',
-                        title: '¡Registro Exitoso!',
-                        text: 'Se ha agregado la seccion ' + nombre + ' al sistema',
-                        footer: 'SCHSL', timer: 3000, showCloseButton: false, showConfirmButton: false,
-                      }).then((isConfirm) => {
-                          location.reload();
-                      } );
-                    } 
-                    if (datos.msj === "Invalido") {
-                      Swal.fire({
-                          type: 'warning',
-                          title: '¡Datos invalidos!',
-                          text: 'Los datos ingresados son invalido',
-                          footer: 'SCHSL', timer: 3000, showCloseButton: false, showConfirmButton: false,
-                      });
-                    }
-                    if (datos.msj === "Repetido") {   
-                      Swal.fire({
-                        type: 'warning',
-                        title: '¡Registro repetido!',
-                        text: 'El profesor ' + nombre + ' ' + apellido + ' ya esta agregado al sistema',
-                        footer: 'SCHSL', timer: 3000, showCloseButton: false, showConfirmButton: false,
-                      });
-                    }
-                    if (datos.msj === "Error") {   
-                      Swal.fire({
-                        type: 'error',
-                        title: '¡Error al guardar los cambio!',
-                        text: 'Intente de nuevo, si el error persiste por favor contacte con el soporte',
-                        footer: 'SCHSL', timer: 3000, showCloseButton: false, showConfirmButton: false,
-                      });
-                    }     
-                    if (datos.msj === "Vacio") {   
-                      Swal.fire({
-                        type: 'warning',
-                        title: '¡Debe rellenar todos los campos!',
-                        footer: 'SCHSL', timer: 3000, showCloseButton: false, showConfirmButton: false,
-                      });
-                    }     
-                },
-                error: function(respuesta){       
-                  var datos = JSON.parse(respuesta);
-                  console.log(datos);
-
-                }
-
-              });
-          }else { 
-                swal.fire({
-                    type: 'error',
-                    title: '¡Proceso cancelado!',
-                });
-          } 
-      });
-
-    }
-
-  });
+  
 });  
+
+const cerrarmodal = () => {
+  $("#modalAgregarSeccion #periodo").val('').trigger('change');
+  $("#modalAgregarSeccion #trayecto").val('').trigger('change');
+  $("#modalAgregarSeccion").modal('hide');
+  $("#formAgregar").trigger('reset');
+  $("#formAgregar #nombreS").html("");
+  $("#formAgregar #periodoS").html("");
+  $("#formAgregar #trayectoS").html("");
+  $("#formAgregar #alumnosS").html("");
+}  
+$('#cerrarM').click(cerrarmodal);
+$('#salirM').click(cerrarmodal);
+
 
 function validar(modificar = false, id=""){
   var form = "";

@@ -50,16 +50,10 @@
                     <div class="modal-dialog tamModals" style="text-align:left;">
                       <div class="modal-content">
                       <form role="form" method="post" id="formAgregar" enctype="multipart/form-data">
-                        <!--=====================================
-                        CABEZA DEL MODAL
-                        ======================================-->
                         <div class="modal-header" style="background:#3c8dbc; color:white">
                           <button type="button" class="close" data-dismiss="modal" style="top:25px;" id="cerrarM">&times;</button>
                           <h4 class="modal-title" style="text-align: left;">Agregar Saber Complementario</h4>
                         </div>
-                        <!--=====================================
-                        CUERPO DEL MODAL
-                        ======================================-->
                         <div class="modal-body" style="max-height:70vh;overflow:auto;">
                           <div class="box-body">
                             <div class="row">
@@ -112,9 +106,6 @@
                             </div>
                           </div>
                         </div>
-                        <!--=====================================
-                        PIE DEL MODAL
-                        ======================================-->
                         <div class="modal-footer">
                           <span type="button" class="btn btn-default pull-left" data-dismiss="modal" id="salirM">Salir</span>
                           <span type="button" class="btn btn-primary" id="guardar">Guardar</span>
@@ -213,10 +204,6 @@
 
                                 <form role="form" method="post" id="formModificar" enctype="multipart/form-data">
 
-                                  <!--=====================================
-                                  CABEZA DEL MODAL
-                                  ======================================-->
-
                                   <div class="modal-header" style="background:#3c8dbc; color:white">
 
                                     <button type="button" class="close" data-dismiss="modal" style="top:25px;" >&times;</button>
@@ -224,10 +211,6 @@
                                     <h4 class="modal-title" style="text-align: left;">Modificar Saber Complementario</h4>
 
                                   </div>
-
-                                  <!--=====================================
-                                  CUERPO DEL MODAL
-                                  ======================================-->
 
                                   <div class="modal-body" style="max-height:70vh;overflow:auto;">
 
@@ -288,10 +271,6 @@
                                     </div>
 
                                   </div>
-
-                                  <!--=====================================
-                                  PIE DEL MODAL
-                                  ======================================-->
 
                                   <div class="modal-footer">
 

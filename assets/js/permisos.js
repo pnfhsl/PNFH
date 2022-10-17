@@ -34,7 +34,8 @@ $(document).ready(function () {
   $('.nombreModificar').on('input', function () {      
     this.value = this.value.replace(/[^a-zA-Z ñ Ñ Á á É é Í í Ó ó Ú ú ]/g,''); });
 
-  $("#guardar").click(function(){
+  $("#guardar").click(function(e){
+    e.preventDefault();
     var url = $("#url").val();
     var response = validar();
     if(response){
@@ -180,7 +181,8 @@ $(document).ready(function () {
       });
   });
 
-  $(".modificarButtonModal").click(function(){
+  $(".modificarButtonModal").click(function(e){
+    e.preventDefault();
     var url = $("#url").val();
     var id = $(this).val();
     //alert(id);
@@ -373,6 +375,14 @@ $(document).ready(function () {
   });
 
 });  
+
+const cerrarmodal = () => {
+  $("#modalAgregarPermiso").modal('hide');
+  $("#formAgregar").trigger('reset');
+  $("#formAgregar #nombreP").html("");
+}  
+$('#cerrarM').click(cerrarmodal);
+$('#salirM').click(cerrarmodal);
 
 function validar(modificar = false, id=""){
     var form = "";

@@ -109,7 +109,7 @@
 											$data['cod_seccion'] = $datos['cod_seccion'];  
 											foreach ($datos['alumnos'] as $alumnos) {
 												$data['cedula_alumno'] = $alumnos;
-													$exec = $this->seccion->ValidarAgregarOModificar("AgregarSecAlumno", $data); 
+													$exec = $this->seccion->ValidarAgregarOModificar($data, "AgregarSecAlumno"); 
 											}
 
 											echo json_encode($exec);
@@ -134,7 +134,7 @@
 										$data['cod_seccion'] = $datos['cod_seccion'];  
 										foreach ($datos['alumnos'] as $alumnos) {
 											$data['cedula_alumno'] = $alumnos;
-												$exec = $this->seccion->ValidarAgregarOModificar("AgregarSecAlumno", $data); 
+												$exec = $this->seccion->ValidarAgregarOModificar($data, "AgregarSecAlumno"); 
 										}
 
 										echo json_encode($exec);
@@ -181,7 +181,7 @@
 											$data['cod_seccion'] = $datos['cod_seccion'];  
 											foreach ($datos['alumnos'] as $alumnos) {
 												$data['cedula_alumno'] = $alumnos;
-													$exec = $this->seccion->ValidarAgregarOModificar("AgregarSecAlumno", $data); 
+													$exec = $this->seccion->ValidarAgregarOModificar($data,"AgregarSecAlumno"); 
 											}
 
 											echo json_encode($exec);
@@ -204,7 +204,7 @@
 										$data['cod_seccion'] = $datos['cod_seccion'];  
 										foreach ($datos['alumnos'] as $alumnos) {
 											$data['cedula_alumno'] = $alumnos;
-												$exec = $this->seccion->ValidarAgregarOModificar("AgregarSecAlumno", $data); 
+												$exec = $this->seccion->ValidarAgregarOModificar($data,"AgregarSecAlumno"); 
 										}
 
 										echo json_encode($exec);

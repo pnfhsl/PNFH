@@ -580,7 +580,8 @@ $(document).ready(function(){
   });
 
 
-  $("#guardar").click(function(){
+  $("#guardar").click(function(e){
+    e.preventDefault();
     var url = $("#url").val();
     // alert('hola');
 
@@ -744,7 +745,8 @@ $(document).ready(function(){
   });
 
 
-  $(".modificarButtonModal").click(function(){
+  $(".modificarButtonModal").click(function(e){
+    e.preventDefault();
     var url = $("#url").val();
     var id = $(this).val();
     // alert(id);
@@ -959,6 +961,22 @@ $(document).ready(function(){
   });
 
 }); 
+
+const cerrarmodal = () => {
+  $("#modalAgregarUsuario #rol").val('').trigger('change');
+  $("#modalAgregarUsuario #cedula").val('').trigger('change');
+  $("#modalAgregarUsuario").modal('hide');
+  $("#formAgregar").trigger('reset');
+  $("#formAgregar #nombreM").html("");
+  $("#formAgregar #rolS").html("");
+  $("#formAgregar #cedulaS").html("");
+  $("#formAgregar #correoS").html("");
+  $("#formAgregar #nombrePC").html("");
+  $("#formAgregar #nombreP").html("");
+}  
+$('#cerrarM').click(cerrarmodal);
+$('#salirM').click(cerrarmodal);
+
 function checkPassword(str){
   var re = /^(?=.*\d)(?=.*[!@#$%^/&.*+-])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
   return re.test(str);

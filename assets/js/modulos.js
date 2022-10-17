@@ -36,7 +36,8 @@ $(document).ready(function(){
 
 
 
-  $("#guardar").click(function(){
+  $("#guardar").click(function(e){
+    e.preventDefault();
     var url = $("#url").val();
 
     var response = validar();
@@ -187,7 +188,8 @@ $(document).ready(function(){
   });
 
 
-  $(".modificarButtonModal").click(function(){
+  $(".modificarButtonModal").click(function(e){
+    e.preventDefault();
     var url = $("#url").val();
     var id = $(this).val();
     //alert(id);
@@ -380,6 +382,15 @@ $(document).ready(function(){
   });
 
 });  
+
+const cerrarmodal = () => {
+  $("#modalAgregarModulo").modal('hide');
+  $("#formAgregar").trigger('reset');
+  $("#formAgregar #nombreM").html("");
+}  
+$('#cerrarM').click(cerrarmodal);
+$('#salirM').click(cerrarmodal);
+
 
 function validar(modificar = false, id=""){
   var form = "";

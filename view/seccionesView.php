@@ -57,7 +57,7 @@
                         CABEZA DEL MODAL
                         ======================================-->
                         <div class="modal-header" style="background:#3c8dbc; color:white">
-                          <button type="button" class="close" data-dismiss="modal" style="top:25px;" >&times;</button>
+                          <button type="button" class="close" data-dismiss="modal" style="top:25px;" id="cerrarM">&times;</button>
                           <h4 class="modal-title" style="text-align: left;">Agregar Sección</h4>
                         </div>
                         <!--=====================================
@@ -339,7 +339,7 @@
                               <?php #style="margin-right:auto;margin-left:auto;width:80%;" ?>
 
                               <div class="modal-content">
-
+                              <form role="form" method="post" id="formModificar" enctype="multipart/form-data">
                                   <!--=====================================
                                   CABEZA DEL MODAL
                                   ======================================-->
@@ -454,8 +454,9 @@
                                   ======================================-->
                                   <div class="modal-footer">
                                     <span type="button" class="btn btn-default pull-left" data-dismiss="modal">Salir</span>
-                                    <button type="submit" class="btn btn-primary modificarButtonModal" value="<?=$data['cod_seccion']?>" id="modificar">Guardar</button>
+                                    <button type="button" class="btn btn-primary modificarButtonModal" value="<?=$data['cod_seccion']?>" id="modificar">Guardar</button>
                                   </div>
+                                  </form>
                               </div>
                             </div>
                           </div>

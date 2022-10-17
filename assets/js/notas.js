@@ -424,7 +424,8 @@ $(document).ready(function(){
     }
   });
 
-  $("#guardar").click(function(){
+  $("#guardar").click(function(e){
+    e.preventDefault();
     var url = $("#url").val();
     // var id = $(this).val();
     // alert(id);
@@ -650,7 +651,8 @@ $(document).ready(function(){
       });
   });
 
-  $(".modificarButtonModal").click(function(){
+  $(".modificarButtonModal").click(function(e){
+    e.preventDefault();
     var url = $("#url").val();
     var id = $(this).val();
     var respuesta = validar(true, id);
@@ -845,6 +847,16 @@ $(document).ready(function(){
   });
 
 });  
+
+const cerrarmodal = () => {
+  $("#modalAgregarNota #seccion").val('').trigger('change');
+  $("#modalAgregarNota #saber").val('').trigger('change');
+  $("#modalAgregarNota").modal('hide');
+  $("#formAgregar").trigger('reset');
+  $("#formAgregar #notaS").html("");
+}  
+$('#cerrarM').click(cerrarmodal);
+$('#salirM').click(cerrarmodal);
 
 function validar(modificar = false, id=""){
     var form = "";

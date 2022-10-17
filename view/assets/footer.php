@@ -57,11 +57,11 @@
 
     <div class="pull-right hidden-xs string">
         <input type="hidden" id="urlNotificaciones" value="<?=$this->encriptar(ucwords(mb_strtolower('Notificaciones'))); ?>">
-      <b>Version</b> 2.0
+      <b> 2022-2023 <a>SCHSL</a></b>
 
     </div>
 
-    <strong class="string">Copyright &copy; 2022-2023 <a>SCHSL</a>.</strong> <span class="string">Todos los derechos reservados.</span>
+    <strong class="string">Copyright &copy; Todos los derechos reservados</strong>
 
   </footer>
   <style type="text/css">
