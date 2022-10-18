@@ -5,8 +5,8 @@
     <title><?php echo _NAMESYSTEM_; ?> | <?php if (!empty($action)) {
                                                 echo $action;
                                             } ?> <?php if (!empty($url)) {
-                                                    echo $url;
-                                                } ?></title>
+                                                        echo $url;
+                                                    } ?></title>
     <?php //require_once('assets/headers.php'); 
     ?>
 </head>
@@ -56,7 +56,7 @@
 
                                         <div class="col-xs-12 col-sm-6 col-lg-3 col-lg-offset-3">
                                             <div class="small-box bg-green">
-                                            <!-- <a href="<?=_ROUTE_.$this->encriptar('Reportes')?>/Aprobacion" target="_blank"> -->
+                                                <!-- <a href="<?= _ROUTE_ . $this->encriptar('Reportes') ?>/Aprobacion" target="_blank"> -->
                                                 <div class="inner">
                                                     <h3 style="font-size: 26px;">Aprobación</h3>
 
@@ -65,10 +65,10 @@
                                                 <div class="icon">
                                                     <i class="fa fa-graduation-cap" style="margin-top: 30px;"></i>
                                                 </div>
-                                                <a id="respaldar" href="<?=_ROUTE_.$this->encriptar('Reportes')?>/Aprobacion" target="_blank" class="small-box-footer clics">
+                                                <a id="respaldar" href="<?= _ROUTE_ . $this->encriptar('Reportes') ?>/Aprobacion" target="_blank" class="small-box-footer clics">
                                                     <i class="fa fa-arrow-circle-right" style="font-size:1.7em;margin-top:10px;margin-bottom:10px;"></i>
                                                 </a>
-                                            <!-- </a> -->
+                                                <!-- </a> -->
                                             </div>
                                         </div>
 
@@ -77,7 +77,7 @@
                                                 <div class="inner">
                                                     <h3 style="font-size: 26px;">Usuarios</h3>
 
-                                                    <p>Lista de <br> Usuarios</p>
+                                                    <p>Listado de <br> Usuarios</p>
                                                 </div>
                                                 <div class="icon">
                                                     <i class="fa fa-users" style="margin-top: 20px; margin-left: -60px;"></i>
@@ -88,12 +88,26 @@
                                             </div>
                                         </div>
 
+                                        <div class="col-lg-4 col-sm-3"></div>
+                                        <div class="col-xs-12 col-sm-6 col-lg-3">
+                                            <div class="small-box bg-yellow">
+                                                <div class="inner">
+                                                    <h3 style="font-size: 26px;">Notas</h3>
+    
+                                                    <p>Calificaciones de <br> los estudiantes</p>
+                                                </div>
+                                                <div class="icon">
+                                                    <i class="fa fa-pie-chart" style="margin-top: 20px; margin-left: -60px;"></i>
+                                                </div>
+                                                <a class="small-box-footer clics">
+                                                    <i class="fa fa-arrow-circle-right" style="font-size:1.7em;margin-top:10px;margin-bottom:10px;"></i>
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
 
                                 </div>
 
-                                <br><br><br><br>
-                                <br><br><br><br>
                                 <input type="hidden" id="url" value="<?= $this->encriptar($this->url); ?>">
 
 
