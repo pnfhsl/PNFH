@@ -27,40 +27,228 @@ $(document).ready(function(){
     });
     console.clear();
   $("#year").change(function(){
+    var url = $("#url").val();
     var val = $(this).val();
     $("#nombrePr").val(val);
+    var valmax = parseInt(val)+1;
     if(val==""){
       $("#fechaA").removeAttr("min");
       $("#fechaA").removeAttr("max");
       $("#fechaC").removeAttr("min");
       $("#fechaC").removeAttr("max");
+      $("#yearP").html("Debe ingresar el año del periodo");
     }else{
       $("#fechaA").attr("min",val+"-01-01");
       $("#fechaA").attr("max",val+"-12-31");
       $("#fechaC").attr("min",val+"-01-01");
-      // $("#fechaC").attr("max",val+"-12-31");
+      $("#fechaC").attr("max",valmax+"-12-31");
+      $("#yearP").html("");
     }
+    $("#fechaA").removeAttr("disabled");
+    $("#fechaC").removeAttr("disabled");
+    $(".numeroPr0").attr("selected", "selected");
+    $(".numeroPrI").removeAttr("disabled");
+    $(".numeroPrII").removeAttr("disabled");
+    $(".box-cargando").show();
+    $.ajax({
+      url: url+'/Buscar',
+      type: 'POST',  
+      data: {
+        Buscar: true,
+        periodos: true,
+        year: val,
+      },
+      success: function(respuesta){
+        $(".box-cargando").hide();
+        // // alert(respuesta);
+        var resp = JSON.parse(respuesta);   
+        // // // alert(resp.msj);
+        if (resp.msj == "Good") {  
+          var data = resp.data;
+          console.log("DATA: ");
+          console.log(data);
+          if(data.length>0){
+            if(data.length==2){
+              $("#fechaA").attr("disabled", "disabled");
+              $("#fechaC").attr("disabled", "disabled");
+            }
+            for (var i = 0; i < data.length; i++) {
+              $(".numeroPr"+data[i]['nombre_periodo']).attr("disabled", "disabled");
+              $(".numeroPr"+data[i]['nombre_periodo']).attr("style", "color:#CCC;");
+              if(data.length==1){
+                if(data[i]['nombre_periodo']=="I"){
+                  $("#fechaA").attr("min", data[i]['fecha_cierre']);
+                  $("#fechaC").attr("min", data[i]['fecha_cierre']);
+                }
+                if(data[i]['nombre_periodo']=="II"){
+                  $("#fechaA").attr("max", data[i]['fecha_apertura']);
+                  $("#fechaC").attr("max", data[i]['fecha_apertura']);
+                }
+              }
+            }
+          }else{
+            $("#fechaA").removeAttr("disabled");
+            $("#fechaC").removeAttr("disabled");
+
+            $(".numeroPrI").removeAttr("disabled");
+            $(".numeroPrI").removeAttr("style");
+            $(".numeroPrII").removeAttr("disabled");
+            $(".numeroPrII").removeAttr("style");
+          }
+        }
+        if (resp.msj == "Denegado") {
+          Swal.fire({
+              type: 'error',
+              title: '¡Permiso Denegado!',
+              text: 'No tiene permiso para realizar esta operación',
+              footer: 'SCHSL',
+              timer: 3000,
+              showCloseButton: false,
+              showConfirmButton: false,
+          });
+        }
+      },
+      error: function(respuesta){
+        $(".box-cargando").hide();
+        // // // alert(respuesta);
+        var resp = JSON.parse(respuesta);
+        // console.log(resp);
+      }
+    });
     $("#fechaA").val("");
     $("#fechaC").val("");
   });
+  $("#cerrarM").click(function(){
+    $(".btnReset").click();
+    $("#fechaA").removeAttr("disabled");
+    $("#fechaC").removeAttr("disabled");
+    $(".numeroPr0").attr("selected", "selected");
+    $(".numeroPrI").removeAttr("disabled");
+    $(".numeroPrII").removeAttr("disabled");
+  });
+
+  $(".cerrarVarios").click(function(){
+    var id = $(this).attr("name");
+    document.getElementById("btnReset"+id).click();
+    // $("#btnReset"+id).click();
+    $("#fechaA"+id).removeAttr("disabled");
+    $("#fechaC"+id).removeAttr("disabled");
+    // $(".numeroPr0"+id).attr("selected", "selected");
+    $(".numeroPrI"+id).removeAttr("disabled");
+    $(".numeroPrII"+id).removeAttr("disabled");
+  });
 
   $(".yearModificar").change(function(){
+    var url = $("#url").val();
     var id = $(this).attr("name");
     var val = $(this).val();
-    // alert(val);
-    // alert(id);
+    var json = $(".json_periodo"+id).html();
+    var dataJson = JSON.parse(json);
+
+    // var apMin = $("#fechaA"+id).attr("min");
+    // var apMax = $("#fechaA"+id).attr("max");
+    // if(apMin!=undefined){
+    //   // alert("apertura: MIN: "+apMin);
+    // }
+    // if(apMax!=undefined){
+    //   // alert("apertura: MAX: "+apMax);
+    // }
+
+    // var ciMin = $("#fechaC"+id).attr("min");
+    // var ciMax = $("#fechaC"+id).attr("max");
+    // if(ciMin!=undefined){
+    //   // alert("cierre: MIN: "+ciMin);
+    // }
+    // if(ciMax!=undefined){
+    //   // alert("cierre: MAX: "+ciMax);
+    // }
+    // // // alert(val);
+    // // // alert(id);
     $("#nombrePr"+id).val(val);
     if(val==""){
-      $("#fechaA"+id).removeAttr("min");
-      $("#fechaA"+id).removeAttr("max");
-      $("#fechaC"+id).removeAttr("min");
-      $("#fechaC"+id).removeAttr("max");
+      // $("#fechaA"+id).removeAttr("min");
+      // $("#fechaA"+id).removeAttr("max");
+      // $("#fechaC"+id).removeAttr("min");
+      // $("#fechaC"+id).removeAttr("max");
+      $("#yearP"+id).html("Debe ingresar el año del periodo");
     }else{
-      $("#fechaA"+id).attr("min",val+"-01-01");
-      $("#fechaA"+id).attr("max",val+"-12-31");
-      $("#fechaC"+id).attr("min",val+"-01-01");
+      // $("#fechaA"+id).attr("min",val+"-01-01");
+      // $("#fechaA"+id).attr("max",val+"-12-31");
+      // $("#fechaC"+id).attr("min",val+"-01-01");
       // $("#fechaC"+id).attr("max",val+"-12-31");
+      $("#yearP"+id).html("");
     }
+    // $("#fechaA"+id).removeAttr("disabled");
+    // $("#fechaC"+id).removeAttr("disabled");
+    $(".numeroPr0"+id).attr("selected", "selected");
+    $(".numeroPr0"+id).removeAttr("selected");
+    $(".numeroPrI"+id).removeAttr("disabled");
+    $(".numeroPrII"+id).removeAttr("disabled");
+    $(".box-cargando"+id).show();
+    $.ajax({
+      url: url+'/Buscar',    
+      type: 'POST',  
+      data: {
+        Buscar: true,
+        periodos: true,
+        year: val,
+      },
+      success: function(respuesta){
+        $(".box-cargando").hide();
+        // // alert(respuesta);
+        var resp = JSON.parse(respuesta);   
+        if (resp.msj == "Good") {
+          var data = resp.data;
+          // // alert(data.length);
+          if(data.length>0){
+            $(".numeroPrI"+id).removeAttr("disabled");
+            $(".numeroPrI"+id).removeAttr("style");
+            $(".numeroPrII"+id).removeAttr("disabled");
+            $(".numeroPrII"+id).removeAttr("style");
+            for (var i = 0; i < data.length; i++) {
+              $(".numeroPr"+data[i]['nombre_periodo']+id).attr("disabled", "disabled");
+              $(".numeroPr"+data[i]['nombre_periodo']+id).attr("style", "color:#CCC;");
+              if(data[i]['id_periodo']==dataJson['id_periodo']){
+                if(data[i]['nombre_periodo'].toUpperCase()==dataJson['nombre_periodo'].toUpperCase()){
+                  $(".numeroPr"+data[i]['nombre_periodo']+id).removeAttr("selected");
+                  $(".numeroPr"+data[i]['nombre_periodo']+id).removeAttr("disabled");
+                  $(".numeroPr"+data[i]['nombre_periodo']+id).removeAttr("style");
+                  
+                  $(".numeroPr"+data[i]['nombre_periodo']+id).attr("selected", "selected");
+                  $("#fechaA"+id).val(dataJson['fecha_apertura']);
+                  $("#fechaC"+id).val(dataJson['fecha_cierre']);
+                }
+              }
+            }
+          }else{
+            $("#fechaA"+id).removeAttr("disabled");
+            $("#fechaC"+id).removeAttr("disabled");
+
+            $(".numeroPrI"+id).removeAttr("disabled");
+            $(".numeroPrI"+id).removeAttr("style");
+            $(".numeroPrII"+id).removeAttr("disabled");
+            $(".numeroPrII"+id).removeAttr("style");
+          }
+        }
+        if (resp.msj == "Denegado") {
+          Swal.fire({
+              type: 'error',
+              title: '¡Permiso Denegado!',
+              text: 'No tiene permiso para realizar esta operación',
+              footer: 'SCHSL',
+              timer: 3000,
+              showCloseButton: false,
+              showConfirmButton: false,
+          });
+        }
+      },
+      error: function(respuesta){
+        $(".box-cargando").hide();
+        // // // alert(respuesta);
+        var resp = JSON.parse(respuesta);
+        // console.log(resp);
+      }
+    });
     $("#fechaA"+id).val("");
     $("#fechaC"+id).val("");
   });
@@ -79,7 +267,7 @@ $(document).ready(function(){
       if(fechaA > fechaC){ $(this).val(fechaC); }
     }
     if(fechaA == ""){
-      $("#fechaAP").html("Seleccione un fecha");
+      $("#fechaAP").html("Seleccione un fecha de apertura");
       $("#fechaC").removeAttr("min");
     }else{
       $("#fechaAP").html("");
@@ -95,7 +283,7 @@ $(document).ready(function(){
       if(fechaA > fechaC){ $(this).val(fechaC); }
     }
     if(fechaA == ""){
-      $("#fechaAP"+id).html("Seleccione un fecha");
+      $("#fechaAP"+id).html("Seleccione un fecha de apertura");
       $("#fechaC"+id).removeAttr("min");
     }else{
       $("#fechaAP"+id).html("");
@@ -111,7 +299,7 @@ $(document).ready(function(){
       if(fechaC < fechaA){ $(this).val(fechaA); }
     }
     if(fechaC == ""){
-      $("#fechaCP").html("Seleccione un fecha");
+      $("#fechaCP").html("Seleccione un fecha de cierre");
       $("#fechaA").removeAttr("max");
     }else{
       $("#fechaCP").html("");
@@ -127,13 +315,35 @@ $(document).ready(function(){
       if(fechaC < fechaA){ $(this).val(fechaA); }
     }
     if(fechaC == ""){
-      $("#fechaCP"+id).html("Seleccione un fecha");
+      $("#fechaCP"+id).html("Seleccione un fecha de cierre");
       $("#fechaA"+id).removeAttr("max");
     }else{
       $("#fechaCP"+id).html("");
       $("#fechaA"+id).attr("max",fechaC);
     }
   });
+
+  $("#numeroPr").change(function(){
+    var numero = $(this).val();
+    if(numero==""){
+      $("#nombreP").html("Debe ingresar el número de periodo");
+    }else{
+      $("#nombreP").html("");
+    }
+    
+  });
+
+  $(".numeroPrModificar").change(function(){
+    var id = $(this).attr("name");
+    var numero = $(this).val();
+      if(numero==""){
+      $("#nombreP"+id).html("Debe ingresar el número de periodo");
+    }else{
+      $("#nombreP"+id).html("");
+    }
+    
+  });
+
 
   $("#guardar").click(function(e){
     e.preventDefault();
@@ -158,8 +368,8 @@ $(document).ready(function(){
             let fechaAC = $("#fechaC").val();
 
 
-         // alert(numeroPr + ' ' + yearPeriodo + ' ' + fechaAP + ' ' + fechaAC);
-
+         // // // alert(numeroPr + ' ' + yearPeriodo + ' ' + fechaAP + ' ' + fechaAC);
+              $(".box-cargando").show();
               $.ajax({
                 url: url+'/Agregar',    
                 type: 'POST',   
@@ -174,10 +384,11 @@ $(document).ready(function(){
                 },
 
                 success: function(resp){
-                  // alert(resp);
-                  // window.alert("Hola mundo");
-                  // console.log(resp); 
-                  // window.alert(resp);
+                  $(".box-cargando").hide();
+                  // // // alert(resp);
+                  // window.// // alert("Hola mundo");
+                  // // console.log(resp); 
+                  // window.// // alert(resp);
                   var datos = JSON.parse(resp);     
                   if (datos.msj === "Good") {   
                     Swal.fire({
@@ -189,11 +400,22 @@ $(document).ready(function(){
                         location.reload();
                     });
                   }
+                  if (datos.msj == "Denegado") {
+                      Swal.fire({
+                          type: 'error',
+                          title: '¡Permiso Denegado!',
+                          text: 'No tiene permiso para realizar esta operación',
+                          footer: 'SCHSL',
+                          timer: 3000,
+                          showCloseButton: false,
+                          showConfirmButton: false,
+                      });
+                  }
                   if (datos.msj === "Invalido") {
                     Swal.fire({
                         type: 'warning',
                         title: '¡Datos invalidos!',
-                        text: 'Los datos ingresados son invalido',
+                        text: 'Los datos ingresados son invalidos',
                         footer: 'SCHSL', timer: 3000, showCloseButton: false, showConfirmButton: false,
                     });
                   }
@@ -221,9 +443,10 @@ $(document).ready(function(){
                     });
                   }
                 },
-                error: function(respuesta){       
+                error: function(respuesta){
+                  $(".box-cargando").hide();
                   var datos = JSON.parse(respuesta);
-                  console.log(datos);
+                  // console.log(datos);
                 }
               });
           }else { 
@@ -251,9 +474,10 @@ $(document).ready(function(){
           closeOnCancel: false 
       }).then((isConfirm) => {
           if (isConfirm.value){            
-            /*window.alert($(this).val());*/
+            /*window.// // alert($(this).val());*/
             let userMofif = $(this).val();
-            //alert(userMofif);
+            //// // alert(userMofif);
+            $(".box-cargando").show();
             $.ajax({
               url: url+'/Buscar',    
               type: 'POST',  
@@ -261,18 +485,19 @@ $(document).ready(function(){
                 Buscar: true,   
                 userNofifId: userMofif,       
               },
-              success: function(respuesta){       
-                // alert(respuesta); 
+              success: function(respuesta){
+                $(".box-cargando").hide();
+                // // // alert(respuesta); 
                 var resp = JSON.parse(respuesta);   
-                // alert(resp.msj);
+                // // // alert(resp.msj);
                 if (resp.msj == "Good") {  
                  
                   $("#modificarButton"+userMofif).click(); 
 
                   /*
-                  alert('Bienvenido');                    
-                  console.log('Aquí estoy yo'); 
-                  // console.log($(".cedula").val(Json['resp']));
+                  // // alert('Bienvenido');                    
+                  // console.log('Aquí estoy yo'); 
+                  // // console.log($(".cedula").val(Json['resp']));
                   Swal.fire({
                     type: 'success',
                     title: '¡Modificación Exitosa!',
@@ -285,12 +510,24 @@ $(document).ready(function(){
                   });
                   */
 
-                }        
+                }    
+                if (resp.msj == "Denegado") {
+                  Swal.fire({
+                      type: 'error',
+                      title: '¡Permiso Denegado!',
+                      text: 'No tiene permiso para realizar esta operación',
+                      footer: 'SCHSL',
+                      timer: 3000,
+                      showCloseButton: false,
+                      showConfirmButton: false,
+                  });
+                }
               },
-              error: function(respuesta){       
-                // alert(respuesta);
+              error: function(respuesta){
+                $(".box-cargando").hide();
+                // // // alert(respuesta);
                 var resp = JSON.parse(respuesta);
-                console.log(resp);
+                // console.log(resp);
 
               }
 
@@ -310,7 +547,7 @@ $(document).ready(function(){
     e.preventDefault();
     var url = $("#url").val();
     var id = $(this).val();
-    // alert(id);
+    // // // alert(id);
     var response = validar(true, id);
     if(response){
       swal.fire({ 
@@ -330,7 +567,8 @@ $(document).ready(function(){
               let yearPeriodo = $("#year" + id).val();
               let fechaAP = $("#fechaA" + id).val();
               let fechaAC = $("#fechaC" + id).val();
-                // alert(id + ' '+ nombrePr + ' ' + yearPeriodo + ' ' + fechaAP + ' ' + fechaAC);
+                // // // alert(id + ' '+ nombrePr + ' ' + yearPeriodo + ' ' + fechaAP + ' ' + fechaAC);
+              $(".box-cargando").show();
               $.ajax({
                 url: url+'/Modificar',    
                 type: 'POST',   
@@ -345,7 +583,8 @@ $(document).ready(function(){
                 
                 },
                 success: function(resp){
-                    // alert(resp);
+                  $(".box-cargando").hide();
+                    // // // alert(resp);
                   var datos = JSON.parse(resp);   
                   if (datos.msj === "Good") {   
                       Swal.fire({
@@ -357,11 +596,22 @@ $(document).ready(function(){
                           location.reload();
                       } );
                     } 
+                    if (datos.msj == "Denegado") {
+                        Swal.fire({
+                            type: 'error',
+                            title: '¡Permiso Denegado!',
+                            text: 'No tiene permiso para realizar esta operación',
+                            footer: 'SCHSL',
+                            timer: 3000,
+                            showCloseButton: false,
+                            showConfirmButton: false,
+                        });
+                    }
                     if (datos.msj === "Invalido") {
                       Swal.fire({
                           type: 'warning',
                           title: '¡Datos invalidos!',
-                          text: 'Los datos ingresados son invalido',
+                          text: 'Los datos ingresados son invalidos',
                           footer: 'SCHSL', timer: 3000, showCloseButton: false, showConfirmButton: false,
                       });
                     }
@@ -389,9 +639,10 @@ $(document).ready(function(){
                       });
                     }   
                 },
-                error: function(respuesta){       
+                error: function(respuesta){
+                  $(".box-cargando").hide();
                   var datos = JSON.parse(respuesta);
-                  console.log(datos);
+                  // console.log(datos);
 
                 }
 
@@ -437,7 +688,7 @@ $(document).ready(function(){
                      
                       let userDelete = $(this).val();
                    
-
+                      $(".box-cargando").show();
                       $.ajax({
                         url: url+'/Eliminar',    
                         type: 'POST',   
@@ -446,8 +697,9 @@ $(document).ready(function(){
                    
                         userDelete: userDelete,
                         },
-                        success: function(respuesta){       
-                           // alert(respuesta);
+                        success: function(respuesta){
+                          $(".box-cargando").hide();    
+                          // //// alert(respuesta);
                           var datos = JSON.parse(respuesta);
                           if (datos.msj === "Good"){   
                               
@@ -460,6 +712,17 @@ $(document).ready(function(){
                                 location.reload();
                             });
                           } 
+                          if (datos.msj == "Denegado") {
+                              Swal.fire({
+                                  type: 'error',
+                                  title: '¡Permiso Denegado!',
+                                  text: 'No tiene permiso para realizar esta operación',
+                                  footer: 'SCHSL',
+                                  timer: 3000,
+                                  showCloseButton: false,
+                                  showConfirmButton: false,
+                              });
+                          }
                           if (datos.msj === "Error") {   
                             Swal.fire({
                               type: 'error',
@@ -469,9 +732,10 @@ $(document).ready(function(){
                             });
                           }            
                         },
-                        error: function(respuesta){       
+                        error: function(respuesta){
+                          $(".box-cargando").hide();
                           var data = JSON.parse(respuesta);
-                          console.log(data);
+                          // console.log(data);
 
                         }
 
@@ -536,7 +800,7 @@ function validar(modificar = false, id=""){
     }
 
     var fechaA = $(form+" #fechaA"+id).val();
-    // alert(fechaA);
+    // // // alert(fechaA);
     var rfechaA = false;
     if(fechaA == ""){
       $(form+" #fechaAP"+id).html("Seleccione un fecha de apertura");
@@ -546,7 +810,7 @@ function validar(modificar = false, id=""){
     }
 
     var fechaC = $(form+" #fechaC"+id).val();
-    // alert(fechaC);
+    // // // alert(fechaC);
     var rfechaC = false;
     if(fechaC == ""){
       $(form+" #fechaCP"+id).html("Seleccione un fecha de cierre");
@@ -556,8 +820,8 @@ function validar(modificar = false, id=""){
     }
 
 
-    // alert(fechaA);
-    // alert(fechaC);
+    // // // alert(fechaA);
+    // // // alert(fechaC);
     var rfechaV = false;
     if(fechaC < fechaA){
       $(form+" #fechaV"+id).html("La fecha final debe ser mayor a la fecha inicial");

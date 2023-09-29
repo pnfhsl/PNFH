@@ -20,7 +20,7 @@
 		public function Consultar(){
 			session_destroy();
 			session_unset();
-			header("location:"._ROUTE_);	
+			header("location:"._ROUTE_);
 		}
 		
 

@@ -68,7 +68,7 @@
                                 <div class="row">
                                   <!-- ENTRADA PARA EL NOMBRE -->
                                   <div class="form-group col-xs-12 col-sm-12">
-                                    <label for="nombre">Nombre</label>
+                                    <label for="nombre">Nombre de Rol</label>
                                     <div class="input-group" style="width:100%;">
                                       <span class="input-group-addon" style="width:5%;"><i class="fa fa-user"></i></span>
                                       <input type="text" class="form-control input-lg" name="nuevoNombre" id="nombre" placeholder="Ingresar nombre" maxlength="30" required>
@@ -211,12 +211,12 @@
 
                                                 <!-- ENTRADA PARA EL NOMBRE -->
                                                 <div class="form-group col-xs-12 col-sm-12">
-                                                  <label>Nombre</label>
+                                                  <label for="nombreCargar<?= $data['id_rol'] ?>">Nombre de Rol</label>
                                                   <div class="input-group" style="width:100%;">
                                                     <span class="input-group-addon" style="width:5%;"><i class="fa fa-user"></i></span>
-                                                    <input type="text" class="form-control input-lg col-xs-12 nombreModificar" name="nuevoNombre" id="nombre<?= $data['id_rol'] ?>" placeholder="Ingresar nombre" maxlength="30" value="<?= $data['nombre_rol'] ?>" readonly>
+                                                    <input type="text" class="form-control input-lg col-xs-12" id="nombreCargar<?= $data['id_rol'] ?>" placeholder="Ingresar nombre" maxlength="30" value="<?= $data['nombre_rol'] ?>" readonly>
                                                   </div>
-                                                  <span id="nombreS" class="mensajeError"></span>
+                                                  <span id="nombreCargarS<?=$data['id_rol'] ?>" class="mensajeError"></span>
                                                 </div>
 
                                                 <div class="form-group col-xs-12 col-sm-12">
@@ -325,9 +325,10 @@
 
                                               <!-- ENTRADA PARA EL NOMBRE -->
                                               <div class="form-group col-xs-12 col-sm-12">
+                                                <label for="nombre<?=$data['id_rol'] ?>">Nombre de Rol</label>
                                                 <div class="input-group" style="width:100%;">
                                                   <span class="input-group-addon" style="width:5%;"><i class="fa fa-user"></i></span>
-                                                  <input type="text" class="form-control input-lg col-xs-12 nombreModificar" name="nuevoNombre" id="nombre<?= $data['id_rol'] ?>" placeholder="Ingresar nombre" maxlength="30" value="<?= $data['nombre_rol'] ?>" required>
+                                                  <input type="text" class="form-control input-lg col-xs-12 nombreModificar" name="<?=$data['id_rol'] ?>" id="nombre<?= $data['id_rol'] ?>" placeholder="Ingresar nombre" maxlength="30" value="<?= $data['nombre_rol'] ?>" required>
                                                 </div>
                                                 <div style="width:100%;text-align:right;">
                                                   <span id="nombreS<?= $data['id_rol'] ?>" class="mensajeError"></span>

@@ -27,6 +27,67 @@ $(document).ready(function(){
   });
   console.clear();
 
+  $("#nombreSC").keyup(function(){
+    var valor = $(this).val();
+    if(valor.length > 2 ){
+      $("#nombreS").html("");
+    }else{
+      $("#nombreS").html("Debe ingresar el nombre del saber");
+    }
+  });
+
+  $(".nombreSCModificar").keyup(function(){
+    var id = $(this).attr("name");
+    var valor = $(this).val();
+    if(valor.length > 2 ){
+      $("#nombreS"+id).html("");
+    }else{
+      $("#nombreS"+id).html("Debe ingresar el nombre del saber");
+    }
+  });
+
+  $("#trayectoSC").change(function(){
+    var valor = $(this).val();
+    if(valor==""){
+      $("#trayectoS").html("Seleccione un trayecto");
+    }else{
+      $("#trayectoS").html("");
+    }
+  });
+
+
+  $(".trayectoSCModificar").change(function(){
+    var id = $(this).attr("name");
+    var valor = $(this).val();
+    if(valor==""){
+      $("#trayectoS"+id).html("Seleccione un trayecto");
+    }else{
+      $("#trayectoS"+id).html("");
+    }
+  });
+
+  $("#faseSC").change(function(){
+    var valor = $(this).val();
+    if(valor==""){
+      $("#faseS").html("Seleccione un fase");
+    }else{
+      $("#faseS").html("");
+    }
+  });
+
+
+  $(".faseSCModificar").change(function(){
+    var id = $(this).attr("name");
+    var valor = $(this).val();
+    if(valor==""){
+      $("#faseS"+id).html("Seleccione un fase");
+    }else{
+      $("#faseS"+id).html("");
+    }
+  });
+
+  
+
   $("#guardar").click(function(e){
     e.preventDefault();
     var url = $("#url").val();
@@ -48,8 +109,8 @@ $(document).ready(function(){
         let trayectoSC = $("#trayectoSC").val();     
         let faseSC = $("#faseSC").val();   
             
-            // alert(nombreSC + ' ' + trayectoSC+ ' '+ faseSC);
-
+            // // // alert(nombreSC + ' ' + trayectoSC+ ' '+ faseSC);
+              $(".box-cargando").show();
               $.ajax({
                 url: url+'/Agregar',    
                 type: 'POST',   
@@ -62,10 +123,11 @@ $(document).ready(function(){
                       },
 
                 success: function(resp){
-                  //  alert(resp);
-                /*window.alert("Hola mundo");   
-                console.log(resp); 
-                  window.alert(resp);*/
+                  $(".box-cargando").hide();
+                  //  // // alert(resp);
+                /*window.// // alert("Hola mundo");   
+                // console.log(resp); 
+                  window.// // alert(resp);*/
                   var datos = JSON.parse(resp);     
                     if (datos.msj === "Good") {   
                       Swal.fire({
@@ -77,11 +139,22 @@ $(document).ready(function(){
                           location.reload();
                       } );
                     } 
+                    if (datos.msj == "Denegado") {
+                      Swal.fire({
+                          type: 'error',
+                          title: '¡Permiso Denegado!',
+                          text: 'No tiene permiso para realizar esta operación',
+                          footer: 'SCHSL',
+                          timer: 3000,
+                          showCloseButton: false,
+                          showConfirmButton: false,
+                      });
+                    }
                     if (datos.msj === "Invalido") {
                       Swal.fire({
                           type: 'warning',
                           title: '¡Datos invalidos!',
-                          text: 'Los datos ingresados son invalido',
+                          text: 'Los datos ingresados son invalidos',
                           footer: 'SCHSL', timer: 3000, showCloseButton: false, showConfirmButton: false,
                       });
                     }
@@ -109,9 +182,10 @@ $(document).ready(function(){
                       });
                     }     
                 },
-                error: function(respuesta){       
+                error: function(respuesta){
+                  $(".box-cargando").hide();
                   var datos = JSON.parse(respuesta);
-                  console.log(datos);
+                  // console.log(datos);
 
                 }
 
@@ -148,7 +222,8 @@ $(document).ready(function(){
             let nombreSC = $("#nombreSC" + id).val();
             let trayecto = $("#trayectoSC" + id).val();
             let fase = $("#faseSC" + id).val();
-             // alert(id + ' '+ nombreSC + ' ' + trayecto + ' ' + fase);
+             // // // alert(id + ' '+ nombreSC + ' ' + trayecto + ' ' + fase);
+            $(".box-cargando").show();
             $.ajax({
               url: url+'/Modificar',    
               type: 'POST',   
@@ -162,10 +237,11 @@ $(document).ready(function(){
               
               },
               success: function(resp){
-                 // alert(resp);
-              /*window.alert("Hola mundo");   
-              console.log(resp); 
-                window.alert(resp);*/
+                $(".box-cargando").hide();
+                 // // // alert(resp);
+              /*window.// // alert("Hola mundo");   
+              // console.log(resp); 
+                window.// // alert(resp);*/
                 var datos = JSON.parse(resp);   
                   if (datos.msj === "Good") {   
                     Swal.fire({
@@ -177,11 +253,22 @@ $(document).ready(function(){
                         location.reload();
                     } );
                   } 
+                  if (datos.msj == "Denegado") {
+                    Swal.fire({
+                        type: 'error',
+                        title: '¡Permiso Denegado!',
+                        text: 'No tiene permiso para realizar esta operación',
+                        footer: 'SCHSL',
+                        timer: 3000,
+                        showCloseButton: false,
+                        showConfirmButton: false,
+                    });
+                  }
                   if (datos.msj === "Invalido") {
                     Swal.fire({
                         type: 'warning',
                         title: '¡Datos invalidos!',
-                        text: 'Los datos ingresados son invalido',
+                        text: 'Los datos ingresados son invalidos',
                         footer: 'SCHSL', timer: 3000, showCloseButton: false, showConfirmButton: false,
                     });
                   }
@@ -209,9 +296,10 @@ $(document).ready(function(){
                     });
                   }   
               },
-              error: function(respuesta){       
+              error: function(respuesta){
+                $(".box-cargando").hide();
                 var datos = JSON.parse(respuesta);
-                console.log(datos);
+                // console.log(datos);
 
               }
 
@@ -239,9 +327,10 @@ $(document).ready(function(){
           closeOnCancel: false 
       }).then((isConfirm) => {
           if (isConfirm.value){            
-            /*window.alert($(this).val());*/
+            /*window.// // alert($(this).val());*/
             let userMofif = $(this).val();
-            //alert(userMofif);
+            //// // alert(userMofif);
+            $(".box-cargando").show();
             $.ajax({
               url: url+'/Buscar',    
               type: 'POST',  
@@ -249,17 +338,18 @@ $(document).ready(function(){
                 Buscar: true,   
                 userNofif: userMofif,       
               },
-              success: function(respuesta){       
-                // alert(respuesta); 
+              success: function(respuesta){
+                $(".box-cargando").hide();   
+                // // // alert(respuesta); 
                 var resp = JSON.parse(respuesta);   
-                // alert(resp.msj);
+                // // // alert(resp.msj);
                 if (resp.msj == "Good") {  
                   $("#modificarButton"+userMofif).click(); 
 
                   /*
-                  alert('Bienvenido');                    
-                  console.log('Aquí estoy yo'); 
-                  // console.log($(".cedula").val(Json['resp']));
+                  // // alert('Bienvenido');                    
+                  // console.log('Aquí estoy yo'); 
+                  // // console.log($(".cedula").val(Json['resp']));
                   Swal.fire({
                     type: 'success',
                     title: '¡Modificación Exitosa!',
@@ -272,12 +362,24 @@ $(document).ready(function(){
                   });
                   */
 
-                }        
+                }  
+                if (resp.msj == "Denegado") {
+                  Swal.fire({
+                      type: 'error',
+                      title: '¡Permiso Denegado!',
+                      text: 'No tiene permiso para realizar esta operación',
+                      footer: 'SCHSL',
+                      timer: 3000,
+                      showCloseButton: false,
+                      showConfirmButton: false,
+                  });
+                }      
               },
-              error: function(respuesta){       
-                // alert(respuesta);
+              error: function(respuesta){
+                $(".box-cargando").hide();
+                // // // alert(respuesta);
                 var resp = JSON.parse(respuesta);
-                console.log(resp);
+                // console.log(resp);
 
               }
 
@@ -320,7 +422,7 @@ $(document).ready(function(){
                     if (isConfirm.value){                      
                      
                       let userDelete = $(this).val();
-
+                      $(".box-cargando").show();
                       $.ajax({
                         url: url+'/Eliminar',    
                         type: 'POST',   
@@ -328,8 +430,9 @@ $(document).ready(function(){
                         Eliminar: true,   
                         userDelete: userDelete,
                         },
-                        success: function(respuesta){       
-                           // alert(respuesta);
+                        success: function(respuesta){
+                          $(".box-cargando").hide();
+                           // // // alert(respuesta);
                           var datos = JSON.parse(respuesta);
                           if (datos.msj === "Good"){   
                               
@@ -342,6 +445,17 @@ $(document).ready(function(){
                                 location.reload();
                             });
                           } 
+                          if (datos.msj == "Denegado") {
+                            Swal.fire({
+                                type: 'error',
+                                title: '¡Permiso Denegado!',
+                                text: 'No tiene permiso para realizar esta operación',
+                                footer: 'SCHSL',
+                                timer: 3000,
+                                showCloseButton: false,
+                                showConfirmButton: false,
+                            });
+                          }
                           if (datos.msj === "Repetido") {   
                             Swal.fire({
                               type: 'warning',
@@ -366,9 +480,10 @@ $(document).ready(function(){
                             });
                           }        
                         },
-                        error: function(respuesta){       
+                        error: function(respuesta){
+                          $(".box-cargando").hide();
                           var data = JSON.parse(respuesta);
-                          console.log(data);
+                          // console.log(data);
 
                         }
 
@@ -426,7 +541,7 @@ function validar(modificar = false, id=""){
   
 
   var trayecto = $(form+" #trayectoSC"+id).val();
-  console.log(trayecto);
+  // console.log(trayecto);
   var rtrayecto = false;
   if(trayecto == ""){
     $(form+" #trayectoS"+id).html("Seleccione un trayecto");
@@ -452,6 +567,6 @@ function validar(modificar = false, id=""){
   }else{
     validado=false;
   }
-  /*  alert(validado);*/
+  /*  // // alert(validado);*/
   return validado;
 }

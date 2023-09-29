@@ -1,10 +1,9 @@
 <?php
-	/* utilizaremos namespace en la primera línea de código */
 	namespace content\controllers;
 	use content\traits\Utility as Utility;
-	use config\settings\sysConfig as sysConfig;  /* El as nos ayuda a renombrar el directorio sysConfig*/
+	use config\settings\sysConfig as sysConfig;
+	use content\modelo\mantenimientoModel as mantenimientoModel;
 
-	/* Extender el sysConfig utilizando composer dentro de la clase frontController*/
 	class frontController extends sysConfig{
 		use Utility;
 		private $url;
@@ -18,42 +17,40 @@
 		private $params;
 
 		public function __construct($request){
-			/* Si la url no existe, está en blanco o no cumple con los parámetros devolver al apartado inicial del sistema */
-
-			// if(isset($request["url"])){  			/* Validar el $_REQUEST que se está solicitando  */
-			// 	$this->url = $request["url"];		/* asignamos el contenido a la variable privada url */
-			// 	$this->direccion = _DIRECTORY_;		/* asignamos el contenido de la constante definida en  sysConfig*/
-			// 	$this->controlador = _CONTROLLER_;  /* asignamos el contenido de la constante definida en  sysConfig*/
-			// 	$this->Validar_URL();				/* LLamamos la va funcion que valida la url */
-			// }else{
-			// // 	// die("<script>location='?url=user'</script>");	/* si esta vacia le asiganeros el valor home */
-			// }
+			/* Si la url no existe, está en blanco o no cumple con los parámetros devuelve valor por defecto */
 			if(empty($request['url'])){$request['url']="";}
 			$this->request = $request['url'];
 			$this->Url();
 			$this->Controller();
 			$this->Method();
 			$this->Param();
-			// if(empty($request['params'])){$request['params']="";}
-			// $this->params = $request['params'];
-			// $params = explode('/',$this->params);
-			$this->Validar_URL();				/* LLamamos la va funcion que valida la url */
+
+			$this->Validar_URL();
+
+			$_SESSION['accesoTemporalActualUser'] = _ACC_USER_;
+			$_SESSION['accesoTemporalActualPass'] = _ACC_PASS_;
+
+			$this->Respaldo_BD();
 		}
 
 		public function Url(){
 			$this->url = explode('/', $this->request);
-			$this->direccion = _DIRECTORY_;		/* asignamos el contenido de la constante definida en  sysConfig*/
-			$this->controlador = _CONTROLLER_;  /* asignamos el contenido de la constante definida en  sysConfig*/
+			$this->direccion = _DIRECTORY_;
+			$this->controlador = _CONTROLLER_;
 		}
 		
 		public function Controller(){
-
 			$control = $this->desencriptar($this->url[0]);
-			if(!empty($_SESSION['cuentaActiva']) && $_SESSION['cuentaActiva']==true && !empty($_SESSION['cuenta_usuario']) && !empty($_SESSION['cuenta_persona'])){
-				if(!empty($_SESSION['cuenta_usuario']) && $_SESSION['cuenta_usuario']['estatus']=="2"){
-					$this->controller = $control == '' ? 'Preguntas' : $control;
+			if(!empty($_SESSION['cuentaActiva']) && $_SESSION['cuentaActiva']==true && 
+			   !empty($_SESSION['cuenta_usuario']) && !empty($_SESSION['cuenta_persona'])
+			){
+				if(!empty($_SESSION['cuenta_usuario']) && 
+				   $_SESSION['cuenta_usuario']['estatus']=="2"){
+					
+					$this->controller = $control == 'Logout' ? $control : 'Preguntas';
 				}
-				if(!empty($_SESSION['cuenta_usuario']) && $_SESSION['cuenta_usuario']['estatus']=="1"){
+				if(!empty($_SESSION['cuenta_usuario']) && 
+				   $_SESSION['cuenta_usuario']['estatus']=="1"){
 					$this->controller = $control == '' ? 'Home' : $control;
 				}
 			}else{
@@ -76,17 +73,10 @@
 			}else{	
 				require_once("errorController.php");	
 			}
-			// if($url == 1){
-			// 	$this->Cargar_Pagina($this->url[0]); /* llamdo de la funcion que cargara las vistas */
-			// }else{
-			// 	die('LA URL INGRESADA ES INVÁLIDA');
-			// }
 		}
 
 		private function Cargar_Pagina($url){
-			/* verificacion si el archivo existe , en la direccion predeterminada */
 			if(file_exists($this->direccion.mb_strtolower($url).$this->controlador)){
-				/* si existe trae el archivo solicitado mediante el require_once */
 				require_once($this->direccion.mb_strtolower($url).$this->controlador); 
 				
 				$root = str_replace("/", "\\", $this->direccion);
@@ -105,11 +95,53 @@
 					require_once("errorController.php");					
 				}
 			}else{
-				/* si no existe redireccionaremos a la pagina de error */
 				require_once("errorController.php");					
-				// die("<script>location='?url=error'</script>");
 			}	
 		}
+
+		private function Respaldo_BD(){
+			$manteniment = new mantenimientoModel();
+			$unDia = 3600*24;
+			$unaSemana = $unDia*7;
+			$unaQuincena = $unDia*15;
+			$unMes = $unDia*30;
+			$date = date('Y-m-d', time());
+			$dateReq = date('Y-m-d', time()-($unaSemana));
+			$lastBackup = "libs/backup/automatico/lastBackup.txt";
+			$lastDate = "";
+			if (file_exists($lastBackup)) {
+				$handle = fopen($lastBackup,'r');
+				if (!$handle){
+					$info = "No se ha podido abrir el archivo";
+				}else{
+					$lastDate = fread($handle, 10);
+				}
+				fclose($handle);
+			}
+			$respaldar = false;
+			if($lastDate!=""){
+				if($dateReq >= $lastDate){ $respaldar = true; }
+			}else{
+				$respaldar = true;
+			}
+			if($respaldar == true){
+				$archivo = "libs/backup/automatico/" . _DB_WEB_ . "_" . $date . ".sql";
+				if (file_exists($archivo)) {
+					$info = "Ya se encuentra respaldado";
+				} else {
+					$mantenimiento = $manteniment->Respaldar($date);
+					if($mantenimiento['ejecucion']==true){
+						$info = "Respaldo exitoso";
+						$handle = fopen($lastBackup,'w+');
+						fwrite($handle, $date);
+						fclose($handle);
+					}else{
+						$info = "Error al respaldar";
+					}
+				}
+			}
+		}
+
 	}
 
 

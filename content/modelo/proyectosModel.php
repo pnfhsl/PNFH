@@ -7,16 +7,10 @@
 
 	class proyectosModel extends database{
 
-		private $cedula;
-		private $cedulaAnt;
-		private $nombre; 
-		private $apellido;
-		private $telefono;
-		private $email;
-		private $grupo;
-		private $grupoeqp;
-		private $aprobI;
-		private $aprobII;
+		private $cod_proyecto;
+		private $titulo_proyecto;
+		private $trayecto_proyecto; 
+		private $cedula_profesor;
 
 		public function __construct(){
 			// $this->con = parent::__construct();
@@ -84,6 +78,30 @@
 			}
 		}
 
+		public function limpiarPost($array){
+			$leng = [
+				0=>['campo'=>'nombre', 'length'=>60], 
+				1=>['campo'=>'seccion', 'length'=>15], 
+				2=>['campo'=>'trayecto', 'length'=>1], 
+				3=>['campo'=>'tutor', 'length'=>8], 
+				4=>['campo'=>'codigo', 'length'=>20],
+				5=>['campo'=>'cod_proyecto', 'length'=>20],
+				6=>['campo'=>'secciones', 'length'=>15],
+				7=>['campo'=>'cod_seccion', 'length'=>15],
+			];
+			foreach($leng as $len){
+				if(!empty($array[$len['campo']])){
+					if(strlen($array[$len['campo']]) > $len['length']){
+						$array[$len['campo']] = substr($array[$len['campo']], 0, $len['length']);
+						$array[$len['campo']] = stripslashes($array[$len['campo']]);
+						$array[$len['campo']] = strip_tags($array[$len['campo']]);
+						$array[$len['campo']] = htmlspecialchars($array[$len['campo']]);
+					}
+				}
+			}
+			return $array;
+		}
+
 		private function Validate($campo, $valor){
 			$pattern = [
 				'0' => ['campo'=>"id",'expresion'=>'/[^a-zA-Z0-9]/'],
@@ -124,7 +142,8 @@
 				if($cod_seccion==""){
 					$query = parent::prepare("SELECT * FROM proyectos, grupos, seccion_alumno, alumnos WHERE proyectos.cod_proyecto = grupos.cod_proyecto and grupos.id_SA = seccion_alumno.id_SA and seccion_alumno.cedula_alumno = alumnos.cedula_alumno and proyectos.estatus = 1 and grupos.estatus = 1 and alumnos.estatus = 1");
 				}else{
-					$query = parent::prepare("SELECT * FROM proyectos, grupos, seccion_alumno, alumnos WHERE proyectos.cod_proyecto = grupos.cod_proyecto and grupos.id_SA = seccion_alumno.id_SA and seccion_alumno.cedula_alumno = alumnos.cedula_alumno and proyectos.estatus = 1 and grupos.estatus = 1 and alumnos.estatus = 1 and seccion_alumno.cod_seccion = '{$cod_seccion}'");
+					$query = parent::prepare("SELECT * FROM proyectos, grupos, seccion_alumno, alumnos WHERE proyectos.cod_proyecto = grupos.cod_proyecto and grupos.id_SA = seccion_alumno.id_SA and seccion_alumno.cedula_alumno = alumnos.cedula_alumno and proyectos.estatus = 1 and grupos.estatus = 1 and alumnos.estatus = 1 and seccion_alumno.cod_seccion = :cod_seccion");
+					$query->bindValue(":cod_seccion", $cod_seccion);
 				}
 				$respuestaArreglo = '';
 				$query->execute();
@@ -144,7 +163,8 @@
 				if($cod_seccion==""){
 					$query = parent::prepare("SELECT DISTINCT proyectos.cod_proyecto, seccion_alumno.cod_seccion FROM proyectos, grupos, seccion_alumno, alumnos WHERE proyectos.cod_proyecto = grupos.cod_proyecto and grupos.id_SA = seccion_alumno.id_SA and seccion_alumno.cedula_alumno = alumnos.cedula_alumno and proyectos.estatus = 1 and grupos.estatus = 1 and alumnos.estatus = 1");
 				}else{
-					$query = parent::prepare("SELECT DISTINCT proyectos.cod_proyecto, seccion_alumno.cod_seccion FROM proyectos, grupos, seccion_alumno, alumnos WHERE proyectos.cod_proyecto = grupos.cod_proyecto and grupos.id_SA = seccion_alumno.id_SA and seccion_alumno.cedula_alumno = alumnos.cedula_alumno and proyectos.estatus = 1 and grupos.estatus = 1 and alumnos.estatus = 1 and seccion_alumno.cod_seccion = '{$cod_seccion}'");
+					$query = parent::prepare("SELECT DISTINCT proyectos.cod_proyecto, seccion_alumno.cod_seccion FROM proyectos, grupos, seccion_alumno, alumnos WHERE proyectos.cod_proyecto = grupos.cod_proyecto and grupos.id_SA = seccion_alumno.id_SA and seccion_alumno.cedula_alumno = alumnos.cedula_alumno and proyectos.estatus = 1 and grupos.estatus = 1 and alumnos.estatus = 1 and seccion_alumno.cod_seccion = :cod_seccion");
+					$query->bindValue(":cod_seccion", $cod_seccion);
 				}
 				$respuestaArreglo = '';
 				$query->execute();
@@ -237,7 +257,7 @@
 
 		private function ConsultaPK($codProyecto){
 			try {
-				$query = parent::prepare("SELECT * FROM proyectos WHERE estatus = 1 and cod_proyecto LIKE '%{$codProyecto}%'");
+				$query = parent::prepare("SELECT * FROM proyectos WHERE cod_proyecto LIKE '%{$codProyecto}%'");
 				$respuestaArreglo = '';
 				$query->execute();
 				$query->setFetchMode(parent::FETCH_ASSOC);
@@ -253,7 +273,7 @@
 
 		private function ConsultaPKGrupo($codGrupo){
 			try {
-				$query = parent::prepare("SELECT * FROM grupos WHERE estatus = 1 and cod_grupo LIKE '%{$codGrupo}%'");
+				$query = parent::prepare("SELECT * FROM grupos WHERE cod_grupo LIKE '%{$codGrupo}%'");
 				$respuestaArreglo = '';
 				$query->execute();
 				$query->setFetchMode(parent::FETCH_ASSOC);
@@ -372,13 +392,10 @@
 		}
 
 		public function ExtraerPK($codProyecto){
-			// echo $codSeccion." --- ";
-			$numss = $this::ConsultaPK($codProyecto);
-			// print_r($numss);
+			$numss = self::ConsultaPK($codProyecto);
 			$numMax = 0;
 			if(count($numss)>1){
 				$len = strlen($codProyecto);
-				// echo $len;
 				foreach ($numss as $key) {
 					if(!empty($key['cod_proyecto'])){
 						$n = substr($key['cod_proyecto'], $len);
@@ -389,13 +406,12 @@
 				}
 			}
 			$numero = $numMax+1;
-			// echo $numero;
 			$codProyecto .= $numero;
 			return $codProyecto;
 		}
 
 		public function ExtraerPKGrupo($codGrupo){
-			$numss = $this::ConsultaPKGrupo($codGrupo);
+			$numss = self::ConsultaPKGrupo($codGrupo);
 			$numMax = 0;
 			if(count($numss)>1){
 				$len = strlen($codGrupo);
@@ -412,8 +428,6 @@
 			$codGrupo .= $numero;
 			return $codGrupo;
 		}
-
-		
 
 	}
 

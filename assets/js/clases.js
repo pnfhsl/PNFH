@@ -26,9 +26,188 @@ $(document).ready(function () {
     }
   });
   console.clear();
+
   $('#seccion').change(function () {
     var url = $("#url").val();
     var seccion = $(this).val();
+    if(seccion==""){
+      $("#seccionS").html("Seleccione una sección");
+    }else{
+      $("#seccionS").html("");
+    }
+
+    if (seccion == "") {
+      var html = '';
+      html += '<option value="">Seleccione un periodo</option>';
+      $("#periodo").html(html);
+    } else {
+      $.ajax({
+        url: url + '/Buscar',
+        type: 'POST',
+        data: {
+          Buscar: true,
+          periodos: true,
+          cod_seccion: seccion,
+        },
+        success: function (respuesta) {
+          // // alert(respuesta);
+          var resp = JSON.parse(respuesta);
+          // console.log(resp);
+          if (resp.msj == "Good") {
+            var data = resp.data;
+            var dataPeriodos = "";
+
+            if (resp.msjPeriodos == "Good") {
+              dataPeriodos = resp.dataPeriodos;
+            }
+            // console.log("DATA: ");
+            // console.log(data);
+            // console.log("PERIODOS: ");
+            // console.log(dataPeriodos);
+
+            var html = '';
+            html += '<option value="">Seleccione un periodo</option>';
+            for (var i = 0; i < data.length; i++) {
+              html += '<option value="' + data[i]['id_periodo'] + '" ';
+
+              if (dataPeriodos.length > 0) {
+                for (var j = 0; j < dataPeriodos.length; j++) {
+                  if (dataPeriodos[j]['id_periodo'] == data[i]['id_periodo']) {
+                    // html += 'disabled="disabled"'
+                  }
+                }
+              }
+
+              html += ' >' + data[i]['year_periodo']+'-'+data[i]['nombre_periodo'] + '</option>';
+            }
+            $("#periodo").html(html);
+          }
+          if (resp.msj == "Denegado") {
+            Swal.fire({
+                type: 'error',
+                title: '¡Permiso Denegado!',
+                text: 'No tiene permiso para realizar esta operación',
+                footer: 'SCHSL',
+                timer: 3000,
+                showCloseButton: false,
+                showConfirmButton: false,
+            });
+          }
+          if (resp.msj == "Vacio") {
+            var html = '';
+            html += '<option value="">Seleccione un periodo</option>';
+            $("#periodo").html(html);
+          }
+        },
+        error: function (respuesta) {
+          // // // alert(respuesta);
+          var resp = JSON.parse(respuesta);
+          // console.log(resp);
+        }
+      });
+    }
+  });
+  
+  $('.seccionModificar').change(function () {
+    var url = $("#url").val();
+    var seccion = $(this).val();
+    var id = $(this).attr("name");
+    if(seccion==""){
+      $("#seccionS"+id).html("Seleccione una sección");
+    }else{
+      $("#seccionS"+id).html("");
+    }
+
+    if (seccion == "") {
+      var html = '';
+      html += '<option value="">Seleccione un periodo</option>';
+      $("#periodo"+id).html(html);
+      html = '';
+      html += '<option value="">Saber Complementario</option>';
+      $("#saber"+id).html(html);
+    } else {
+      $.ajax({
+        url: url + '/Buscar',
+        type: 'POST',
+        data: {
+          Buscar: true,
+          periodos: true,
+          cod_seccion: seccion,
+        },
+        success: function (respuesta) {
+          // // alert(respuesta);
+          var resp = JSON.parse(respuesta);
+          // console.log(resp);
+          if (resp.msj == "Good") {
+            var data = resp.data;
+            var dataPeriodos = "";
+
+            if (resp.msjPeriodos == "Good") {
+              dataPeriodos = resp.dataPeriodos;
+            }
+            // console.log("DATA: ");
+            // console.log(data);
+            // console.log("PERIODOS: ");
+            // console.log(dataPeriodos);
+
+            var html = '';
+            html += '<option value="">Seleccione un periodo</option>';
+            for (var i = 0; i < data.length; i++) {
+              html += '<option value="' + data[i]['id_periodo'] + '" ';
+
+              if (dataPeriodos.length > 0) {
+                for (var j = 0; j < dataPeriodos.length; j++) {
+                  if (dataPeriodos[j]['id_periodo'] == data[i]['id_periodo']) {
+                    // html += 'disabled="disabled"'
+                  }
+                }
+              }
+
+              html += ' >' + data[i]['year_periodo']+'-'+data[i]['nombre_periodo'] + '</option>';
+            }
+            $("#periodo"+id).html(html);
+          }
+          if (resp.msj == "Denegado") {
+            Swal.fire({
+                type: 'error',
+                title: '¡Permiso Denegado!',
+                text: 'No tiene permiso para realizar esta operación',
+                footer: 'SCHSL',
+                timer: 3000,
+                showCloseButton: false,
+                showConfirmButton: false,
+            });
+          }
+          if (resp.msj == "Vacio") {
+            var html = '';
+            html += '<option value="">Seleccione un periodo</option>';
+            $("#periodo"+id).html(html);
+
+            html = '';
+            html += '<option value="">Saber Complementario</option>';
+            $("#saber"+id).html(html);
+          }
+        },
+        error: function (respuesta) {
+          // // // alert(respuesta);
+          var resp = JSON.parse(respuesta);
+          // console.log(resp);
+        }
+      });
+    }
+  });
+  
+
+  $('#periodo').change(function () {
+    var url = $("#url").val();
+    var seccion = $("#seccion").val();
+    var periodo = $(this).val();
+    if(periodo==""){
+      $("#periodoS").html("Seleccione el periodo para la clase");
+    }else{
+      $("#periodoS").html("");
+    }
+
     if (seccion == "") {
       var html = '';
       html += '<option value="">Saber Complementario</option>';
@@ -41,11 +220,12 @@ $(document).ready(function () {
           Buscar: true,
           saberes: true,
           cod_seccion: seccion,
+          id_periodo: periodo,
         },
         success: function (respuesta) {
-          // alert(respuesta);
+          // // alert(respuesta);
           var resp = JSON.parse(respuesta);
-          console.log(resp);
+          // console.log(resp);
           if (resp.msj == "Good") {
             var data = resp.data;
             var dataSaberes = "";
@@ -60,7 +240,6 @@ $(document).ready(function () {
             html += '<option value="">Saber Complementario</option>';
             for (var i = 0; i < data.length; i++) {
               html += '<option value="' + data[i]['id_SC'] + '" ';
-
               if (dataSaberes.length > 0) {
                 for (var j = 0; j < dataSaberes.length; j++) {
                   if (dataSaberes[j]['id_SC'] == data[i]['id_SC']) {
@@ -68,10 +247,20 @@ $(document).ready(function () {
                   }
                 }
               }
-
               html += ' >' + data[i]['nombreSC'] + '</option>';
             }
             $("#saber").html(html);
+          }
+          if (resp.msj == "Denegado") {
+            Swal.fire({
+                type: 'error',
+                title: '¡Permiso Denegado!',
+                text: 'No tiene permiso para realizar esta operación',
+                footer: 'SCHSL',
+                timer: 3000,
+                showCloseButton: false,
+                showConfirmButton: false,
+            });
           }
           if (resp.msj == "Vacio") {
             var html = '';
@@ -80,13 +269,136 @@ $(document).ready(function () {
           }
         },
         error: function (respuesta) {
-          // alert(respuesta);
+          // // // alert(respuesta);
           var resp = JSON.parse(respuesta);
-          console.log(resp);
+          // console.log(resp);
         }
       });
     }
   });
+
+  $('.periodoModificar').change(function () {
+    var url = $("#url").val();
+    var periodo = $(this).val();
+    var id = $(this).attr("name");
+    var seccion = $("#seccion"+id).val();
+    if(periodo==""){
+      $("#periodoS"+id).html("Seleccione el periodo para la clase");
+    }else{
+      $("#periodoS"+id).html("");
+    }
+    if (seccion == "") {
+      var html = '';
+      html += '<option value="">Saber Complementario</option>';
+      $("#saber"+id).html(html);
+    } else {
+      $.ajax({
+        url: url + '/Buscar',
+        type: 'POST',
+        data: {
+          Buscar: true,
+          saberes: true,
+          cod_seccion: seccion,
+          id_periodo: periodo,
+        },
+        success: function (respuesta) {
+          // // alert(respuesta);
+          var resp = JSON.parse(respuesta);
+          // console.log(resp);
+          if (resp.msj == "Good") {
+            var data = resp.data;
+            var dataSaberes = "";
+            if (resp.msjSaberes == "Good") {
+              dataSaberes = resp.dataSaberes;
+            }
+            // console.log("DATA: ");
+            // console.log(data);
+            // console.log("SABERES: ");
+            // console.log(dataSaberes);
+            var html = '';
+            html += '<option value="">Saber Complementario</option>';
+            for (var i = 0; i < data.length; i++) {
+              html += '<option value="' + data[i]['id_SC'] + '" ';
+              if (dataSaberes.length > 0) {
+                for (var j = 0; j < dataSaberes.length; j++) {
+                  if (dataSaberes[j]['id_SC'] == data[i]['id_SC']) {
+                    if(dataSaberes[j]['id_clase']==id){
+                      html += 'selected="selected"';
+                    }else{
+                      html += 'disabled="disabled"';
+                    }
+                  }
+
+                }
+              }
+              html += ' >' + data[i]['nombreSC'] + '</option>';
+            }
+            $("#saber"+id).html(html);
+          }
+          if (resp.msj == "Denegado") {
+            Swal.fire({
+                type: 'error',
+                title: '¡Permiso Denegado!',
+                text: 'No tiene permiso para realizar esta operación',
+                footer: 'SCHSL',
+                timer: 3000,
+                showCloseButton: false,
+                showConfirmButton: false,
+            });
+          }
+          if (resp.msj == "Vacio") {
+            var html = '';
+            html += '<option value="">Saber Complementario</option>';
+            $("#saber"+id).html(html);
+          }
+        },
+        error: function (respuesta) {
+          // // // alert(respuesta);
+          var resp = JSON.parse(respuesta);
+          // console.log(resp);
+        }
+      });
+    }
+  });
+
+  $("#saber").change(function(){
+    var saber = $(this).val();
+    if(saber==""){
+      $("#saberS").html("Seleccione una saber");
+    }else{
+      $("#saberS").html("");
+    }
+  });
+
+  $(".saberModificar").change(function(){
+    var id = $(this).attr("name");
+    var saber = $(this).val();
+    if(saber==""){
+      $("#saberS"+id).html("Seleccione una saber");
+    }else{
+      $("#saberS"+id).html("");
+    }
+  });
+
+  $("#profesor").change(function(){
+    var profesor = $(this).val();
+    if(profesor==""){
+      $("#profesorS").html("Debe seleccionar un profesor para la clase");
+    }else{
+      $("#profesorS").html("");
+    }
+  });
+
+  $(".profesorModificar").change(function(){
+    var id = $(this).attr("name");
+    var profesor = $(this).val();
+    if(profesor==""){
+      $("#profesorS"+id).html("Debe seleccionar un profesor para la clase");
+    }else{
+      $("#profesorS"+id).html("");
+    }
+  });
+
 
   $("#guardar").click(function (e) {
     e.preventDefault();
@@ -108,15 +420,16 @@ $(document).ready(function () {
           let id = $(this).val();
 
           let seccion = $("#seccion" + id).val();
+          let periodo = $("#periodo"+id).val();
           let saber = $("#saber" + id).val();
           let profesor = $("#profesor").val();
 
 
-          /*          alert( seccion + ' ' + saber + ' ' + profesor);*/
-          // alert( saber);
-          // alert( seccion );
-          // alert( profesor);
-
+          /*          // // alert( seccion + ' ' + saber + ' ' + profesor);*/
+          // // // alert( saber);
+          // // // alert( seccion );
+          // // // alert( profesor);
+          $(".box-cargando").show();
           $.ajax({
             url: url + '/Agregar',
             type: 'POST',
@@ -125,13 +438,14 @@ $(document).ready(function () {
               seccion: seccion,
               saber: saber,
               profesor: profesor,
+              periodo: periodo,
               /*seccion:seccion,       
               alumno: alumno,*/
 
             },
             success: function (resp) {
-              // alert(resp);
-
+              $(".box-cargando").hide();
+              // // alert(resp);
               var datos = JSON.parse(resp);
               if (datos.msj === "Good") {
                 Swal.fire({
@@ -143,11 +457,22 @@ $(document).ready(function () {
                   location.reload();
                 });
               }
+              if (datos.msj == "Denegado") {
+                Swal.fire({
+                    type: 'error',
+                    title: '¡Permiso Denegado!',
+                    text: 'No tiene permiso para realizar esta operación',
+                    footer: 'SCHSL',
+                    timer: 3000,
+                    showCloseButton: false,
+                    showConfirmButton: false,
+                });
+              }
               if (datos.msj === "Invalido") {
                 Swal.fire({
                   type: 'warning',
                   title: '¡Datos invalidos!',
-                  text: 'Los datos ingresados son invalido',
+                  text: 'Los datos ingresados son invalidos',
                   footer: 'SCHSL', timer: 3000, showCloseButton: false, showConfirmButton: false,
                 });
               }
@@ -176,8 +501,9 @@ $(document).ready(function () {
               }
             },
             error: function (respuesta) {
+              $(".box-cargando").hide();
               var datos = JSON.parse(respuesta);
-              console.log(datos);
+              // console.log(datos);
 
             }
 
@@ -187,78 +513,6 @@ $(document).ready(function () {
             type: 'error',
             title: '¡Proceso cancelado!',
           });
-        }
-      });
-    }
-  });
-
-  $('.seccionModificar').change(function () {
-
-    var url = $("#url").val();
-    var id = $(this).attr("name");
-    var seccion = $(this).val();
-    // alert(id);
-    // alert(seccion);
-    if (seccion == "") {
-      var html = '';
-      html += '<option value="">Saber Complementario</option>';
-      $("#saber" + id).html(html);
-    } else {
-      $.ajax({
-        url: url + '/Buscar',
-        type: 'POST',
-        data: {
-          Buscar: true,
-          saberes: true,
-          cod_seccion: seccion,
-        },
-        success: function (respuesta) {
-          // alert(respuesta);
-          var resp = JSON.parse(respuesta);
-          // alert(resp.msj);
-          if (resp.msj == "Good") {
-            var data = resp.data;
-            var dataSaberes = "";
-            if (resp.msjSaberes == "Good") {
-              dataSaberes = resp.dataSaberes;
-            }
-            // console.log("DATA: ");
-            // console.log(data);
-            // console.log("Saberes: ");
-            // console.log(dataSaberes);
-            // console.log($("#saber"+id).html());
-            var html = '';
-            html += '<option value="">Saber Complementario</option>';
-            // alert(dataSaberes);
-            // alert(dataSaberes);
-
-            for (var i = 0; i < data.length; i++) {
-              html += '<option value="' + data[i]['id_SC'] + '" ';
-              if (dataSaberes.length > 0) {
-                for (var j = 0; j < dataSaberes.length; j++) {
-                  if (dataSaberes[j]['id_SC'] == data[i]['id_SC']) {
-                    if (dataSaberes[j]['id_clase'] == id) {
-                      html += 'selected="selected"'
-                    } else {
-                      html += 'disabled="disabled"'
-                    }
-                  }
-                }
-              }
-              html += ' >' + data[i]['nombreSC'] + '</option>';
-            }
-            $("#saber" + id).html(html);
-          }
-          if (resp.msj == "Vacio") {
-            var html = '';
-            html += '<option value="">Saber Complementario</option>';
-            $("#saber" + id).html(html);
-          }
-        },
-        error: function (respuesta) {
-          // alert(respuesta);
-          var resp = JSON.parse(respuesta);
-          console.log(resp);
         }
       });
     }
@@ -276,9 +530,9 @@ $(document).ready(function () {
       closeOnCancel: false
     }).then((isConfirm) => {
       if (isConfirm.value) {
-        /*window.alert($(this).val());*/
+        /*window.// // alert($(this).val());*/
         let userMofif = $(this).val();
-        // alert(userMofif);
+        // // // alert(userMofif);
         $("#modificarButton" + userMofif).click();
 
       } else {
@@ -313,9 +567,11 @@ $(document).ready(function () {
 
           let seccion = $("#seccion" + id).val();
           let saber = $("#saber" + id).val();
+          let periodo = $("#periodo"+id).val();
           let profesor = $("#profesor" + id).val();
 
-          // alert( seccion + ' ' + saber + ' ' + profesor);
+          // // // alert( seccion + ' ' + saber + ' ' + profesor);
+          $(".box-cargando").show();
           $.ajax({
             url: url + '/Modificar',
             type: 'POST',
@@ -325,10 +581,11 @@ $(document).ready(function () {
               seccion: seccion,
               saber: saber,
               profesor: profesor,
+              periodo: periodo,
             },
             success: function (resp) {
-              // alert(resp);
-
+              $(".box-cargando").hide();
+              // // alert(resp);
               var datos = JSON.parse(resp);
               if (datos.msj === "Good") {
                 Swal.fire({
@@ -340,11 +597,22 @@ $(document).ready(function () {
                   location.reload();
                 });
               }
+              if (datos.msj == "Denegado") {
+                Swal.fire({
+                    type: 'error',
+                    title: '¡Permiso Denegado!',
+                    text: 'No tiene permiso para realizar esta operación',
+                    footer: 'SCHSL',
+                    timer: 3000,
+                    showCloseButton: false,
+                    showConfirmButton: false,
+                });
+              }
               if (datos.msj === "Invalido") {
                 Swal.fire({
                   type: 'warning',
                   title: '¡Datos invalidos!',
-                  text: 'Los datos ingresados son invalido',
+                  text: 'Los datos ingresados son invalidos',
                   footer: 'SCHSL', timer: 3000, showCloseButton: false, showConfirmButton: false,
                 });
               }
@@ -373,8 +641,9 @@ $(document).ready(function () {
               }
             },
             error: function (respuesta) {
+              $(".box-cargando").hide();
               var datos = JSON.parse(respuesta);
-              console.log(datos);
+              // console.log(datos);
 
             }
 
@@ -387,7 +656,6 @@ $(document).ready(function () {
         }
       });
     }
-
   });
 
   $(".eliminarBtn").click(function () {
@@ -416,10 +684,11 @@ $(document).ready(function () {
           closeOnCancel: false
         }).then((isConfirm) => {
           if (isConfirm.value) {
-            /*window.alert($(this).val());*/
+            /*window.// // alert($(this).val());*/
             let claseDelete = $(this).val();
 
-            /* alert(claseDelete);*/
+            /* // // alert(claseDelete);*/
+            $(".box-cargando").show();
             $.ajax({
               url: url + '/Eliminar',
               type: 'POST',
@@ -428,7 +697,8 @@ $(document).ready(function () {
                 claseDelete: claseDelete,
               },
               success: function (respuesta) {
-                /* alert(respuesta);*/
+                $(".box-cargando").hide();
+                // // alert(respuesta);
                 var datos = JSON.parse(respuesta);
                 if (datos.msj === "Good") {
                   Swal.fire({
@@ -440,7 +710,17 @@ $(document).ready(function () {
                     location.reload();
                   });
                 }
-
+                if (datos.msj == "Denegado") {
+                  Swal.fire({
+                      type: 'error',
+                      title: '¡Permiso Denegado!',
+                      text: 'No tiene permiso para realizar esta operación',
+                      footer: 'SCHSL',
+                      timer: 3000,
+                      showCloseButton: false,
+                      showConfirmButton: false,
+                  });
+                }
                 if (datos.msj === "Repetido") {
                   Swal.fire({
                     type: 'warning',
@@ -466,8 +746,9 @@ $(document).ready(function () {
                 }
               },
               error: function (respuesta) {
+                $(".box-cargando").hide();
                 var data = JSON.parse(respuesta);
-                console.log(data);
+                // console.log(data);
 
               }
 
@@ -476,7 +757,6 @@ $(document).ready(function () {
             swal.fire({
               type: 'error',
               title: '¡Proceso cancelado!',
-              confirmButtonColor: "#ED2A77",
             });
           }
         });
@@ -485,11 +765,11 @@ $(document).ready(function () {
         swal.fire({
           type: 'error',
           title: '¡Proceso cancelado!',
-          confirmButtonColor: "#ED2A77",
         });
       }
     });
   });
+
 });
 
 const cerrarmodal = () => {
@@ -523,6 +803,15 @@ function validar(modificar = false, id = "") {
     $(form + " #seccionS" + id).html("");
   }
 
+  var periodo = $(form+" #periodo"+id).val();
+  var rperiodo = false;
+  if(periodo == ""){
+    $(form+" #periodoS"+id).html("Seleccione el periodo para la clase");
+  }else{
+    rperiodo = true;
+    $(form+" #periodoS"+id).html("");
+  }
+
   var saber = $(form + " #saber" + id).val();
   var rsaber = false;
   if (saber == "") {
@@ -549,6 +838,6 @@ function validar(modificar = false, id = "") {
   } else {
     validado = false;
   }
-  // alert(validado);
+  // // // alert(validado);
   return validado;
 }

@@ -63,7 +63,7 @@
                                   <select class="form-control input-lg select2" style="width:100%;" name="nuevoRol" id="seccion">
                                     <option value="">Sección</option>
                                     <?php foreach ($secciones as $date): if(!empty($date['cod_seccion'])): ?>
-                                        <option value="<?php echo $date['cod_seccion'] ?>"><?=$date['nombre_seccion'] ?> (<?=$date['year_periodo']."-".$date['nombre_periodo']; ?>)</option>
+                                        <option value="<?php echo $date['cod_seccion']."=".$date['id_periodo'] ?>"><?=$date['nombre_seccion'] ?> (<?=$date['year_seccion']; ?>) - <?="Fase ".$date['nombre_periodo']; ?></option>
                                     <?php endif; endforeach; ?>
                                   </select>
                                 </div>
@@ -118,9 +118,9 @@
                           </div>
                         </div>
 
-                        <div class="modal-footer">
+                        <div class="modal-footer" >
                           <span type="button" class="btn btn-default pull-left" data-dismiss="modal" id="salirM">Salir</span>
-                          <span type="button" class="btn btn-primary" id="guardar">Guardar</span>
+                          <span type="button" class="btn btn-primary btnmodalAgg" id="guardar" style="display:none;">Guardar</span>
                         </div>
                       </form>
                       </div>
@@ -204,13 +204,14 @@
                                   <div class="form-group col-xs-12">
                                     <label style="font-size:1.5em;">Sección:
                                         <?php 
-                                          foreach ($secciones as $date):
-                                            if(!empty($date['cod_seccion'])):
-                                              if($data['cod_seccion']==$date['cod_seccion']){
-                                                echo "<i>".$date['nombre_seccion']."</i>";
-                                              } 
-                                            endif;
-                                          endforeach;
+                                          // foreach ($secciones as $date):
+                                          //   if(!empty($date['cod_seccion'])):
+                                          //     if($data['cod_seccion']==$date['cod_seccion']){
+                                          //       echo "<i>".$date['nombre_seccion']."</i>";
+                                          //     } 
+                                          //   endif;
+                                          // endforeach;
+                                          echo "<i>".$data['nombre_seccion']."</i>";
                                         ?>
                                     </label>
                                     <br>
@@ -381,8 +382,8 @@
                                       <select class="form-control input-lg select2 seccionModificar" style="width:100%;" name="<?=$codigoModal;?>" id="seccion<?=$codigoModal;?>">
                                         <!-- <option value="">Sección</option> -->
                                         <?php foreach ($secciones as $date): if(!empty($date['cod_seccion'])): ?>
-                                          <?php if($data['cod_seccion']==$date['cod_seccion']){ ?>
-                                            <option selected="selected"  value="<?php echo $date['cod_seccion'] ?>"><?=$date['nombre_seccion'] ?> (<?=$date['year_periodo']."-".$date['nombre_periodo']; ?>)</option>
+                                          <?php if($data['cod_seccion']==$date['cod_seccion'] && $data['id_periodo']==$date['id_periodo']){ ?>
+                                            <option value="<?php echo $date['cod_seccion']."=".$date['id_periodo'] ?>"><?=$date['nombre_seccion'] ?> (<?=$date['year_seccion']; ?>) - <?="Fase ".$date['nombre_periodo']; ?></option>
                                             <?php } ?>
                                         <?php endif; endforeach; ?>
                                       </select>

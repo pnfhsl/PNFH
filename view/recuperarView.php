@@ -90,6 +90,7 @@ $(document).ready(function() {
           let pass = $("#pass").val();
 
           // alert(pass);
+          $(".box-cargando").show();
           $.ajax({
               url: 'Login/recuperarAcceso',    
               type: 'POST',   
@@ -98,10 +99,11 @@ $(document).ready(function() {
                 pass: pass,
               },
               success: function(respuesta){
+                $(".box-cargando").hide();
                 // alert(respuesta);
                 // console.log(respuesta);
                 var data = JSON.parse(respuesta); 
-                console.log(data);
+                // console.log(data);
 
                 if (data.msj === "Good") {   
                   Swal.fire({
@@ -120,7 +122,8 @@ $(document).ready(function() {
                   return;
                 }
              },
-              error: function(respuesta){       
+              error: function(respuesta){
+                $(".box-cargando").hide(); 
                 var datos = JSON.parse(respuesta);
                 console.log(datos);
 

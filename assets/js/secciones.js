@@ -30,10 +30,25 @@ $(document).ready(function(){
 
   
   $('#nombre').on('input', function () {      
-    this.value = this.value.replace(/[^0-9 H S h s]/g,''); });
+    this.value = this.value.replace(/[^0-9 H S h s]/g,'');
+    if(this.value.length == 6 ){
+      $("#nombreS").html("");
+    }else{
+      $("#nombreS").html("Debe ingresar el nombre de la sección");
+    }
+  });
     // this.value = this.value.replace(/[^0-9- H h S s ]/g,''); });
+
   $('.nombreModificar').on('input', function () {      
-    this.value = this.value.replace(/[^0-9 H S h s]/g,''); });
+    var id = $(this).attr("name");
+    this.value = this.value.replace(/[^0-9 H S h s]/g,'');
+    if(this.value.length > 2 && this.value.length <= 6 ){
+      $("#nombreS"+id).html("");
+    }else{
+      $("#nombreS"+id).html("Debe ingresar el nombre de la sección");
+    }
+  });
+
   $("#alumnos").change(function(){
     var alumnos = $(this).val();
     if(alumnos.length == 0){
@@ -78,6 +93,202 @@ $(document).ready(function(){
     html2 = "";
     html2 += '<option disabled="" value="">Cargar Alumnos</option>';
     $("#alumnos").html(html2);
+    var valor = $(this).val();
+    if(valor==""){
+      $("#periodoS").html("Seleccione el periodo para la sección");
+    }else{
+      $("#periodoS").html("");
+    }
+  });
+
+
+  $('#trayecto').change(function(){
+    var url = $("#url").val();
+    var trayecto = $(this).val();
+    if(trayecto==""){
+      $("#trayectoS").html("Seleccione el trayecto para la sección");
+    }else{
+      $("#trayectoS").html("");
+    }
+    var year = $("#year").val();
+    if(trayecto==""){
+      var html = '';
+      html += '<option disabled="" value="">Cargar Alumnos</option>';
+      $("#alumnos").html(html);
+    }else{
+      $(".box-cargando").show();
+      $.ajax({
+        url: url+'/Buscar',    
+        type: 'POST',  
+        data: {
+          Buscar: true,
+          alumnos: true,
+          trayecto: trayecto,
+          year: year,
+        },
+        success: function(respuesta){
+          $(".box-cargando").hide();
+          // // alert(respuesta);
+          var resp = JSON.parse(respuesta);   
+          // // alert(resp.msj);
+          if (resp.msj == "Good") {  
+            var data = resp.data;
+            var dataSecciones = "";
+            if(resp.msjSecciones=="Good"){
+              dataSecciones = resp.dataSecciones;
+            }
+            // // console.log("DATA: ");
+            // // console.log(data);
+            // // console.log("SECCIONES: ");
+            // // console.log(dataSecciones);
+            // // console.log(data);
+            // // console.log($("#alumnos").html());
+            var html = '';
+            html += '<option disabled="" value="">Cargar Alumnos</option>';
+            for (var i = 0; i < data.length; i++) {
+              html += '<option value="'+data[i]['cedula_alumno']+'"';
+              if(dataSecciones.length>0){
+                for (var j = 0; j < dataSecciones.length; j++) {
+                  if((dataSecciones[j]['trayecto_alumno']==data[i]['trayecto_alumno']) && dataSecciones[j]['cedula_alumno']==data[i]['cedula_alumno']){
+                    html += 'disabled="disabled"';
+                  }
+                }
+              }
+              html += '>'+data[i]['cedula_alumno']+" "+data[i]['nombre_alumno']+" "+data[i]['apellido_alumno']+'</option>';
+            }
+            $("#alumnos").html(html);
+          }
+          if (resp.msj == "Denegado") {
+            Swal.fire({
+                type: 'error',
+                title: '¡Permiso Denegado!',
+                text: 'No tiene permiso para realizar esta operación',
+                footer: 'SCHSL',
+                timer: 3000,
+                showCloseButton: false,
+                showConfirmButton: false,
+            });
+          }
+          if (resp.msj == "Desconectado") {
+              Swal.fire({
+                type: 'error',
+                title: '¡Problema de conexión a la base de datos',
+                text: 'No se esta logrando hacer conexión a la base de datos.',
+                footer: 'SCHSL',
+                timer: 3000,
+                showCloseButton: false,
+                showConfirmButton: false,
+              });
+            }
+          if(resp.msj == "Vacio"){
+            var html = '';
+            html += '<option disabled="" value="">Cargar Alumnos</option>';
+            $("#alumnos").html(html);
+          }
+        },
+        error: function(respuesta){
+          $(".box-cargando").hide();
+          // // // alert(respuesta);
+          var resp = JSON.parse(respuesta);
+          // console.log(resp);
+        }
+      });
+    }
+  });
+
+  $('.trayectoModificar').change(function(){
+    var url = $("#url").val();
+
+    var id = $(this).attr("name");
+    // // console.log(id);
+    var trayecto = $(this).val();
+
+    if(trayecto==""){
+      $("#trayectoS"+id).html("Seleccione el trayecto para la sección");
+    }else{
+      $("#trayectoS"+id).html("");
+    }
+    // // // alert(id);
+    var year = $("#year"+id).val();
+    // // // alert(periodo);
+    if(trayecto==""){
+      var html = '';
+      html += '<option disabled="" value="">Cargar Alumnos</option>';
+      $("#alumnos"+id).html(html);
+
+    }else{
+      $(".box-cargando").show();
+      $.ajax({
+        url: url+'/Buscar',    
+        type: 'POST',  
+        data: {
+          Buscar: true,   
+          alumnos: true,   
+          trayecto: trayecto,
+          year: year,
+        },
+        success: function(respuesta){
+          $(".box-cargando").hide();
+          // // alert(respuesta);
+          var resp = JSON.parse(respuesta);   
+          // // // alert(resp.msj);
+          if (resp.msj == "Good") {  
+            var data = resp.data;
+            var dataSecciones = "";
+            if(resp.msjSecciones=="Good"){
+              dataSecciones = resp.dataSecciones;
+            }
+            // console.log("DATA: ");
+            // console.log(data);
+            // console.log("SECCIONES: ");
+            // console.log(dataSecciones);
+            // // console.log(data);
+            // // console.log($("#alumnos"+id).html());
+            var html = '';
+            html += '<option disabled="" value="">Cargar Alumnos</option>';
+            for (var i = 0; i < data.length; i++) {
+              html += '<option value="'+data[i]['cedula_alumno']+'"';
+              if(dataSecciones.length>0){
+                for (var j = 0; j < dataSecciones.length; j++) {
+                  // if(dataSecciones[j]['cedula_alumno']==data[i]['cedula_alumno']){
+                  if((dataSecciones[j]['trayecto_alumno']==data[i]['trayecto_alumno']) && dataSecciones[j]['cedula_alumno']==data[i]['cedula_alumno']){
+                    if(dataSecciones[j]['cod_seccion']==id){
+                      html += 'selected="selected"';
+                    }else{
+                      html += 'disabled="disabled"';
+                    }
+                  }
+                }
+              }
+              html += '>'+data[i]['cedula_alumno']+" "+data[i]['nombre_alumno']+" "+data[i]['apellido_alumno']+'</option>';
+            }
+            $("#alumnos"+id).html(html);
+          }
+          if (resp.msj == "Denegado") {
+            Swal.fire({
+                type: 'error',
+                title: '¡Permiso Denegado!',
+                text: 'No tiene permiso para realizar esta operación',
+                footer: 'SCHSL',
+                timer: 3000,
+                showCloseButton: false,
+                showConfirmButton: false,
+            });
+          }
+          if(resp.msj == "Vacio"){
+            var html = '';
+            html += '<option disabled="" value="">Cargar Alumnos</option>';
+            $("#alumnos"+id).html(html);
+          }
+        },
+        error: function(respuesta){
+          $(".box-cargando").hide();
+          // // // alert(respuesta);
+          var resp = JSON.parse(respuesta);
+          // console.log(resp);
+        }
+      });
+    }
   });
 
   $("#guardar").click(function(e){
@@ -100,43 +311,53 @@ $(document).ready(function(){
 
 
             let nombre = $("#nombre").val();     
-            let periodo = $("#periodo").val();     
+            let year = $("#year").val();     
             let trayecto = $("#trayecto").val();   
             let alumnos = $("#alumnos").val();
 
-            //alert(nombre + ' ' + periodo + ' ' + trayecto + ' '+ alumnos);
+            //// // alert(nombre + ' ' + periodo + ' ' + trayecto + ' '+ alumnos);
+              $(".box-cargando").show();
               $.ajax({
                 url: url+'/Agregar',    
                 type: 'POST',   
                 data: {
                   Agregar: true,   
                   nombre: nombre,       
-                  periodo: periodo,       
+                  year: year,       
                   trayecto: trayecto,
                   alumnos: alumnos,
 
                 },
                 success: function(resp){
-                  // alert(resp);
-                /*window.alert("Hola mundo");   
-                console.log(resp); 
-                  window.alert(resp);*/
+                  $(".box-cargando").hide();
+                  // // alert(resp);
                   var datos = JSON.parse(resp);     
                     if (datos.msj === "Good") {   
                       Swal.fire({
                         type: 'success',
                         title: '¡Registro Exitoso!',
-                        text: 'Se ha agregado la seccion ' + nombre + ' al sistema',
+                        text: 'Se ha agregado la seccion ' + nombre.toUpperCase() + ' al sistema',
                         footer: 'SCHSL', timer: 3000, showCloseButton: false, showConfirmButton: false,
                       }).then((isConfirm) => {
                           location.reload();
                       } );
                     } 
+                    if (datos.msj == "Denegado") {
+                      Swal.fire({
+                          type: 'error',
+                          title: '¡Permiso Denegado!',
+                          text: 'No tiene permiso para realizar esta operación',
+                          footer: 'SCHSL',
+                          timer: 3000,
+                          showCloseButton: false,
+                          showConfirmButton: false,
+                      });
+                    }
                     if (datos.msj === "Invalido") {
                       Swal.fire({
                           type: 'warning',
                           title: '¡Datos invalidos!',
-                          text: 'Los datos ingresados son invalido',
+                          text: 'Los datos ingresados son invalidos',
                           footer: 'SCHSL', timer: 3000, showCloseButton: false, showConfirmButton: false,
                       });
                     }
@@ -144,7 +365,7 @@ $(document).ready(function(){
                       Swal.fire({
                         type: 'warning',
                         title: '¡Registro repetido!',
-                        text: 'El profesor ' + nombre + ' ' + apellido + ' ya esta agregado al sistema',
+                        text: 'La sección ' + nombre.toUpperCase() + ' ya esta agregado al sistema',
                         footer: 'SCHSL', timer: 3000, showCloseButton: false, showConfirmButton: false,
                       });
                     }
@@ -164,9 +385,10 @@ $(document).ready(function(){
                       });
                     }     
                 },
-                error: function(respuesta){       
+                error: function(respuesta){
+                  $(".box-cargando").hide();
                   var datos = JSON.parse(respuesta);
-                  console.log(datos);
+                  // console.log(datos);
 
                 }
 
@@ -181,145 +403,6 @@ $(document).ready(function(){
 
     }
 
-  });
-
-  $('#trayecto').change(function(){
-    var url = $("#url").val();
-    var trayecto = $(this).val();
-    var periodo = $("#periodo").val();
-    if(trayecto==""){
-      var html = '';
-      html += '<option disabled="" value="">Cargar Alumnos</option>';
-      $("#alumnos").html(html);
-    }else{
-      $.ajax({
-        url: url+'/Buscar',    
-        type: 'POST',  
-        data: {
-          Buscar: true,
-          alumnos: true,
-          trayecto: trayecto,
-          periodo: periodo,
-        },
-        success: function(respuesta){       
-          // alert(respuesta);
-          var resp = JSON.parse(respuesta);   
-          // alert(resp.msj);
-          if (resp.msj == "Good") {  
-            var data = resp.data;
-            var dataSecciones = "";
-            if(resp.msjSecciones=="Good"){
-              dataSecciones = resp.dataSecciones;
-            }
-            // console.log("DATA: ");
-            // console.log(data);
-            // console.log("SECCIONES: ");
-            // console.log(dataSecciones);
-            // console.log(data);
-            // console.log($("#alumnos").html());
-            var html = '';
-            html += '<option disabled="" value="">Cargar Alumnos</option>';
-            for (var i = 0; i < data.length; i++) {
-              html += '<option value="'+data[i]['cedula_alumno']+'"';
-              if(dataSecciones.length>0){
-                for (var j = 0; j < dataSecciones.length; j++) {
-                  if((dataSecciones[j]['trayecto_alumno']==data[i]['trayecto_alumno']) && dataSecciones[j]['cedula_alumno']==data[i]['cedula_alumno']){
-                    html += 'disabled="disabled"';
-                  }
-                }
-              }
-              html += '>'+data[i]['cedula_alumno']+" "+data[i]['nombre_alumno']+" "+data[i]['apellido_alumno']+'</option>';
-            }
-            $("#alumnos").html(html);
-          }
-          if(resp.msj == "Vacio"){
-            var html = '';
-            html += '<option disabled="" value="">Cargar Alumnos</option>';
-            $("#alumnos").html(html);
-          }
-        },
-        error: function(respuesta){       
-          // alert(respuesta);
-          var resp = JSON.parse(respuesta);
-          console.log(resp);
-        }
-      });
-    }
-  });
-
-  $('.trayectoModificar').change(function(){
-    var url = $("#url").val();
-
-    var id = $(this).attr("name");
-    // console.log(id);
-    var trayecto = $(this).val();
-    // alert(id);
-    var periodo = $("#periodo"+id).val();
-    // alert(periodo);
-    if(trayecto==""){
-      var html = '';
-      html += '<option disabled="" value="">Cargar Alumnos</option>';
-      $("#alumnos"+id).html(html);
-
-    }else{
-      $.ajax({
-        url: url+'/Buscar',    
-        type: 'POST',  
-        data: {
-          Buscar: true,   
-          alumnos: true,   
-          trayecto: trayecto,
-          periodo: periodo,
-        },
-        success: function(respuesta){ 
-          // alert(respuesta);
-          var resp = JSON.parse(respuesta);   
-          // alert(resp.msj);
-          if (resp.msj == "Good") {  
-            var data = resp.data;
-            var dataSecciones = "";
-            if(resp.msjSecciones=="Good"){
-              dataSecciones = resp.dataSecciones;
-            }
-            // console.log("DATA: ");
-            // console.log(data);
-            // console.log("SECCIONES: ");
-            // console.log(dataSecciones);
-            // console.log(data);
-            // console.log($("#alumnos"+id).html());
-            var html = '';
-            html += '<option disabled="" value="">Cargar Alumnos</option>';
-            for (var i = 0; i < data.length; i++) {
-              html += '<option value="'+data[i]['cedula_alumno']+'"';
-              if(dataSecciones.length>0){
-                for (var j = 0; j < dataSecciones.length; j++) {
-                  // if(dataSecciones[j]['cedula_alumno']==data[i]['cedula_alumno']){
-                  if((dataSecciones[j]['trayecto_alumno']==data[i]['trayecto_alumno']) && dataSecciones[j]['cedula_alumno']==data[i]['cedula_alumno']){
-                    if(dataSecciones[j]['cod_seccion']==id){
-                      html += 'selected="selected"';
-                    }else{
-                      html += 'disabled="disabled"';
-                    }
-                  }
-                }
-              }
-              html += '>'+data[i]['cedula_alumno']+" "+data[i]['nombre_alumno']+" "+data[i]['apellido_alumno']+'</option>';
-            }
-            $("#alumnos"+id).html(html);
-          }
-          if(resp.msj == "Vacio"){
-            var html = '';
-            html += '<option disabled="" value="">Cargar Alumnos</option>';
-            $("#alumnos"+id).html(html);
-          }
-        },
-        error: function(respuesta){       
-          // alert(respuesta);
-          var resp = JSON.parse(respuesta);
-          console.log(resp);
-        }
-      });
-    }
   });
 
   $(".modificarButtonModal").click(function(e){
@@ -341,13 +424,13 @@ $(document).ready(function(){
           if (isConfirm.value){ 
 
             let nombre = $("#nombre"+id).val();  
-            let periodo = $("#periodo"+id).val();     
+            let year = $("#year"+id).val();     
             let trayecto = $("#trayecto"+id).val();
             let alumnos = $("#alumnos"+id).val();
             
-            // alert(id + " " + nombre + " " + periodo + " " + trayecto + " ");
-            // alert(id + " " + nombre + " " + periodo + " " + trayecto + " " + alumnos);
-
+            // // // alert(id + " " + nombre + " " + year + " " + trayecto + " ");
+            // // // alert(id + " " + nombre + " " + year + " " + trayecto + " " + alumnos);
+            $(".box-cargando").show();
             $.ajax({
               url: url+'/Modificar',    
               type: 'POST',   
@@ -355,15 +438,13 @@ $(document).ready(function(){
                 Editar: true,   
                 codigo: id,   
                 seccion: nombre,       
-                periodo: periodo,
+                year: year,
                 trayecto: trayecto,
                 alumnos: alumnos,
               },
               success: function(resp){
-                // alert(resp);
-              /*window.alert("Hola mundo");   
-              console.log(resp); 
-                window.alert(resp);*/
+                $(".box-cargando").hide();
+                // // alert(resp);
                 var datos = JSON.parse(resp);   
                 if (datos.msj === "Good") {   
                     Swal.fire({
@@ -375,11 +456,22 @@ $(document).ready(function(){
                         location.reload();
                     } );
                   } 
+                  if (datos.msj == "Denegado") {
+                      Swal.fire({
+                          type: 'error',
+                          title: '¡Permiso Denegado!',
+                          text: 'No tiene permiso para realizar esta operación',
+                          footer: 'SCHSL',
+                          timer: 3000,
+                          showCloseButton: false,
+                          showConfirmButton: false,
+                      });
+                    }
                   if (datos.msj === "Invalido") {
                     Swal.fire({
                         type: 'warning',
                         title: '¡Datos invalidos!',
-                        text: 'Los datos ingresados son invalido',
+                        text: 'Los datos ingresados son invalidos',
                         footer: 'SCHSL', timer: 3000, showCloseButton: false, showConfirmButton: false,
                     });
                   }
@@ -387,7 +479,7 @@ $(document).ready(function(){
                     Swal.fire({
                       type: 'warning',
                       title: '¡Registro repetido!',
-                      text: 'La seccion ya esta agregada al sistema',
+                      text: 'La sección ' + nombre.toUpperCase() + ' ya esta agregado al sistema',
                       footer: 'SCHSL', timer: 3000, showCloseButton: false, showConfirmButton: false,
                     });
                   }
@@ -407,9 +499,10 @@ $(document).ready(function(){
                     });
                   }   
               },
-              error: function(respuesta){       
+              error: function(respuesta){
+                $(".box-cargando").hide();
                 var datos = JSON.parse(respuesta);
-                console.log(datos);
+                // console.log(datos);
 
               }
 
@@ -438,7 +531,8 @@ $(document).ready(function(){
       }).then((isConfirm) => {
           if (isConfirm.value){            
             let cod_seccion = $(this).val();
-            // alert(cod_seccion);
+            // // // alert(cod_seccion);
+            $(".box-cargando").show();
             $.ajax({
               url: url+'/Buscar',    
               type: 'POST',  
@@ -446,18 +540,31 @@ $(document).ready(function(){
                 Buscar: true,   
                 cod_seccion: cod_seccion,       
               },
-              success: function(respuesta){       
-                // alert(respuesta); 
+              success: function(respuesta){
+                $(".box-cargando").hide();
+                // // // alert(respuesta); 
                 var resp = JSON.parse(respuesta);   
-                // alert(resp.msj);
+                // // // alert(resp.msj);
                 if (resp.msj == "Good") {  
                   $("#modificarButton"+cod_seccion).click(); 
                 }        
+                if (resp.msj == "Denegado") {
+                  Swal.fire({
+                      type: 'error',
+                      title: '¡Permiso Denegado!',
+                      text: 'No tiene permiso para realizar esta operación',
+                      footer: 'SCHSL',
+                      timer: 3000,
+                      showCloseButton: false,
+                      showConfirmButton: false,
+                  });
+                }
               },
-              error: function(respuesta){       
-                // alert(respuesta);
+              error: function(respuesta){
+                $(".box-cargando").hide();
+                // // // alert(respuesta);
                 var resp = JSON.parse(respuesta);
-                console.log(resp);
+                // console.log(resp);
               }
 
             });
@@ -484,9 +591,10 @@ $(document).ready(function(){
           closeOnCancel: false 
       }).then((isConfirm) => {
           if (isConfirm.value){            
-            /*window.alert($(this).val());*/
+            /*window.// // alert($(this).val());*/
             let cod_seccion = $(this).val();
-             // alert(cod_seccion);
+             // // alert(cod_seccion);
+             $(".box-cargando").show();
             $.ajax({
               url: url+'/Buscar',    
               type: 'POST',  
@@ -494,18 +602,31 @@ $(document).ready(function(){
                 Buscar: true,   
                 cod_seccion: cod_seccion,       
               },
-              success: function(respuesta){       
-                 // alert(respuesta); 
+              success: function(respuesta){
+                $(".box-cargando").hide();
+                 // // // alert(respuesta); 
                 var resp = JSON.parse(respuesta);   
-                 // alert(resp.msj);
+                 // // // alert(resp.msj);
                 if (resp.msj == "Good") {  
                   $("#cargarButton"+cod_seccion).click(); 
-                }        
+                }   
+                if (resp.msj == "Denegado") {
+                  Swal.fire({
+                      type: 'error',
+                      title: '¡Permiso Denegado!',
+                      text: 'No tiene permiso para realizar esta operación',
+                      footer: 'SCHSL',
+                      timer: 3000,
+                      showCloseButton: false,
+                      showConfirmButton: false,
+                  });
+                }     
               },
-              error: function(respuesta){       
-                // alert(respuesta);
+              error: function(respuesta){
+                $(".box-cargando").hide();
+                // // // alert(respuesta);
                 var resp = JSON.parse(respuesta);
-                console.log(resp);
+                // console.log(resp);
               }
 
             });
@@ -545,7 +666,8 @@ $(document).ready(function(){
                 }).then((isConfirm) => {
                     if (isConfirm.value){                      
                       var cod = $(this).val();
-                      // alert(cod);
+                      // // // alert(cod);
+                      $(".box-cargando").show();
                       $.ajax({
                         url: url+'/Eliminar',    
                         type: 'POST',   
@@ -553,8 +675,9 @@ $(document).ready(function(){
                           Eliminar: true,   
                           cod_seccion: cod,
                         },
-                        success: function(respuesta){       
-                          // alert(respuesta);
+                        success: function(respuesta){
+                          $(".box-cargando").hide();
+                          // // // alert(respuesta);
                           var datos = JSON.parse(respuesta);
                           if (datos.msj === "Good") {   
                             Swal.fire({
@@ -566,6 +689,17 @@ $(document).ready(function(){
                                 location.reload();
                             } );
                           } 
+                          if (datos.msj == "Denegado") {
+                            Swal.fire({
+                                type: 'error',
+                                title: '¡Permiso Denegado!',
+                                text: 'No tiene permiso para realizar esta operación',
+                                footer: 'SCHSL',
+                                timer: 3000,
+                                showCloseButton: false,
+                                showConfirmButton: false,
+                            });
+                          }
                           if (datos.msj === "Repetido") {   
                             Swal.fire({
                               type: 'warning',
@@ -590,9 +724,10 @@ $(document).ready(function(){
                             });
                           }        
                         },
-                        error: function(respuesta){       
+                        error: function(respuesta){
+                          $(".box-cargando").hide();
                           var data = JSON.parse(respuesta);
-                          console.log(data);
+                          // console.log(data);
 
                         }
 
@@ -648,13 +783,13 @@ function validar(modificar = false, id=""){
     $(form+" #nombreS"+id).html("Debe ingresar el nombre de la sección");
   }
 
-  var periodo = $(form+" #periodo"+id).val();
-  var rperiodo = false;
-  if(periodo == ""){
-    $(form+" #periodoS"+id).html("Seleccione el periodo para la sección");
+  var year = $(form+" #year"+id).val();
+  var ryear = false;
+  if(year == ""){
+    $(form+" #yearS"+id).html("Seleccione el año para la sección");
   }else{
-    rperiodo = true;
-    $(form+" #periodoS"+id).html("");
+    ryear = true;
+    $(form+" #yearS"+id).html("");
   }
 
   var trayecto = $(form+" #trayecto"+id).val();
@@ -668,7 +803,7 @@ function validar(modificar = false, id=""){
 
   var alumnos = $(form+" #alumnos"+id).val();
   var ralumnos = false;
-  // alert(alumnos.length);
+  // // // alert(alumnos.length);
   if(alumnos.length == 0){
     $(form+" #alumnosS"+id).html("Seleccione los alumnos para conformar la sección");
   }else{
@@ -684,12 +819,12 @@ function validar(modificar = false, id=""){
 
 
   var validado = false;
-  if(rnombre==true && rperiodo==true && rtrayecto==true && ralumnos==true){
+  if(rnombre==true && ryear==true && rtrayecto==true && ralumnos==true){
     validado=true;
   }else{
     validado=false;
   }
   
-  // alert(validado);
+  // // // alert(validado);
   return validado;
 }

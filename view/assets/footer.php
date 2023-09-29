@@ -89,8 +89,6 @@ $(document).ready(function(){
     if($(window).width() >= 1200){ // MD
         $(".logoTopMenu").attr("style","width:8vh;");
     }
-    // $(".wrapper").attr("style","padding-right:0 !important;width:100% !important;");
-    // $("body").attr("style","padding-right:0 !important;width:100% !important;");
     $(window).resize(function(){
         if($(window).width() < 768){ // XS
 	        $(".logoTopMenu").attr("style","width:5vh;");
@@ -104,24 +102,15 @@ $(document).ready(function(){
         if($(window).width() >= 1200){ // MD
 	        $(".logoTopMenu").attr("style","width:8vh;");
         }
-        // $(".wrapper").attr("style","padding-right:0 !important;width:100% !important;");
-        // $("body").attr("style","padding-right:0 !important;width:100% !important;");
     });
-    // $(window).scroll(function(){
-    //     $(".wrapper").attr("style","padding-right:0 !important;width:100% !important;");
-    //     $("body").attr("style","padding-right:0 !important;width:100% !important;");
-    // });
-    // $(".closeModal").click(function(){
-    //     $(".wrapper").attr("style","padding-right:0 !important;width:100% !important;");
-    //     $("body").attr("style","padding-right:0 !important;width:100% !important;");
-    // });
+
+
     // NuevoPeriodo();
-    CierrePeriodoSubidaNotas();
+    // CierrePeriodoSubidaNotas();
     // NotificacionVerificacionDeNotas();
+
     $(".lanzarNotificacion").click(function(){
         var id = $(this).attr("id");
-        // alert(id);
-        // alert('asd');
         $(".formNotificaciones"+id).submit();
     });
 });

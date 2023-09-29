@@ -24,7 +24,6 @@ License URL: http://creativecommons.org/licenses/by/3.0/
   <!-- google fonts-->
   <link href="//fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
   <!-- /google fonts-->
-
 </head>
 
 
@@ -50,7 +49,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
   <input type="hidden" id="url" value="<?= $this->encriptar($this->url); ?>">
   <input type="hidden" id="urlPreguntas" value="<?= $this->encriptar("Preguntas"); ?>">
   <input type="hidden" id="urlHome" value="<?= $this->encriptar("Home"); ?>">
-  <h1>Iniciar Sesión</h1>
+  <!-- <input type="hidden" value="<?=$this->encriptar("Admin123."); ?>"> -->
+  <h1 id="title">Iniciar Sesión</h1>
   <div class=" w3l-login-form">
     <!-- <h2>Inicio de Sesión</h2> -->
     <form action="#" method="POST">
@@ -163,7 +163,6 @@ License URL: http://creativecommons.org/licenses/by/3.0/
   <footer>
     <p class="copyright-agileinfo"> &copy; 2022 Todos los Derechos Reservados | <a href="#">SCHSL</a></p>
   </footer>
-
 <script type="text/javascript">
 $(document).ready(function() { //Al Cargar la paginaZ
 
@@ -193,20 +192,10 @@ $(document).ready(function() { //Al Cargar la paginaZ
           },
           success: function(respuesta) {
             $(".box-cargando").hide();
-
-            // alert(respuesta);
-             // console.log(respuesta);
+            // // alert(respuesta);
+            // console.log(respuesta);
             var data = JSON.parse(respuesta);
-            // console.log(data);
-
-            // console.log(data.preguntas);
-            // console.log(data.preguntas[0].pregunta);
-            // console.log(data.preguntas[0].respuesta);
-            // console.log(data.preguntas[1].pregunta);
-            // console.log(data.preguntas[1].respuesta);
-            // console.log(data.preguntas[2].pregunta);
-            // console.log(data.preguntas[2].respuesta);
-
+            console.log(data);
             if (data.access === "Acceder") {
               // Swal.fire({
               //   type: 'success',
@@ -244,14 +233,18 @@ $(document).ready(function() { //Al Cargar la paginaZ
                   showConfirmButton: false,
                 });  
             }
+            if (data.msj === "Desconectado") {
+              Swal.fire({
+                type: 'error',
+                title: '¡Problema de conexión a la base de datos',
+                text: 'No se esta logrando hacer conexión a la base de datos.',
+                footer: 'SCHSL',
+                timer: 3000,
+                showCloseButton: false,
+                showConfirmButton: false,
+              });
+            }
             if (data.msj === "Usuario o contraseña invalido!") {
-              // alert('asd');
-              // Swal.fire({
-              //   type: 'warning',
-              //   title: '¡Usuario o contraseña inválido',
-              //   text: 'El nombre de usuario y la contraseña no coinciden',
-              //   footer: 'SCHSL', timer: 2000, showCloseButton: false, showConfirmButton: false,
-              // }); 
               $("#usuario").focus();
               $("#usuario").val("");
               $("#password").val("");
@@ -268,11 +261,24 @@ $(document).ready(function() { //Al Cargar la paginaZ
 
             if (data.look === "Bloqueo") {
               $("#preguntas").click();
-              console.log(data);
+              // console.log(data);
               $("#cedulaUsuarioPreguntas").val(data.cedula);
               $("#preg_uno").html(data.preguntas[0].pregunta);
               $("#preg_dos").html(data.preguntas[1].pregunta);
               $("#preg_tres").html(data.preguntas[2].pregunta);
+              $("#respuesta_uno").attr("name", data.preguntas[0].id_respuesta);
+              $("#respuesta_dos").attr("name", data.preguntas[1].id_respuesta);
+              $("#respuesta_tres").attr("name", data.preguntas[2].id_respuesta);
+              console.log(data);
+              // // alert(data.preguntas[0].pregunta);
+              // // alert(data.preguntas[0].respuestas);
+              // // alert(data.preguntas[1].pregunta);
+              // // alert(data.preguntas[1].respuestas);
+              // // alert(data.preguntas[2].pregunta);
+              // // alert(data.preguntas[2].respuestas);
+
+
+
               // Swal.fire({
               //   type: 'warning',
               //   title: '¡Usuario bloqueado!',
@@ -283,35 +289,12 @@ $(document).ready(function() { //Al Cargar la paginaZ
             }
 
             // var pregunta = $("#enviarPregunta").click();
-            $('#enviarPregunta').on('click', function() {
-              // alert('hizo click sobre el boton');
-              let respuesta_uno = $("#respuesta_uno").val();
-              let respuesta_dos = $("#respuesta_dos").val();
-              let respuesta_tres = $("#respuesta_tres").val();
-              // alert(respuesta_uno + ' ' + respuesta_dos + ' ' + respuesta_tres);
-              if ((respuesta_uno == data.preguntas[0].respuesta) && (respuesta_dos == data.preguntas[1].respuesta) && (respuesta_tres == data.preguntas[2].respuesta)) {
-                $("#modificarPass").click();
-              } else {
-                $(".cerrarPreguntasModal").click();
-                $("#respuesta_uno").val("");
-                $("#respuesta_dos").val("");
-                $("#respuesta_tres").val("");
-                Swal.fire({
-                  type: 'warning',
-                  title: '¡Usuario bloqueado!',
-                  text: 'El usuario ' + user + ' ha sido bloqueado. Contacte al administrador para su desbloqueo',
-                  footer: 'SCHSL',
-                  timer: 3000,
-                  showCloseButton: false,
-                  showConfirmButton: false,
-                });
-              }
-            });
 
           },
           error: function(respuesta) {
+            $(".box-cargando").hide();
             var data = JSON.parse(respuesta);
-            console.log(data);
+            // console.log(data);
 
           }
         });
@@ -327,10 +310,85 @@ $(document).ready(function() { //Al Cargar la paginaZ
     }
 
   });
+  
+
+  $('#enviarPregunta').click(function() {
+
+    var cedulaPreguntas = $("#cedulaUsuarioPreguntas").val();
+
+    var respuesta_uno = $("#respuesta_uno").val();
+    var respuesta_dos = $("#respuesta_dos").val();
+    var respuesta_tres = $("#respuesta_tres").val();
+
+    var nr1 = $("#respuesta_uno").attr("name");
+    var nr2 = $("#respuesta_dos").attr("name");
+    var nr3 = $("#respuesta_tres").attr("name");
+
+    // // alert(cedulaPreguntas);
+    // // alert("nr1: "+nr1+": "+respuesta_uno+" | nr2: "+nr2+": "+respuesta_dos+" | nr3: "+nr3+": "+respuesta_tres);
+
+    $(".box-cargando").show();
+    $.ajax({
+      url: url + '/validarRespuestas',
+      type: 'POST',
+      data: {
+        validarRespuestas: true,
+        ci: cedulaPreguntas,
+        nr1: nr1,
+        nr2: nr2,
+        nr3: nr3,
+        r1: respuesta_uno,
+        r2: respuesta_dos,
+        r3: respuesta_tres,
+      },
+      success: function(resp) {
+        $(".box-cargando").hide();
+        // // alert(resp);
+        // // console.log(resp);
+        var datos = JSON.parse(resp);
+        if (datos.msj === "Good") {
+          $("#modificarPass").click();
+        }
+        if (datos.msj === "Error") {
+              //   Swal.fire({
+              //     type: 'warning',
+              //     title: '¡Correo no enviado!',
+              //     text: 'No se pudo enviar el correo electronico',
+              //     footer: 'SCHSL',
+              //     timer: 3000,
+              //     showCloseButton: false,
+              //     showConfirmButton: false,
+              //   });
+            $(".cerrarPreguntasModal").click();
+            $("#respuesta_uno").val("");
+            $("#respuesta_dos").val("");
+            $("#respuesta_tres").val("");
+            Swal.fire({
+              type: 'warning',
+              title: '¡Usuario bloqueado!',
+              text: 'El usuario ha sido bloqueado. Contacte al administrador para su desbloqueo',
+              footer: 'SCHSL',
+              timer: 3000,
+              showCloseButton: false,
+              showConfirmButton: false,
+            });
+            $("#usuario").val("");
+            $("#password").val("");
+        }
+      },
+      error: function(respuesta) {
+        var datos = JSON.parse(respuesta);
+        // console.log(datos);
+      }
+    });
+  });
+  
 
   $("#enviarCorreo").click(function() {
     var url = $("#url").val();
     let correo = $("#correo").val();
+    var ci = $("#cedulaUsuarioPreguntas").val();
+    // // alert(ci);
 
     $(".box-cargando").show();
     $.ajax({
@@ -341,8 +399,8 @@ $(document).ready(function() { //Al Cargar la paginaZ
       },
       success: function(resp) {
         $(".box-cargando").hide();
-        // alert(resp);
-        console.log(resp);
+        // // alert(resp);
+        // console.log(resp);
         var datos = JSON.parse(resp);
         if (datos.msj === "Good") {
           Swal.fire({
@@ -355,7 +413,10 @@ $(document).ready(function() { //Al Cargar la paginaZ
             showConfirmButton: false,
           });
           $(".cerrarEnviarCorreo").click();
+          $(".cerrarPreguntasModal").click();
           $("#correo").val("");
+          $("#usuario").val("");
+          $("#password").val("");
         }
         if (datos.msj === "Vacio") {
           Swal.fire({
@@ -395,8 +456,9 @@ $(document).ready(function() { //Al Cargar la paginaZ
         }
       },
       error: function(respuesta) {
+        $(".box-cargando").hide();
         var datos = JSON.parse(respuesta);
-        console.log(datos);
+        // console.log(datos);
 
       }
     });
@@ -419,8 +481,8 @@ $(document).ready(function() { //Al Cargar la paginaZ
   //     },
   //     success: function(resp) {
   //       $(".box-cargando").hide();
-  //       alert(resp);
-  //       // console.log(resp);
+  //       // // alert(resp);
+  //       // // console.log(resp);
   //       // var datos = JSON.parse(resp);
   //       // if (datos.msj === "Good") {
   //       //   Swal.fire({
@@ -460,7 +522,7 @@ $(document).ready(function() { //Al Cargar la paginaZ
   //     },
   //     error: function(respuesta) {
   //       var datos = JSON.parse(respuesta);
-  //       console.log(datos);
+  //       // console.log(datos);
 
   //     }
   //   });

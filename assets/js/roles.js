@@ -56,7 +56,7 @@ $(document).ready(function () {
         idp = permisos[j]['id_permiso'];
         var names = "m"+idm+"-p"+idp;
         $("#"+names).val(val);
-        // console.log($("#"+names)[0].checked);
+        // // console.log($("#"+names)[0].checked);
         // if($("#"+names)[0].checked==true){ // 
         if(val=="on"){
           // $("#"+names).removeAttr("checked");
@@ -89,7 +89,7 @@ $(document).ready(function () {
         idp = permisos[j]['id_permiso'];
         var names = "m"+idm+"-p"+idp+"_modif"+id;
         $("#"+names).val(val);
-        // console.log($("#"+names)[0].checked);
+        // // console.log($("#"+names)[0].checked);
         // if($("#"+names)[0].checked==true){ // 
         if(val=="on"){
           // $("#"+names).removeAttr("checked");
@@ -104,11 +104,24 @@ $(document).ready(function () {
   });
   
 
-  $('#nombre').on('input', function () {      
-    this.value = this.value.replace(/[^a-zA-Z ñ Ñ Á á É é Í í Ó ó Ú ú ]/g,''); });
+  $('#nombre').on('input', function(){
+    this.value = this.value.replace(/[^a-zA-Z ñ Ñ Á á É é Í í Ó ó Ú ú ]/g,'');
+    if(this.value.length > 2){
+       $("#nombreS").html("");
+    }else{
+       $("#nombreS").html("Debe ingresar el nombre del rol");
+    }
+  });
 
-  $('.nombreModificar').on('input', function () {      
-    this.value = this.value.replace(/[^a-zA-Z ñ Ñ Á á É é Í í Ó ó Ú ú ]/g,''); });
+  $('.nombreModificar').on('input', function(){
+    var id = $(this).attr("name");
+    this.value = this.value.replace(/[^a-zA-Z ñ Ñ Á á É é Í í Ó ó Ú ú ]/g,'');
+    if(this.value.length > 2){
+       $("#nombreS"+id).html("");
+    }else{
+       $("#nombreS"+id).html("Debe ingresar el nombre del rol");
+    }
+  });
 
   $("#guardar").click(function(e){
     e.preventDefault();
@@ -140,7 +153,7 @@ $(document).ready(function () {
         }
       }
       options = [names, ops, modul, perm];
-      // console.log(options);
+      // // console.log(options);
 
       swal.fire({ 
             title: "¿Desea guardar los datos?",
@@ -154,11 +167,12 @@ $(document).ready(function () {
       }).then((isConfirm) => {
           if (isConfirm.value){ 
             let nombre = $("#nombre").val();     
-            // alert(nombre);
-            // alert(options);
-            // console.log(nombre);
-            // console.log(options);
-          /*alert(cedula + ' ' + nombre + ' ' + apellido + ' ' + especialidad);*/
+            // // // alert(nombre);
+            // // // alert(options);
+            // // console.log(nombre);
+            // // console.log(options);
+          /*// // alert(cedula + ' ' + nombre + ' ' + apellido + ' ' + especialidad);*/
+              $(".box-cargando").show();
               $.ajax({
                 url: url+'/Agregar',    
                 type: 'POST',   
@@ -168,8 +182,9 @@ $(document).ready(function () {
                   accesos: options,  
                 },
                 success: function(resp){
-                  // console.log(resp); 
-                  // alert(resp);
+                  $(".box-cargando").hide();
+                  // // console.log(resp); 
+                  // // // alert(resp);
                   var datos = JSON.parse(resp);     
                   if (datos.msj === "Good") {   
                     Swal.fire({
@@ -181,11 +196,22 @@ $(document).ready(function () {
                         location.reload();
                     } );
                   } 
+                  if (datos.msj == "Denegado") {
+                    Swal.fire({
+                        type: 'error',
+                        title: '¡Permiso Denegado!',
+                        text: 'No tiene permiso para realizar esta operación',
+                        footer: 'SCHSL',
+                        timer: 3000,
+                        showCloseButton: false,
+                        showConfirmButton: false,
+                    });
+                  }
                   if (datos.msj === "Invalido") {
                       Swal.fire({
                           type: 'warning',
                           title: '¡Datos invalidos!',
-                          text: 'Los datos ingresados son invalido',
+                          text: 'Los datos ingresados son invalidos',
                           footer: 'SCHSL',
                           timer: 3000,
                           showCloseButton: false,
@@ -216,9 +242,10 @@ $(document).ready(function () {
                     });
                   }     
                 },
-                error: function(respuesta){       
+                error: function(respuesta){
+                  $(".box-cargando").hide();
                   var datos = JSON.parse(respuesta);
-                  console.log(datos);
+                  // console.log(datos);
                 }
 
               });
@@ -262,7 +289,8 @@ $(document).ready(function () {
         }
       }
       options = [names, ops, modul, perm];
-      // console.log(options);
+      console.log(options);
+      // // alert(options);
 
       swal.fire({ 
           title: "¿Desea guardar los datos?",
@@ -277,7 +305,7 @@ $(document).ready(function () {
           if (isConfirm.value){ 
 
             let nombre = $("#nombre"+id).val();     
-
+            $(".box-cargando").show();
             $.ajax({
               url: url+'/Modificar',    
               type: 'POST',   
@@ -289,26 +317,38 @@ $(document).ready(function () {
 
               },
               success: function(resp){
-              // console.log(resp); 
-                // alert(resp);
-              /*window.alert("Hola mundo");   
-                window.alert(resp);*/
+                $(".box-cargando").hide();
+                console.log(resp); 
+                  // // alert(resp);
+                /*window.// // alert("Hola mundo");   
+                window.// // alert(resp);*/
                 var datos = JSON.parse(resp);   
                 if (datos.msj === "Good") {   
                   Swal.fire({
                     type: 'success',
-                    title: '¡¡Modificacion Exitosa!', 
+                    title: '¡Modificacion Exitosa!', 
                     text: 'Se ha modificado el rol ' + nombre + ' en el sistema', 
                     footer: 'SCHSL', timer: 3000, showCloseButton: false, showConfirmButton: false,
                   }).then((isConfirm) => {
-                      location.reload();
+                      // location.reload();
                   } );
                 } 
+                if (datos.msj == "Denegado") {
+                  Swal.fire({
+                      type: 'error',
+                      title: '¡Permiso Denegado!',
+                      text: 'No tiene permiso para realizar esta operación',
+                      footer: 'SCHSL',
+                      timer: 3000,
+                      showCloseButton: false,
+                      showConfirmButton: false,
+                  });
+                }
                 if (datos.msj === "Invalido") {
                     Swal.fire({
                         type: 'warning',
                         title: '¡Datos invalidos!',
-                        text: 'Los datos ingresados son invalido',
+                        text: 'Los datos ingresados son invalidos',
                         footer: 'SCHSL',
                         timer: 3000,
                         showCloseButton: false,
@@ -339,9 +379,10 @@ $(document).ready(function () {
                   });
                 }   
               },
-              error: function(respuesta){       
+              error: function(respuesta){
+                $(".box-cargando").hide();
                 var datos = JSON.parse(respuesta);
-                console.log(datos);
+                // console.log(datos);
 
               }
 
@@ -369,9 +410,10 @@ $(document).ready(function () {
           closeOnCancel: false 
       }).then((isConfirm) => {
           if (isConfirm.value){            
-            /*window.alert($(this).val());*/
+            /*window.// // alert($(this).val());*/
             let userNofif = $(this).val();
-            // alert(userNofif);
+            // // // alert(userNofif);
+            $(".box-cargando").show();
             $.ajax({
               url: url+'/Buscar',    
               type: 'POST',  
@@ -379,17 +421,18 @@ $(document).ready(function () {
                 Buscar: true,   
                 userNofif: userNofif,       
               },
-              success: function(respuesta){       
-                // alert(respuesta); 
+              success: function(respuesta){
+                $(".box-cargando").hide();   
+                // // // alert(respuesta); 
                 var resp = JSON.parse(respuesta);   
-                // alert(resp.msj);
+                // // // alert(resp.msj);
                 if (resp.msj == "Good") {  
                   $("#modificarButton"+userNofif).click(); 
 
                   /*
-                  alert('Bienvenido');                    
-                  console.log('Aquí estoy yo'); 
-                  // console.log($(".cedula").val(Json['resp']));
+                  // // alert('Bienvenido');                    
+                  // console.log('Aquí estoy yo'); 
+                  // // console.log($(".cedula").val(Json['resp']));
                   Swal.fire({
                     type: 'success',
                     title: '¡Modificación Exitosa!',
@@ -402,12 +445,24 @@ $(document).ready(function () {
                   });
                   */
 
-                }        
+                }
+                if (resp.msj == "Denegado") {
+                  Swal.fire({
+                      type: 'error',
+                      title: '¡Permiso Denegado!',
+                      text: 'No tiene permiso para realizar esta operación',
+                      footer: 'SCHSL',
+                      timer: 3000,
+                      showCloseButton: false,
+                      showConfirmButton: false,
+                  });
+                }
               },
-              error: function(respuesta){       
-                // alert(respuesta);
+              error: function(respuesta){
+                $(".box-cargando").hide();
+                // // // alert(respuesta);
                 var resp = JSON.parse(respuesta);
-                console.log(resp);
+                // console.log(resp);
 
               }
 
@@ -438,27 +493,29 @@ $(document).ready(function () {
           closeOnCancel: false 
       }).then((isConfirm) => {
           if (isConfirm.value){            
-            /*window.alert($(this).val());*/
+            /*window.// // alert($(this).val());*/
             let userNofif = $(this).val();
-            // alert(userNofif);
+            // // // alert(userNofif);
+            $(".box-cargando").show();
             $.ajax({
               url: url+'/Buscar',    
               type: 'POST',  
               data: {
-                Buscar: true,   
-                userNofif: userNofif,       
+                Buscar: true,
+                userNofif: userNofif,
               },
-              success: function(respuesta){       
-                // alert(respuesta); 
+              success: function(respuesta){
+                $(".box-cargando").hide();
+                // // // alert(respuesta); 
                 var resp = JSON.parse(respuesta);   
-                // alert(resp.msj);
+                // // // alert(resp.msj);
                 if (resp.msj == "Good") {  
                   $("#mostrarButton"+userNofif).click(); 
 
                   /*
-                  alert('Bienvenido');                    
-                  console.log('Aquí estoy yo'); 
-                  // console.log($(".cedula").val(Json['resp']));
+                  // // alert('Bienvenido');                    
+                  // console.log('Aquí estoy yo'); 
+                  // // console.log($(".cedula").val(Json['resp']));
                   Swal.fire({
                     type: 'success',
                     title: '¡Modificación Exitosa!',
@@ -471,12 +528,24 @@ $(document).ready(function () {
                   });
                   */
 
-                }        
+                }
+                if (resp.msj == "Denegado") {
+                  Swal.fire({
+                      type: 'error',
+                      title: '¡Permiso Denegado!',
+                      text: 'No tiene permiso para realizar esta operación',
+                      footer: 'SCHSL',
+                      timer: 3000,
+                      showCloseButton: false,
+                      showConfirmButton: false,
+                  });
+                }
               },
-              error: function(respuesta){       
-                // alert(respuesta);
+              error: function(respuesta){
+                $(".box-cargando").hide();
+                // // // alert(respuesta);
                 var resp = JSON.parse(respuesta);
-                console.log(resp);
+                // console.log(resp);
 
               }
 
@@ -519,8 +588,9 @@ $(document).ready(function () {
                     closeOnCancel: false 
                 }).then((isConfirm) => {
                     if (isConfirm.value){                      
-                        /*window.alert($(this).val());*/
-                        let userDelete = $(this).val();
+                      /*window.// // alert($(this).val());*/
+                      let userDelete = $(this).val();
+                      $(".box-cargando").show();
                       $.ajax({
                         url: url+'/Eliminar',    
                         type: 'POST',   
@@ -528,9 +598,10 @@ $(document).ready(function () {
                           Eliminar: true,   
                           userDelete: userDelete,
                         },
-                        success: function(respuesta){       
-                          // alert(respuesta);
-                          console.log(respuesta);
+                        success: function(respuesta){
+                          $(".box-cargando").hide();  
+                          // // // alert(respuesta);
+                          // console.log(respuesta);
                           var datos = JSON.parse(respuesta);
                           if (datos.msj === "Good") {   
                             Swal.fire({
@@ -541,7 +612,18 @@ $(document).ready(function () {
                             }).then((isConfirm) => {
                                 location.reload();
                             } );
-                          } 
+                          }
+                          if (datos.msj == "Denegado") {
+                            Swal.fire({
+                                type: 'error',
+                                title: '¡Permiso Denegado!',
+                                text: 'No tiene permiso para realizar esta operación',
+                                footer: 'SCHSL',
+                                timer: 3000,
+                                showCloseButton: false,
+                                showConfirmButton: false,
+                            });
+                          }
                           // if (datos.msj === "Repetido") {   
                           //   Swal.fire({
                           //     type: 'warning',
@@ -566,9 +648,10 @@ $(document).ready(function () {
                             });
                           }        
                         },
-                        error: function(respuesta){       
+                        error: function(respuesta){
+                          $(".box-cargando").hide();
                           var data = JSON.parse(respuesta);
-                          console.log(data);
+                          // console.log(data);
 
                         }
 

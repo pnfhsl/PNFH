@@ -32,7 +32,13 @@ $(document).ready(function(){
   $('#seccion').change(function(){
     var url = $("#url").val();
     var seccion = $(this).val();
+    if(seccion==""){
+      $("#error_seccion").html("Debe seleccionar una sección");
+    }else{
+      $("#error_seccion").html("");
+    }
     $(".boxlist_alumnosnotas").slideUp(500);
+    $(".btnmodalAgg").slideUp(500);
     if(seccion==""){
       var html = '';
       html += '<option value="">Saber Complementario</option>';
@@ -47,37 +53,58 @@ $(document).ready(function(){
           cod_seccion: seccion,       
         },
         success: function(respuesta){       
-          // alert(respuesta);
-          // console.log(respuesta);
+          // // alert(respuesta);
+          // //console.log(respuesta);
           var resp = JSON.parse(respuesta);
           if (resp.msj == "Good") {
             var data = resp.data;
             var dataSaberes = "";
+            var dataNotas = "";
             if(resp.msjSaberes=="Good"){
               dataSaberes = resp.dataSaberes;
+              if(resp.msjNotas=="Good"){
+                dataNotas = resp.dataNotas;
+              }
             }
             // console.log("DATA: ");
             // console.log(data);
             // console.log("SABERES: ");
             // console.log(dataSaberes);
-            // console.log(dataSaberes.length);
+            // console.log("NOTAS: ");
+            // console.log(dataNotas);
+            // //console.log(dataSaberes.length);
             var html = '';
             html += '<option value="">Saber Complementario</option>';
             for (var i = 0; i < data.length; i++) {
-              html += '<option value="'+data[i]['id_SC']+'" ';
 
               if(dataSaberes.length>0){
                 for (var j = 0; j < dataSaberes.length; j++) {
-                  // alert(data[i]['id_SC']);
-                  // alert(dataSaberes[j]['id_SC']);
                   if(dataSaberes[j]['id_SC']==data[i]['id_SC']){
-                    html += 'disabled="disabled"'
+                    html += '<option value="'+data[i]['id_SC']+'" ';
+                    if(dataNotas.length>0){
+                      for (var k = 0; j < dataNotas.length; j++) {
+                        if(dataSaberes[j]['id_clase']==dataNotas[k]['id_clase']){
+                            html += 'disabled="disabled"';
+                        }
+                      }
+                    }
+                    html += ' >'+data[i]['nombreSC']+'</option>';
                   }
                 }
               }
-              html += ' >'+data[i]['nombreSC']+'</option>';
             }
             $("#saber").html(html);
+          }
+          if (resp.msj == "Denegado") {
+            Swal.fire({
+                type: 'error',
+                title: '¡Permiso Denegado!',
+                text: 'No tiene permiso para realizar esta operación',
+                footer: 'SCHSL',
+                timer: 3000,
+                showCloseButton: false,
+                showConfirmButton: false,
+            });
           }
           if(resp.msj == "Vacio"){
             var html = '';
@@ -86,21 +113,32 @@ $(document).ready(function(){
           }
         },
         error: function(respuesta){       
-          // alert(respuesta);
+          // // // alert(respuesta);
           var resp = JSON.parse(respuesta);
-          console.log(resp);
+          //console.log(resp);
         }
       });
     }
+  });
+
+  $("#saber").change(function(){
+    var saber = $(this).val();
+    if(saber==""){
+      $("#error_saber").html("Debe seleccionar un saber");
+    }else{
+      $("#error_saber").html("");
+    }
+    $(".boxlist_alumnosnotas").slideUp(500);
+    $(".btnmodalAgg").slideUp(500);
   });
 
   $('.seccionModificar').change(function(){
     var url = $("#url").val();
     var id = $(this).attr("name");
     var seccion = $(this).val();
-    // alert(id);
-    // alert(url);
-    // alert(seccion);
+    // // // alert(id);
+    // // // alert(url);
+    // // // alert(seccion);
     $(".boxlist_alumnosnotas"+id).slideUp(500);
     if(seccion==""){
       var html = '';
@@ -116,19 +154,19 @@ $(document).ready(function(){
           cod_seccion: seccion,       
         },
         success: function(respuesta){       
-          // alert(respuesta);
+          // // // alert(respuesta);
           var resp = JSON.parse(respuesta);
-          // console.log(resp);
+          // //console.log(resp);
           if (resp.msj == "Good") {
             var data = resp.data;
             var dataSaberes = "";
             if(resp.msjSaberes=="Good"){
               dataSaberes = resp.dataSaberes;
             }
-            // console.log("DATA: ");
-            // console.log(data);
-            // console.log("SABERES: ");
-            // console.log(dataSaberes);
+            // //console.log("DATA: ");
+            // //console.log(data);
+            // //console.log("SABERES: ");
+            // //console.log(dataSaberes);
             var html = '';
             html += '<option value="">Saber Complementario</option>';
             for (var i = 0; i < data.length; i++) {
@@ -146,6 +184,17 @@ $(document).ready(function(){
             }
             $("#saber"+id).html(html);
           }
+          if (resp.msj == "Denegado") {
+            Swal.fire({
+                type: 'error',
+                title: '¡Permiso Denegado!',
+                text: 'No tiene permiso para realizar esta operación',
+                footer: 'SCHSL',
+                timer: 3000,
+                showCloseButton: false,
+                showConfirmButton: false,
+            });
+          }
           if(resp.msj == "Vacio"){
             var html = '';
             html += '<option value="">Saber Complementario</option>';
@@ -153,9 +202,9 @@ $(document).ready(function(){
           }
         },
         error: function(respuesta){       
-          // alert(respuesta);
+          // // // alert(respuesta);
           var resp = JSON.parse(respuesta);
-          console.log(resp);
+          //console.log(resp);
         }
       });
     }
@@ -169,6 +218,7 @@ $(document).ready(function(){
     if((seccion!="" && saber != "")){
       $("#error_seccion").html("");
       $("#error_saber").html("");
+      $(".box-cargando").show();
       $.ajax({
         url: url+'/Buscar',    
         type: 'POST',   
@@ -179,7 +229,8 @@ $(document).ready(function(){
           id_SC: saber,       
         },
         success: function(resp){
-          // alert(resp);
+          $(".box-cargando").hide();
+          // // // alert(resp);
           var datos = JSON.parse(resp); 
           if (datos.msj === "Good") {
             var nada = ""; 
@@ -214,7 +265,7 @@ $(document).ready(function(){
                     var data = datos.data;
                     $(".alumnosJson").html(JSON.stringify(data));
                     for (var i = 0; i < data.length; i++) {
-                      // console.log(data[i]);
+                      // // //console.log(data[i]);
                       html += "<tr>";
                         html += "<td>";
                           html += "<span>"+(i+1)+"</span>";
@@ -231,7 +282,7 @@ $(document).ready(function(){
                         html += "<td>";
                           nada = "";
                           html += "<span><input type='number' class='form-control notasAlumnos' name='notasAlumnos[]' onkeyup='if( $(this).val() > 1.0 ){ $(this).val( ($(this).val()/10) ); $(this).focus(); }' onfocusout='if($(this).val()>=1){ $(this).val(1); } if($(this).val()<=0){ $(this).val(0); }' value='0' max='1' min='0' step='0.1' id='nota"+data[i]['cedula_alumno']+"' required oninput='this.value=this.value.replace(/[^0-9 .]/g,"+","+");' ></span>";
-                          //alert(this.value)
+                          //// alert(this.value)
                         html += "</td>";
                       html += "</tr>";
                       html += "<tr style='padding-top:0;padding-bottom:0;margin-top:0;margin-bottom:0;'>";
@@ -277,11 +328,24 @@ $(document).ready(function(){
             html += "</div>";
             $(".boxlist_alumnosnotas").html(html);
             $(".boxlist_alumnosnotas").slideDown(500);
-          } 
+            $(".btnmodalAgg").slideDown(500);
+          }
+          if (datos.msj == "Denegado") {
+            Swal.fire({
+                type: 'error',
+                title: '¡Permiso Denegado!',
+                text: 'No tiene permiso para realizar esta operación',
+                footer: 'SCHSL',
+                timer: 3000,
+                showCloseButton: false,
+                showConfirmButton: false,
+            });
+          }
         },
-        error: function(respuesta){       
+        error: function(respuesta){
+          $(".box-cargando").hide();
           var datos = JSON.parse(respuesta);
-          console.log(datos);
+          //console.log(datos);
 
         }
 
@@ -317,6 +381,7 @@ $(document).ready(function(){
     if((seccion!="" && saber != "")){
       $("#error_seccion"+id).html("");
       $("#error_saber"+id).html("");
+      $(".box-cargando").show();
       $.ajax({
         url: url+'/Buscar',    
         type: 'POST',   
@@ -327,7 +392,8 @@ $(document).ready(function(){
           id_SC: saber,       
         },
         success: function(resp){
-          // alert(resp);
+          $(".box-cargando").hide();
+          // // // alert(resp);
           var datos = JSON.parse(resp); 
           if (datos.msj === "Good") {
             var nada = ""; 
@@ -362,7 +428,7 @@ $(document).ready(function(){
                     var data = datos.data;
                     $(".alumnosJsonModif").html(JSON.stringify(data));
                     for (var i = 0; i < data.length; i++) {
-                      // console.log(data[i]);
+                      // //console.log(data[i]);
                       html += "<tr>";
                         html += "<td>";
                           html += "<span>"+(i+1)+"</span>";
@@ -404,11 +470,23 @@ $(document).ready(function(){
             html += "</div>";
             $(".boxlist_alumnosnotas"+id).html(html);
             $(".boxlist_alumnosnotas"+id).slideDown(500);
-          } 
+          }
+          if (datos.msj == "Denegado") {
+            Swal.fire({
+                type: 'error',
+                title: '¡Permiso Denegado!',
+                text: 'No tiene permiso para realizar esta operación',
+                footer: 'SCHSL',
+                timer: 3000,
+                showCloseButton: false,
+                showConfirmButton: false,
+            });
+          }
         },
-        error: function(respuesta){       
+        error: function(respuesta){
+          $(".box-cargando").hide();
           var datos = JSON.parse(respuesta);
-          console.log(datos);
+          //console.log(datos);
 
         }
       });
@@ -430,9 +508,9 @@ $(document).ready(function(){
     e.preventDefault();
     var url = $("#url").val();
     // var id = $(this).val();
-    // alert(id);
+    // // // alert(id);
     var response = validar();
-    // alert(response);
+    // // // alert(response);
 
     if(response){
       swal.fire({ 
@@ -459,11 +537,11 @@ $(document).ready(function(){
               notas[i] = $("#nota"+ids).val();
               alumnos[i] = data[i]['id_SA'];
             }
-            // console.log(seccion);
-            // console.log(saber);
-            // console.log(alumnos);
-            // console.log(notas);
-
+            // //console.log(seccion);
+            // //console.log(saber);
+            //console.log(alumnos);
+            // //console.log(notas);
+            $(".box-cargando").show();
             $.ajax({
               url: url+'/Agregar',    
               type: 'POST',   
@@ -475,8 +553,9 @@ $(document).ready(function(){
                 notas: notas,
               },
               success: function(resp){
-                // console.log(resp); 
-                // alert(resp);
+                $(".box-cargando").hide();
+                // //console.log(resp); 
+                // // alert(resp);
 
                 var datos = JSON.parse(resp); 
                 if (datos.msj === "Good") {   
@@ -488,12 +567,23 @@ $(document).ready(function(){
                   }).then((isConfirm) => {
                       location.reload();
                   } );
-                } 
+                }
+                if (datos.msj == "Denegado") {
+                  Swal.fire({
+                      type: 'error',
+                      title: '¡Permiso Denegado!',
+                      text: 'No tiene permiso para realizar esta operación',
+                      footer: 'SCHSL',
+                      timer: 3000,
+                      showCloseButton: false,
+                      showConfirmButton: false,
+                  });
+                }
                 if (datos.msj === "Invalido") {
                       Swal.fire({
                           type: 'warning',
                           title: '¡Datos invalidos!',
-                          text: 'Los datos ingresados son invalido',
+                          text: 'Los datos ingresados son invalidos',
                           footer: 'SCHSL',
                           timer: 3000,
                           showCloseButton: false,
@@ -524,9 +614,10 @@ $(document).ready(function(){
                   });
                 }     
               },
-              error: function(respuesta){       
+              error: function(respuesta){
+                $(".box-cargando").hide();
                 var datos = JSON.parse(respuesta);
-                console.log(datos);
+                //console.log(datos);
 
               }
 
@@ -557,9 +648,10 @@ $(document).ready(function(){
           closeOnCancel: false 
       }).then((isConfirm) => {
           if (isConfirm.value){            
-            /*window.alert($(this).val());*/
+            /*window.// // alert($(this).val());*/
             let notaModif = $(this).val();
-            // alert(notaModif);
+            // // // alert(notaModif);
+            $(".box-cargando").show();
             $.ajax({
               url: url+'/Buscar',    
               type: 'POST',  
@@ -567,20 +659,33 @@ $(document).ready(function(){
                 Buscar: true,   
                 notaModif: notaModif,       
               },
-              success: function(respuesta){       
-                // alert(respuesta); 
+              success: function(respuesta){
+                $(".box-cargando").hide();       
+                // // // alert(respuesta); 
                 var resp = JSON.parse(respuesta);   
-                // alert(resp.msj);
+                // // // alert(resp.msj);
                 if (resp.msj == "Good") { 
-
                   $("#modificarButton"+notaModif).click(); 
+                }
+                if (resp.msj == "Denegado") {
+                  Swal.fire({
+                      type: 'error',
+                      title: '¡Permiso Denegado!',
+                      text: 'No tiene permiso para realizar esta operación',
+                      footer: 'SCHSL',
+                      timer: 3000,
+                      showCloseButton: false,
+                      showConfirmButton: false,
+                  });
+                }
 
-                }        
+
               },
-              error: function(respuesta){       
-                // alert(respuesta);
+              error: function(respuesta){
+                $(".box-cargando").hide();
+                // // // alert(respuesta);
                 var resp = JSON.parse(respuesta);
-                console.log(resp);
+                //console.log(resp);
 
               }
 
@@ -612,9 +717,10 @@ $(document).ready(function(){
           closeOnCancel: false 
       }).then((isConfirm) => {
           if (isConfirm.value){            
-            /*window.alert($(this).val());*/
+            /*window.// // alert($(this).val());*/
             let notaModif = $(this).val();
-            // alert(notaModif);
+            // // // alert(notaModif);
+            $(".box-cargando").show();
             $.ajax({
               url: url+'/Buscar',    
               type: 'POST',  
@@ -622,20 +728,33 @@ $(document).ready(function(){
                 Buscar: true,   
                 notaModif: notaModif,       
               },
-              success: function(respuesta){       
-                // alert(respuesta); 
+              success: function(respuesta){  
+                $(".box-cargando").hide();     
+                // // // alert(respuesta); 
                 var resp = JSON.parse(respuesta);   
-                // alert(resp.msj);
+                // // // alert(resp.msj);
                 if (resp.msj == "Good") { 
-
                   $("#visualizarButton"+notaModif).click(); 
+                }
+                if (resp.msj == "Denegado") {
+                  Swal.fire({
+                      type: 'error',
+                      title: '¡Permiso Denegado!',
+                      text: 'No tiene permiso para realizar esta operación',
+                      footer: 'SCHSL',
+                      timer: 3000,
+                      showCloseButton: false,
+                      showConfirmButton: false,
+                  });
+                }
 
-                }        
+
               },
-              error: function(respuesta){       
-                // alert(respuesta);
+              error: function(respuesta){
+                $(".box-cargando").hide();
+                // // // alert(respuesta);
                 var resp = JSON.parse(respuesta);
-                console.log(resp);
+                //console.log(resp);
 
               }
 
@@ -672,7 +791,7 @@ $(document).ready(function(){
           if (isConfirm.value){ 
 
             // let nota = $("#nota"+id).val();
-            // alert(nota);
+            // // // alert(nota);
             let seccion = $("#seccion"+id).val();     
             let saber = $("#saber"+id).val();    
             var json = $(".alumnosJsonModif"+id).html();
@@ -686,11 +805,11 @@ $(document).ready(function(){
               alumnos[i] = data[i]['id_SA'];
             }
 
-            // console.log(seccion);
-            // console.log(saber);
-            // console.log(alumnos);
-            // console.log(notas);
-
+            console.log(seccion);
+            console.log(saber);
+            console.log(alumnos);
+            console.log(notas);
+            $(".box-cargando").show();
             $.ajax({
               url: url+'/Modificar',    
               type: 'POST',   
@@ -702,24 +821,36 @@ $(document).ready(function(){
                 notas: notas,     
               },
               success: function(resp){
-                // alert(resp);
+                $(".box-cargando").hide();
+                // // // alert(resp);
                 var datos = JSON.parse(resp);   
-                  if (datos.msj === "Good") {   
-                    // alert("asdasd");
+                  if (datos.msj === "Good") {//    
+                    // // alert("asdasd");
                       Swal.fire({
                         type: 'success',
                         title: '¡Modificacion Exitosa!', 
                         text: 'Se ha modificado la nota en el sistema', 
                         footer: 'SCHSL', timer: 3000, showCloseButton: false, showConfirmButton: false,
                       }).then((isConfirm) => {
-                          location.reload();
+                          // location.reload();
                       } );
                   } 
+                  if (datos.msj == "Denegado") {
+                    Swal.fire({
+                        type: 'error',
+                        title: '¡Permiso Denegado!',
+                        text: 'No tiene permiso para realizar esta operación',
+                        footer: 'SCHSL',
+                        timer: 3000,
+                        showCloseButton: false,
+                        showConfirmButton: false,
+                    });
+                  }
                   if (datos.msj === "Invalido") {
                       Swal.fire({
                           type: 'warning',
                           title: '¡Datos invalidos!',
-                          text: 'Los datos ingresados son invalido',
+                          text: 'Los datos ingresados son invalidos',
                           footer: 'SCHSL',
                           timer: 3000,
                           showCloseButton: false,
@@ -750,9 +881,10 @@ $(document).ready(function(){
                     });
                   }   
               },
-              error: function(respuesta){       
+              error: function(respuesta){
+                $(".box-cargando").hide();
                 var datos = JSON.parse(respuesta);
-                console.log(datos);
+                //console.log(datos);
 
               }
 
@@ -792,9 +924,11 @@ $(document).ready(function(){
                     closeOnCancel: false 
                 }).then((isConfirm) => {
                     if (isConfirm.value){                      
-                        /*window.alert($(this).val());*/
+                        /*window.// // alert($(this).val());*/
                         let notaDelete = $(this).val();
-                        // alert(notaDelete);
+                        console.log(notaDelete);
+                        // // // alert(notaDelete);
+                      $(".box-cargando").show();
                       $.ajax({
                         url: url+'/Eliminar',    
                         type: 'POST',   
@@ -802,8 +936,9 @@ $(document).ready(function(){
                           Eliminar: true,   
                           notaDelete: notaDelete,
                         },
-                        success: function(respuesta){       
-                          // alert(respuesta);
+                        success: function(respuesta){
+                          $(".box-cargando").hide();
+                          // // alert(respuesta);
                           var datos = JSON.parse(respuesta);
                           if (datos.msj === "Good") {   
                             Swal.fire({
@@ -814,7 +949,18 @@ $(document).ready(function(){
                             }).then((isConfirm) => {
                                 location.reload();
                             } );
-                          } 
+                          }
+                          if (datos.msj == "Denegado") {
+                            Swal.fire({
+                                type: 'error',
+                                title: '¡Permiso Denegado!',
+                                text: 'No tiene permiso para realizar esta operación',
+                                footer: 'SCHSL',
+                                timer: 3000,
+                                showCloseButton: false,
+                                showConfirmButton: false,
+                            });
+                          }
                           if (datos.msj === "Error") {   
                             Swal.fire({
                               type: 'error',
@@ -824,9 +970,10 @@ $(document).ready(function(){
                             });
                           }           
                         },
-                        error: function(respuesta){       
+                        error: function(respuesta){
+                          $(".box-cargando").hide();
                           var data = JSON.parse(respuesta);
-                          console.log(data);
+                          //console.log(data);
 
                         }
 
@@ -871,7 +1018,7 @@ function validar(modificar = false, id=""){
     }
 
     var data = JSON.parse(json);
-    // console.log(data);
+    // //console.log(data);
     var notaAlumno = new Array();
     var aNota = new Array();
     var rnota = false;
@@ -880,7 +1027,7 @@ function validar(modificar = false, id=""){
     for(var i = 0; i < data.length; i++){
       ids = data[i]['cedula_alumno'];
       notaAlumno[i] = $(form+" #nota"+ids).val();
-      // alert(notaAlumno[i]);
+      // // // alert(notaAlumno[i]);
       aNota[i] = 0;
       if(notaAlumno[i] >= 0 && notaAlumno[i] <= 1){ 
         aNota[i] = 1;  

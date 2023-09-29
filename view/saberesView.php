@@ -62,7 +62,7 @@
                                 <label for="nombreSC">Nombre</label>
                                 <div class="input-group" style="width:100%;">
                                   <span class="input-group-addon" style="width:5%;"><i class="fa fa-address-card"></i></span> 
-                                  <input type="text" class="form-control input-lg" name="nuevoNombre" placeholder="Ingresar Saber Complementario" id="nombreSC" required>
+                                  <input type="text" class="form-control input-lg" name="nuevoNombre" maxlength="50" placeholder="Ingresar Saber Complementario" id="nombreSC" required>
                                 </div>
                                 <div style="width:100%;text-align:right;">
                                   <span id="nombreS" class="mensajeError"></span>
@@ -223,7 +223,7 @@
                                           <label for="nombreSC<?=$data['id_SC']?>">Nombre</label>
                                           <div class="input-group" style="width:100%;">
                                             <span class="input-group-addon" style="width:5%;"><i class="fa fa-address-card"></i></span> 
-                                            <input type="text" class="form-control input-lg" value="<?=$data['nombreSC']?>" name="nuevaNombreSC" placeholder="Ingresar Saber Complementario" id="nombreSC<?=$data['id_SC']?>" required>
+                                            <input type="text" class="form-control input-lg nombreSCModificar" value="<?=$data['nombreSC']?>" name="<?=$data['id_SC']?>" placeholder="Ingresar Saber Complementario" maxlength="50" id="nombreSC<?=$data['id_SC']?>" required>
                                           </div>
                                           <div style="width:100%;text-align:right;">
                                             <span id="nombreS<?=$data['id_SC']?>" class="mensajeError"></span>
@@ -232,11 +232,11 @@
 
                                         
                                         <!-- ENTRADA PARA EL TRAYECTO-->
-                                        <div class="form-group col-xs-12 col-sm-12">
+                                        <div class="form-group col-xs-12 col-sm-12" style="margin-top:2%;">
                                           <label for="trayectoSC<?=$data['id_SC']?>">Trayecto</label>
                                           <div class="input-group" style="width:100%;">
                                             <span class="input-group-addon" style="width:5%;"><i class="fa fa-address-card"></i></span> 
-                                            <select class="form-control select2 input-lg" style="width:100%;" name="trayecto" placeholder="Ingresar trayecto" id="trayectoSC<?=$data['id_SC']?>" required>
+                                            <select class="form-control select2 input-lg trayectoSCModificar" style="width:100%;" name="<?=$data['id_SC']?>" placeholder="Ingresar trayecto" id="trayectoSC<?=$data['id_SC']?>" required>
                                               <option value="">Seleccione un trayecto</option>
                                               <option <?php if($data['trayecto_SC']=="1"){ echo "selected"; } ?> value="1">Trayecto I</option>
                                               <option <?php if($data['trayecto_SC']=="2"){ echo "selected"; } ?> value="2">Trayecto II</option>
@@ -251,11 +251,11 @@
 
                                         
                                         <!-- ENTRADA PARA LA FASE -->
-                                        <div class="form-group col-xs-12 col-sm-12">
+                                        <div class="form-group col-xs-12 col-sm-12" style="margin-top:2%;">
                                           <label for="faseSC<?=$data['id_SC']?>">Fase</label>
                                           <div class="input-group " style="width:100%;">
                                             <span class="input-group-addon" style="width:5%;"><i class="fa fa-address-card"></i></span> 
-                                            <select class="form-control select2 input-lg" style="width:100%;" name="fase" placeholder="Ingresar trayecto" id="faseSC<?=$data['id_SC']?>" required>
+                                            <select class="form-control select2 input-lg faseSCModificar" style="width:100%;" name="<?=$data['id_SC']?>" placeholder="Ingresar trayecto" id="faseSC<?=$data['id_SC']?>" required>
                                               <option value="">Seleccione un fase</option>
                                               <option <?php if($data['fase_SC']=="1"){ echo "selected"; } ?> value="1">Fase I</option>
                                               <option <?php if($data['fase_SC']=="2"){ echo "selected"; } ?> value="2">Fase II</option>

@@ -67,6 +67,7 @@
                             <div class="modal-body" style="max-height:70vh;overflow:auto">
                               <div class="box-body">
                                 <div class="row">
+
                                   <!-- ENTRADA PARA SELECCIONAR SECCIONES-->
                                   <div class="form-group col-xs-12 col-sm-12">
                                     <label for="seccion">Seccion</label>
@@ -75,13 +76,36 @@
                                       <select class="form-control select2 input-lg" style="width:100%;" name="seccion" id="seccion">
                                         <option value="">Sección</option>
                                         <?php foreach ($secciones as $date) : if (!empty($date['cod_seccion'])) :  ?>
-                                            <option value="<?php echo $date['cod_seccion'] ?>"><?= $date['nombre_seccion']; ?> (<?= $date['year_periodo'] . "-" . $date['nombre_periodo']; ?>)</option>
+                                            <option value="<?php echo $date['cod_seccion'] ?>"><?= $date['nombre_seccion']; ?> (<?= $date['year_seccion']; ?>)</option>
                                         <?php endif;
                                         endforeach; ?>
                                       </select>
                                     </div>
                                     <div style="width:100%;text-align:right;">
                                       <span id="seccionS" class="mensajeError"></span>
+                                    </div>
+                                  </div>
+
+                                  <!-- ENTRADA PARA SELECCIONAR PERIODOS-->
+                                  <div class="form-group col-xs-12 col-sm-12">
+                                    <label for="periodo">Período</label>
+                                    <div class="input-group" style="width:100%;">
+                                      <span class="input-group-addon" style="width:5%;"><i class="fa fa-address-card"></i></span> 
+                                      <select class="form-control select2 input-lg" style="width:100%;" name="periodo" placeholder="Ingresar periodo" id="periodo" required>
+                                        <option value="">Seleccione un periodo</option>
+                                        <?php
+                                        foreach ($periodos as $per):
+                                          if(!empty($per['id_periodo'])):
+                                        ?>
+                                        <!-- <option value="<?=$per['id_periodo']?>"><?=mb_strtoupper($per['year_periodo']."-".$per['nombre_periodo']); ?></option> -->
+                                        <?php 
+                                          endif;
+                                        endforeach;
+                                        ?>
+                                      </select>
+                                    </div>
+                                    <div style="width:100%;text-align:right;">
+                                      <span id="periodoS" class="mensajeError"></span>
                                     </div>
                                   </div>
 
@@ -173,7 +197,7 @@
                             </td>
                             <td style="width:20%">
                               <span class="contenido2">
-                                <?php echo $data['nombre_seccion'] . "-" . $data['nombre_periodo']; ?>
+                                <?php echo $data['nombre_seccion']."<br>(<small>".$data['year_seccion']."-".$data['nombre_periodo']."</smal>)"; ?>
                               </span>
                             </td>
                             <td style="width:20%">
@@ -216,16 +240,17 @@
 
 
                                                 <!-- ENTRADA PARA EL SECCION -->
+                                                <?php
+                                                  $yearSeccion = date("Y"); 
+                                                ?>
                                                 <div class="form-group col-xs-12 col-sm-12">
                                                   <label for="seccion<?= $data['id_clase']; ?>">Seccion</label>
                                                   <div class="input-group" style="width:100%;">
                                                     <span class="input-group-addon" style="width:5%;"><i class="fa fa-cogs"></i></span>
-                                                    <select class="form-control select2 input-lg seccionModificar" style="width:100%;" name="<?= $data['id_clase']; ?>" id="seccion<?= $data['id_clase']; ?>">
+                                                    <select class="form-control select2 input-lg seccionModificar" style="width:100%;" name="<?=$data['id_clase']; ?>" id="seccion<?= $data['id_clase']; ?>">
                                                       <option value="">Sección</option>
                                                       <?php foreach ($secciones as $date) : if (!empty($date['cod_seccion'])) :   ?>
-                                                          <option value="<?php echo $date['cod_seccion'] ?>" <?php if ($date['cod_seccion'] == $data['cod_seccion']) {
-                                                                                                                echo "selected";
-                                                                                                              } ?>><?= $date['nombre_seccion'] ?> (<?= $date['year_periodo'] . "-" . $date['nombre_periodo']; ?>)</option>
+                                                          <option value="<?php echo $date['cod_seccion'] ?>" <?php if ($date['cod_seccion'] == $data['cod_seccion']) { echo "selected"; $yearSeccion = $date['year_seccion']; } ?>><?= $date['nombre_seccion'] ?> (<?= $date['year_seccion']; ?>)</option>
                                                       <?php endif;
                                                       endforeach; ?>
                                                     </select>
@@ -235,19 +260,57 @@
                                                   </div>
                                                 </div>
 
-                                                <!-- ENTRADA PARA EL SABER -->
                                                 <div class="form-group col-xs-12 col-sm-12">
-                                                  <label for="saber<?= $data['id_clase']; ?>">Saber complementario</label>
+                                                  <label for="periodo">Período</label>
+                                                  <div class="input-group" style="width:100%;">
+                                                    <span class="input-group-addon" style="width:5%;"><i class="fa fa-address-card"></i></span> 
+                                                    <select class="form-control select2 input-lg periodoModificar" style="width:100%;" name="<?= $data['id_clase']; ?>" placeholder="Ingresar periodo" id="periodo<?= $data['id_clase']; ?>" required>
+                                                      <option value="">Seleccione un periodo</option>
+                                                      <?php
+                                                      foreach ($periodos as $per){
+                                                        if(!empty($per['id_periodo'])){
+                                                          if($per['year_periodo']==$yearSeccion){
+                                                            ?>
+
+                                                        <option <?php if($data['id_periodo']==$per['id_periodo']){ echo "selected"; } ?> value="<?=$per['id_periodo']?>"><?=mb_strtoupper($per['year_periodo']."-".$per['nombre_periodo']); ?></option>
+
+                                                              <?php 
+                                                            }
+                                                          }
+                                                        }
+                                                      ?>
+                                                    </select>
+                                                  </div>
+                                                  <div style="width:100%;text-align:right;">
+                                                    <span id="periodoS" class="mensajeError"></span>
+                                                  </div>
+                                                </div> 
+
+                                                <!-- ENTRADA PARA EL SABER -->
+                                                <div class="form-group col-xs-12 col-sm-12" style="margin-top:2%;">
+                                                  <label for="saber<?=$data['id_clase']; ?>">Saber complementario</label>
                                                   <div class="input-group" style="width:100%;">
                                                     <span class="input-group-addon" style="width:5%;"><i class="fa fa-indent"></i></span>
-                                                    <select class="form-control select2 input-lg saberModificar" style="width:100%;" name="nuevoPerfil" id="saber<?= $data['id_clase']; ?>">
+                                                    <select class="form-control select2 input-lg saberModificar" style="width:100%;" name="<?=$data['id_clase']; ?>" id="saber<?= $data['id_clase']; ?>">
                                                       <option value="">Saber Complementario</option>
                                                       <?php foreach ($saberes as $dateS) : if (!empty($dateS['id_SC'])) : ?>
                                                           <?php if (($dateS['trayecto_SC'] == $data['trayecto_SC']) && ($dateS['fase_SC'] == $data['fase_SC'])) : ?>
-
-                                                            <option value="<?php echo $dateS['id_SC'] ?>" <?php if ($dateS['id_SC'] == $data['id_SC']) {
-                                                                                                            echo "selected";
-                                                                                                          } ?>><?php echo $dateS['nombreSC'] ?></option>
+                                                            <option value="<?php echo $dateS['id_SC'] ?>" 
+                                                              <?php 
+                                                                if ($dateS['id_SC'] == $data['id_SC']) {
+                                                                  echo "selected"; 
+                                                                }else{
+                                                                  foreach ($clases as $class) {
+                                                                    if(!empty($class['id_clase'])){
+                                                                      if($class['id_SC']==$dateS['id_SC']){
+                                                                        echo "disabled";
+                                                                      }
+                                                                    }
+                                                                  }
+                                                                } ?>
+                                                                ><?php echo $dateS['nombreSC'] 
+                                                              ?>
+                                                            </option>
 
                                                           <?php endif; ?>
                                                       <?php endif;
@@ -260,16 +323,14 @@
                                                 </div>
 
                                                 <!-- ENTRADA PARA EL PROFESOR -->
-                                                <div class="form-group col-xs-12 col-sm-12">
+                                                <div class="form-group col-xs-12 col-sm-12"  style="margin-top:2%;">
                                                   <label for="profesor<?= $data['id_clase']; ?>">Profesor</label>
                                                   <div class="input-group" style="width:100%;">
                                                     <span class="input-group-addon" style="width:5%;"><i class="fa fa-indent"></i></span>
-                                                    <select class="form-control select2 input-lg" style="width:100%;" name="nuevoPerfil" id="profesor<?= $data['id_clase']; ?>">
+                                                    <select class="form-control select2 input-lg profesorModificar" style="width:100%;" name="<?=$data['id_clase']; ?>" id="profesor<?= $data['id_clase']; ?>">
                                                       <option value="">Profesor</option>
                                                       <?php foreach ($profesores as $dateP) : if (!empty($dateP['cedula_profesor'])) : ?>
-                                                          <option value="<?php echo $dateP['cedula_profesor'] ?>" <?php if ($dateP['cedula_profesor'] == $data['cedula_profesor']) {
-                                                                                                                    echo "selected";
-                                                                                                                  } ?>><?php echo $dateP['nombre_profesor'] . " " . $dateP['apellido_profesor'] ?></option>
+                                                          <option value="<?php echo $dateP['cedula_profesor'] ?>" <?php if ($dateP['cedula_profesor'] == $data['cedula_profesor']) { echo "selected"; } ?>><?php echo $dateP['nombre_profesor'] . " " . $dateP['apellido_profesor'] ?></option>
                                                       <?php endif;
                                                       endforeach; ?>
                                                     </select>

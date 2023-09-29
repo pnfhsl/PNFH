@@ -219,7 +219,6 @@
                             </td>
                             <td style="width:20%">
                               <span class="contenido2">
-                                <?php echo $data['titulo_proyecto']; ?>
                                 <?php
                                 if ($data['trayecto_proyecto'] == "1") {
                                   $numeroTrayecto = "I";
@@ -230,7 +229,9 @@
                                 } else if ($data['trayecto_proyecto'] == "4") {
                                   $numeroTrayecto = "IV";
                                 }
-                                echo "Trayecto " . $numeroTrayecto;
+                                echo $data['titulo_proyecto'];
+                                echo "<br>";
+                                echo "Trayecto ".$numeroTrayecto;
                                 ?>
                               </span>
                             </td>
@@ -372,10 +373,10 @@
 
                                               <!-- ENTRADA PARA EL USUARIO -->
                                               <div class="form-group col-xs-12 col-sm-12">
-                                                <label for="nombre<?= $data['cod_proyecto'] ?>">Nombre</label>
+                                                <label for="nombre<?=$data['cod_proyecto'] ?>">Nombre</label>
                                                 <div class="input-group" style="width:100%;">
                                                   <span class="input-group-addon" style="width:5%;"><i class="fa fa-user"></i></span>
-                                                  <input type="text" class="form-control input-lg" name="nombre" id="nombre<?= $data['cod_proyecto'] ?>" value="<?= $data['titulo_proyecto'] ?>" placeholder="Ingresar nombre" required>
+                                                  <input type="text" class="form-control input-lg nombreModificar" name="<?=$data['cod_proyecto'] ?>" id="nombre<?= $data['cod_proyecto'] ?>" value="<?= $data['titulo_proyecto'] ?>" placeholder="Ingresar nombre" required>
                                                 </div>
                                                 <div style="width:100%;text-align:right;">
                                                   <span id="nombreS<?= $data['cod_proyecto'] ?>" class="mensajeError"></span>
@@ -430,7 +431,7 @@
                                                                         }
                                                                       }
                                                                     }
-                                                                  } ?> value="<?= $secc['cod_seccion'] ?>"><?= mb_strtoupper($secc['nombre_seccion']) . " (" . $secc['year_periodo'] . "-" . $secc['nombre_periodo'] . ")"; ?></option>
+                                                                  } ?> value="<?= $secc['cod_seccion'] ?>"><?= mb_strtoupper($secc['nombre_seccion']) . " (" . $secc['year_seccion'] . ")"; ?></option>
                                                     <?php
                                                         endif;
                                                       endif;
@@ -493,11 +494,11 @@
                                               </div>
 
 
-                                              <div class="form-group col-xs-12 col-sm-12">
+                                              <div class="form-group col-xs-12 col-sm-12" style="margin-top:2%;">
                                                 <label for="tutor<?= $data['cod_proyecto'] ?>">Tutor</label>
                                                 <div class="input-group" style="width:100%;">
                                                   <span class="input-group-addon" style="width:5%;"><i class="fa fa-address-card"></i></span>
-                                                  <select class="form-control select2 input-lg" style="width:100%;" name="tutor<?= $data['cod_proyecto'] ?>" placeholder="Ingresar tutor" id="tutor<?= $data['cod_proyecto'] ?>" required>
+                                                  <select class="form-control select2 input-lg tutorModificar" style="width:100%;" name="<?= $data['cod_proyecto'] ?>" placeholder="Ingresar tutor" id="tutor<?= $data['cod_proyecto'] ?>" required>
                                                     <option value="">Seleccione un tutor</option>
                                                     <?php
                                                     foreach ($profesores as $prof) :

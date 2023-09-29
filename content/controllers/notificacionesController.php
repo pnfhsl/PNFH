@@ -15,10 +15,28 @@
 		private $notificacion;
 		private $periodo;
 
+		private $fechaDesde;
+		private $fechaActual;
+		private $fechaHasta;
+
 		function __construct($url){			
 			$this->url = $url;
 			$this->notificacion = new notificacionesModel();
 			$this->periodo = new periodosModel();
+
+			$unMinuto = 60;
+			$unaHora = $unMinuto * 60;
+			$unDia = $unaHora * 24;
+			$unaSemana = $unDia * 7;
+			$unaQuincena = $unDia * 15;
+			$unMes = $unDia * 30;
+			$unTrimestre = $unMes * 3;
+			$unSemestre = $unMes * 6;
+			$unAnio = $unMes * 12;
+
+			$this->fechaDesde = date('Y-m-d', time() - $unMes);
+			$this->fechaActual = date('Y-m-d');
+			$this->fechaHasta = date('Y-m-d', time() + $unaQuincena);
 		}
 
 		public function NuevoPeriodo(){

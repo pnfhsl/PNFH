@@ -63,15 +63,37 @@ class alumnosModel extends database
 		return $result;
 	}
 
+	public function limpiarPost($array){
+		$leng = [
+			0=>['campo'=>'cedula', 'length'=>8], 
+			1=>['campo'=>'nombre', 'length'=>25], 
+			2=>['campo'=>'apellido', 'length'=>25], 
+			3=>['campo'=>'trayecto', 'length'=>1], 
+			4=>['campo'=>'codigo', 'length'=>8],
+			5=>['campo'=>'userDelete', 'length'=>8],
+			6=>['campo'=>'userNofif', 'length'=>8],
+		];
+		foreach($leng as $len){
+			if(!empty($array[$len['campo']])){
+				if(strlen($array[$len['campo']]) > $len['length']){
+					$array[$len['campo']] = substr($array[$len['campo']], 0, $len['length']);
+					$array[$len['campo']] = stripslashes($array[$len['campo']]);
+					$array[$len['campo']] = strip_tags($array[$len['campo']]);
+					$array[$len['campo']] = htmlspecialchars($array[$len['campo']]);
+				}
+			}
+		}
+		return $array;
+	}
+
 	private function Validate($campo, $valor)
 	{
 		$pattern = [
 			'0' => ['campo' => "cedula", 'expresion' => '/[^0-9]/'],
 			'1' => ['campo' => "nombre", 'expresion' => '/[^a-zA-Z ñ Ñ Á á É é Í í Ó ó Ú ú ]/'],
 			'2' => ['campo' => "apellido", 'expresion' => '/[^a-zA-Z ñ Ñ Á á É é Í í Ó ó Ú ú ]/'],
-			// '3' => ['campo'=>"telefono",'expresion'=>'/[^0-9]/'],
-			'4' => ['campo' => "trayecto", 'expresion' => '/[^0-9]/'],
-			'5' => ['campo' => "id", 'expresion' => '/[^0-9]/'],
+			'3' => ['campo' => "trayecto", 'expresion' => '/[^0-9]/'],
+			'4' => ['campo' => "codigo", 'expresion' => '/[^0-9]/'],
 		];
 		// $resExp = 0;
 		foreach ($pattern as $exReg) {
@@ -92,7 +114,8 @@ class alumnosModel extends database
 				$query = parent::prepare("SELECT * FROM alumnos WHERE estatus = 1");
 			}
 			if ($trayecto != "") {
-				$query = parent::prepare("SELECT * FROM alumnos WHERE estatus = 1 and trayecto_alumno = '{$trayecto}'");
+				$query = parent::prepare("SELECT * FROM alumnos WHERE estatus = 1 and trayecto_alumno = :trayecto");
+				$query->bindValue(":trayecto",$trayecto);
 			}
 			$respuestaArreglo = '';
 			$query->execute();
@@ -109,7 +132,7 @@ class alumnosModel extends database
 	private function getOne($cedula)
 	{
 		try {
-			$query = parent::prepare('SELECT * FROM alumnos WHERE cedula_alumno = :cedula and estatus = 1');
+			$query = parent::prepare('SELECT * FROM alumnos WHERE cedula_alumno = :cedula');
 			$respuestaArreglo = '';
 			$query->execute(['cedula' => $cedula]);
 			$respuestaArreglo = $query->fetchAll();
@@ -148,46 +171,6 @@ class alumnosModel extends database
 			//   $errorReturn += ['info' => "error sql:{$e}"];
 			//   return $errorReturn;
 			return false;
-		}
-	}
-
-
-
-	public function Cargar($datos)
-	{
-		$error = 0;
-
-		if (!empty($datos['cedula'])) {
-
-			$query = parent::prepare('INSERT INTO alumnos (cedula_alumno, 
-																	  nombre_alumno, 
-																	  apellido_alumno,
-																	  trayecto_alumno,
-																	  estatus) 
-															   VALUES (:cedula_alumno, 
-																	   :nombre_alumno, 
-																	   :apellido_alumno, 
-																	   :trayecto_alumno, 
-																	   1)');
-			$query->bindValue(':cedula_alumno', $datos['cedula']);
-			$query->bindValue(':nombre_alumno', $datos['nombre']);
-			$query->bindValue(':apellido_alumno', $datos['apellido']);
-			$query->bindValue(':trayecto_alumno', $datos['trayecto']);
-			$res = $query->execute();
-			// print_r($respuestaArreglo);
-			if (!$res) {
-				$error++;
-			}
-			$respuestaArreglo = $query->fetchAll();
-		}
-
-		if (!$error) {
-			// $this->bitacora->monitorear($this->url);
-			$Result = array('msj' => "Good");		//Si todo esta correcto 
-			return $Result;
-		} else {
-			$errorReturn['msj'] = "Error: Se encontraron $error errores";
-			return $errorReturn;
 		}
 	}
 

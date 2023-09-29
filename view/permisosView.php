@@ -57,9 +57,10 @@
                           <div class="box-body">
                             <!-- ENTRADA PARA EL NOMBRE -->
                             <div class="form-group">
-                              <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-user"></i></span> 
-                                <input type="text" class="form-control input-lg" name="nuevoNombre" id="nombre" placeholder="Ingresar nombre" maxlength="30" required>
+                              <label for="nombre">Permisos</label>
+                              <div class="input-group" style="width:100%;">
+                                <span class="input-group-addon" style="width:5%;"><i class="fa fa-user"></i></span> 
+                                <input type="text" class="form-control input-lg" style="width:100%;" name="nuevoNombre" id="nombre" placeholder="Ingresar nombre" maxlength="30" required>
                               </div>
                               <div style="width:100%;text-align:right;">
                                 <span id="nombreP" class="mensajeError"></span>
@@ -147,11 +148,12 @@
                                   
                                   <div class="form-group col-xs-12 col-sm-12">
                                     
+                                    <label for="nombre<?=$data['id_permiso']?>">Permisos</label>
                                     <div class="input-group" style="width:100%;">
                                     
                                       <span class="input-group-addon" style="width:5%;"><i class="fa fa-user"></i></span> 
 
-                                      <input type="text" class="form-control input-lg nombreModificar" style="width:100%;" value="<?=$data['nombre_permiso']?>" name="nuevoNombre" id="nombre<?=$data['id_permiso']?>" placeholder="Ingresar nombre" required>
+                                      <input type="text" class="form-control input-lg nombreModificar" style="width:100%;" value="<?=$data['nombre_permiso']?>" name="<?=$data['id_permiso']?>" id="nombre<?=$data['id_permiso']?>" placeholder="Ingresar nombre" required>
                                     </div>
 
                                     <div style="width: 100%; text-align: right;">

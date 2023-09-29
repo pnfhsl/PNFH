@@ -58,8 +58,8 @@ $(document).ready(function () {
         var input_file = $("#file-input");
         var exp_reg = new RegExp("([a-zA-Z0-9\s_\\.\-:])+(" + extesiones_permitidas.join('|') + ")$");
 
-        console.log(exp_reg);
-        console.log(input_file.val());
+        // console.log(exp_reg);
+        // console.log(input_file.val());
 
         if (!exp_reg.test(input_file.val().toLowerCase())) {
             Swal.fire({
@@ -75,10 +75,11 @@ $(document).ready(function () {
         }
 
         var formData = new FormData($(form_data)[0]);
-        console.log(formData);
+        // console.log(formData);
         $("#subir").attr('disabled', true);
-        // console.log($("#subir").attr('disabled', true));
+        // // console.log($("#subir").attr('disabled', true));
         var url = $("#url").val();
+        $(".box-cargando").show();
         $.ajax({
             url: url+'/Cargar',
             type: 'POST',
@@ -87,8 +88,9 @@ $(document).ready(function () {
             contentType: false,
             processData: false,
             success: function (respuesta) {
-                // alert(respuesta);
-                console.log(respuesta);
+                //  // alert(respuesta);
+                $(".box-cargando").hide();
+                // console.log(respuesta);
                 var datos = JSON.parse(respuesta);
                 if (datos.msj === "Good") {
                     Swal.fire({
@@ -101,6 +103,16 @@ $(document).ready(function () {
                         showConfirmButton: false,
                     }).then((isConfirm) => {
                         location.reload();
+                    });
+                } else if (datos.msj == "Denegado") {
+                    Swal.fire({
+                        type: 'error',
+                        title: '¡Permiso Denegado!',
+                        text: 'No tiene permiso para realizar esta operación',
+                        footer: 'SCHSL',
+                        timer: 3000,
+                        showCloseButton: false,
+                        showConfirmButton: false,
                     });
                 } else {
                     Swal.fire({
@@ -148,18 +160,40 @@ $(document).ready(function () {
 
     $('#nombre').on('input', function () {
         this.value = this.value.replace(/[^a-zA-Z ñ Ñ Á á É é Í í Ó ó Ú ú ]/g, '');
+        if(this.value.length > 2 ){
+            $("#nombreS").html("");
+        }else{
+            $("#nombreS").html("Debe ingresar el nombre del alumno");
+        }
     });
 
     $('.nombreModificar').on('input', function () {
+        var id = $(this).attr("name");
         this.value = this.value.replace(/[^a-zA-Z ñ Ñ Á á É é Í í Ó ó Ú ú ]/g, '');
+        if(this.value.length > 2 ){
+            $("#nombreS"+id).html("");
+        }else{
+            $("#nombreS"+id).html("Debe ingresar el nombre del alumno");
+        }
     });
 
     $('#apellido').on('input', function () {
         this.value = this.value.replace(/[^a-zA-Z ñ Ñ Á á É é Í í Ó ó Ú ú ]/g, '');
+        if(this.value.length > 2 ){
+            $("#apellidoS").html("");
+        }else{
+            $("#apellidoS").html("Debe ingresar el apellido del alumno");
+        }
     });
 
     $('.apellidoModificar').on('input', function () {
+        var id = $(this).attr("name");
         this.value = this.value.replace(/[^a-zA-Z ñ Ñ Á á É é Í í Ó ó Ú ú ]/g, '');
+        if(this.value.length > 2 ){
+            $("#apellidoS"+id).html("");
+        }else{
+            $("#apellidoS"+id).html("Debe ingresar el apellido del alumno");
+        }
     });
 
     // $('#telefono').on('input', function () {
@@ -205,9 +239,9 @@ $(document).ready(function () {
     $("#guardar").click(function (e) {
         e.preventDefault();
         let url = $("#url").val();
-        // alert(url);
+        // // // alert(url);
         var response = validar();
-        // alert(response);
+        // // // alert(response);
         if (response) {
 
             swal.fire({
@@ -229,7 +263,8 @@ $(document).ready(function () {
                     // let telefono = $("#telefono").val();
                     let trayecto = $("#trayecto").val();
 
-                    /*alert(cedula + ' ' + nombre + ' ' + apellido + ' ' + especialidad);*/
+                    /*// // alert(cedula + ' ' + nombre + ' ' + apellido + ' ' + especialidad);*/
+                    $(".box-cargando").show();
                     $.ajax({
                         url: url + '/Agregar',
                         type: 'POST',
@@ -242,10 +277,11 @@ $(document).ready(function () {
                             trayecto: trayecto,
                         },
                         success: function (resp) {
-                            // alert(resp);
-                            /*window.alert("Hola mundo");   
-                            console.log(resp); 
-                              window.alert(resp);*/
+                            $(".box-cargando").hide();
+                            // // alert(resp);
+                            /*window.// // alert("Hola mundo");   
+                            // console.log(resp); 
+                              window.// // alert(resp);*/
                             var datos = JSON.parse(resp);
                             if (datos.msj === "Good") {
                                 Swal.fire({
@@ -260,11 +296,33 @@ $(document).ready(function () {
                                     location.reload();
                                 });
                             }
+                            if (datos.msj == "Denegado") {
+                                Swal.fire({
+                                    type: 'error',
+                                    title: '¡Permiso Denegado!',
+                                    text: 'No tiene permiso para realizar esta operación',
+                                    footer: 'SCHSL',
+                                    timer: 3000,
+                                    showCloseButton: false,
+                                    showConfirmButton: false,
+                                });
+                            }
+                            if (datos.msj == "NegadoDuplicado") {
+                                Swal.fire({
+                                    type: 'error',
+                                    title: '¡Registro duplicado como Profesor!',
+                                    text: 'Un Profesor, no puede agregarse como Alumno',
+                                    footer: 'SCHSL',
+                                    timer: 5000,
+                                    showCloseButton: false,
+                                    showConfirmButton: false,
+                                });
+                            }
                             if (datos.msj === "Invalido") {
                                 Swal.fire({
                                     type: 'warning',
                                     title: '¡Datos invalidos!',
-                                    text: 'Los datos ingresados son invalido',
+                                    text: 'Los datos ingresados son invalidos',
                                     footer: 'SCHSL',
                                     timer: 3000,
                                     showCloseButton: false,
@@ -305,8 +363,9 @@ $(document).ready(function () {
                             }
                         },
                         error: function (respuesta) {
+                            $(".box-cargando").hide();
                             var datos = JSON.parse(respuesta);
-                            console.log(datos);
+                            // console.log(datos);
 
                         }
 
@@ -335,9 +394,10 @@ $(document).ready(function () {
             closeOnCancel: false
         }).then((isConfirm) => {
             if (isConfirm.value) {
-                /*window.alert($(this).val());*/
+                /*window.// // alert($(this).val());*/
                 let userMofif = $(this).val();
-                // alert(userMofif);
+                // // // alert(userMofif);
+                $(".box-cargando").show();
                 $.ajax({
                     url: url + '/Buscar',
                     type: 'POST',
@@ -346,18 +406,30 @@ $(document).ready(function () {
                         userNofif: userMofif,
                     },
                     success: function (respuesta) {
-                        // alert(respuesta); 
+                        $(".box-cargando").hide();
+                        // // // alert(respuesta);
                         var resp = JSON.parse(respuesta);
-                        // alert(resp.msj);
+                        // // // alert(resp.msj);
                         if (resp.msj == "Good") {
                             $("#modificarButton" + userMofif).click();
-
+                        }
+                        if (resp.msj == "Denegado") {
+                            Swal.fire({
+                                type: 'error',
+                                title: '¡Permiso Denegado!',
+                                text: 'No tiene permiso para realizar esta operación',
+                                footer: 'SCHSL',
+                                timer: 3000,
+                                showCloseButton: false,
+                                showConfirmButton: false,
+                            });
                         }
                     },
                     error: function (respuesta) {
-                        // alert(respuesta);
+                        $(".box-cargando").hide();
+                        // // // alert(respuesta);
                         var resp = JSON.parse(respuesta);
-                        console.log(resp);
+                        // console.log(resp);
                     }
                 });
 
@@ -395,7 +467,7 @@ $(document).ready(function () {
                     let correo = $("#correo" + id).val();
                     // let telefono = $("#telefono" + id).val();
                     let trayecto = $("#trayecto" + id).val();
-
+                    $(".box-cargando").show();
                     $.ajax({
                         url: url + '/Modificar',
                         type: 'POST',
@@ -411,10 +483,9 @@ $(document).ready(function () {
 
                         },
                         success: function (resp) {
-                            // alert(resp);
-                            /*window.alert("Hola mundo");   
-                            console.log(resp); 
-                              window.alert(resp);*/
+                            $(".box-cargando").hide();
+                            // //console.log(resp); 
+                            // // alert(resp);
                             var datos = JSON.parse(resp);
                             if (datos.msj === "Good") {
                                 Swal.fire({
@@ -429,13 +500,35 @@ $(document).ready(function () {
                                     location.reload();
                                 });
                             }
+                            if (datos.msj == "Denegado") {
+                                Swal.fire({
+                                    type: 'error',
+                                    title: '¡Permiso Denegado!',
+                                    text: 'No tiene permiso para realizar esta operación',
+                                    footer: 'SCHSL',
+                                    timer: 3000,
+                                    showCloseButton: false,
+                                    showConfirmButton: false,
+                                });
+                            }
                             if (datos.msj === "Invalido") {
                                 Swal.fire({
                                     type: 'warning',
                                     title: '¡Datos invalidos!',
-                                    text: 'Los datos ingresados son invalido',
+                                    text: 'Los datos ingresados son invalidos',
                                     footer: 'SCHSL',
                                     timer: 3000,
+                                    showCloseButton: false,
+                                    showConfirmButton: false,
+                                });
+                            }
+                            if (datos.msj == "NegadoDuplicado") {
+                                Swal.fire({
+                                    type: 'error',
+                                    title: '¡Registro duplicado como Profesor!',
+                                    text: 'Un Profesor, no puede agregarse como Alumno',
+                                    footer: 'SCHSL',
+                                    timer: 5000,
                                     showCloseButton: false,
                                     showConfirmButton: false,
                                 });
@@ -474,8 +567,9 @@ $(document).ready(function () {
                             }
                         },
                         error: function (respuesta) {
+                            $(".box-cargando").hide();
                             var datos = JSON.parse(respuesta);
-                            console.log(datos);
+                            // console.log(datos);
 
                         }
 
@@ -516,8 +610,9 @@ $(document).ready(function () {
                     closeOnCancel: false
                 }).then((isConfirm) => {
                     if (isConfirm.value) {
-                        /*window.alert($(this).val());*/
+                        /*window.// // alert($(this).val());*/
                         let userDelete = $(this).val();
+                        $(".box-cargando").show();
                         $.ajax({
                             url: url + '/Eliminar',
                             type: 'POST',
@@ -526,7 +621,8 @@ $(document).ready(function () {
                                 userDelete: userDelete,
                             },
                             success: function (respuesta) {
-                                // alert(respuesta);
+                                $(".box-cargando").hide();
+                                // // // alert(respuesta);
                                 var datos = JSON.parse(respuesta);
                                 if (datos.msj === "Good") {
                                     Swal.fire({
@@ -539,6 +635,17 @@ $(document).ready(function () {
                                         showConfirmButton: false,
                                     }).then((isConfirm) => {
                                         location.reload();
+                                    });
+                                }
+                                if (datos.msj == "Denegado") {
+                                    Swal.fire({
+                                        type: 'error',
+                                        title: '¡Permiso Denegado!',
+                                        text: 'No tiene permiso para realizar esta operación',
+                                        footer: 'SCHSL',
+                                        timer: 3000,
+                                        showCloseButton: false,
+                                        showConfirmButton: false,
                                     });
                                 }
                                 if (datos.msj === "Repetido") {
@@ -575,8 +682,9 @@ $(document).ready(function () {
                                 }
                             },
                             error: function (respuesta) {
+                                $(".box-cargando").hide();
                                 var data = JSON.parse(respuesta);
-                                console.log(data);
+                                // console.log(data);
 
                             }
 
@@ -649,7 +757,7 @@ function validar(modificar = false, id = "") {
 
     // var telefono = $(form + " #telefono" + id).val();
     // var rtelefono = false;
-    // // alert(telefono);
+    // // // // alert(telefono);
     // if (telefono.length >= 11 && telefono.length <= 11) {
     //     $(form + " #telefonoS" + id).html("");
     //     rtelefono = true;
@@ -672,6 +780,6 @@ function validar(modificar = false, id = "") {
     } else {
         validado = false;
     }
-    // alert(validado);
+    // // // alert(validado);
     return validado;
 }

@@ -48,22 +48,50 @@ class perfilModel extends database
 		}
 	}
 	public function ValidarAgregarOModificar($datos, $metodo, $dato2=""){
-		if($metodo=="Agregar" || $metodo=="agregar"){
-			$result = self::Agregar($datos);
+		$res = [];
+		$return = 0;
+		if($metodo == "ModificarCorreo"){
+			foreach ($datos as $campo => $valor) {
+				$resExp = self::Validate($campo, $valor);
+				$return += $resExp;
+			}
 		}
-		if($metodo=="ModificarCorreo" || $metodo=="modificarcorreo"){
-			$result = self::ModificarCorreo($datos);
+		if($return==0){
+			if($metodo=="ModificarCorreo" || $metodo=="modificarcorreo"){
+				$result = self::ModificarCorreo($datos);
+			}
+			if($metodo=="Img" || $metodo=="img"){
+				$result = self::Img($datos, $dato2);
+			}
+			return $result;
+		}else{
+			return ['msj'=>"Invalido"];
 		}
-		if($metodo=="Img" || $metodo=="img"){
-			$result = self::Img($datos, $dato2);
+	}
+
+	private function Validate($campo, $valor){
+		$pattern = [
+			'0' => ['campo'=>"cedula",'expresion'=>'/[^0-9]/'],
+			'1' => ['campo'=>"correo",'expresion'=>'/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,4}\.[0-9]{1,4}\.[0-9]{1,4}\.[0-9]{1,4}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{4,6}))$/'],
+			'2' => ['campo'=>"id",'expresion'=>'/[^0-9]/'],
+		];
+		// $resExp = 0;
+		foreach ($pattern as $exReg) {
+			if($exReg['campo']==$campo){
+				$resExp = preg_match_all($exReg['expresion'], $valor);
+				// echo "Campo: ".$campo." | Valor: ".$valor." | ";
+				// echo "ResExp: ".$resExp." | ";
+				// echo "\n\n";
+				return $resExp;
+			}
 		}
-		return $result;
 	}
 
 	private function Consultar($cedula){
 		try {
 			if($cedula!=""){
-				$query = parent::prepare("SELECT * FROM rsa WHERE estatus = 1 and cedula_usuario = '{$cedula}'");
+				$query = parent::prepare("SELECT * FROM rsa WHERE estatus = 1 and cedula_usuario = :cedula");
+				$query->bindValue(":cedula",$cedula);
 			}else{
 				$query = parent::prepare("SELECT * FROM modulos WHERE estatus = 1");
 			}
@@ -82,7 +110,8 @@ class perfilModel extends database
 	private function ConsultaImagen($cedula){
 
 		try {
-			$query = parent::prepare("SELECT * FROM usuarios WHERE estatus = 1 && cedula_usuario = '{$cedula}' ");
+			$query = parent::prepare("SELECT * FROM usuarios WHERE estatus = 1 && cedula_usuario = :cedula");
+			$query->bindValue(":cedula",$cedula);
 			$respuestaArreglo = '';
 			$query->execute();
 			$query->setFetchMode(parent::FETCH_ASSOC);
@@ -98,7 +127,8 @@ class perfilModel extends database
 	private function ConsultarProfesor($cedula){
 
 		try {
-			$query = parent::prepare("SELECT * FROM profesores WHERE estatus = 1 && cedula_profesor = '{$cedula}'");
+			$query = parent::prepare("SELECT * FROM profesores WHERE estatus = 1 && cedula_profesor = :cedula");
+			$query->bindValue(":cedula",$cedula);
 			$respuestaArreglo = '';
 			$query->execute();
 			$query->setFetchMode(parent::FETCH_ASSOC);
@@ -114,7 +144,8 @@ class perfilModel extends database
 	private function ConsultarAlumno($cedula){
 
 		try {
-			$query = parent::prepare("SELECT * FROM alumnos WHERE estatus = 1 && cedula_alumno = '{$cedula}'");
+			$query = parent::prepare("SELECT * FROM alumnos WHERE estatus = 1 && cedula_alumno = :cedula");
+			$query->bindValue(":cedula",$cedula);
 			$respuestaArreglo = '';
 			$query->execute();
 			$query->setFetchMode(parent::FETCH_ASSOC);
@@ -130,7 +161,8 @@ class perfilModel extends database
 	private function ConsultarUsuario($cedula){
 
 		try {
-			$query = parent::prepare("SELECT * FROM usuarios WHERE estatus = 1 && cedula_usuario = '{$cedula}'");
+			$query = parent::prepare("SELECT * FROM usuarios WHERE estatus = 1 && cedula_usuario = :cedula");
+			$query->bindValue(":cedula",$cedula);
 			$respuestaArreglo = '';
 			$query->execute();
 			$query->setFetchMode(parent::FETCH_ASSOC);
@@ -146,9 +178,6 @@ class perfilModel extends database
 	private function ValidarContraseña($user, $passw){		//Se hace una consulta de los usuarios recibidos
 		$this->user = $user;
 		$this->passw = $passw;
-		//$this->password = md5($this->passw);
-		// var_dump($this->user);
-		// var_dump($this->passw);
 		$sql = ('SELECT * FROM roles, usuarios WHERE usuarios.id_rol = roles.id_rol AND usuarios.nombre_usuario = :user AND usuarios.password_usuario = :password');
 		$new = parent::prepare($sql);
 		$new->bindValue(':user', $this->user);
@@ -158,30 +187,25 @@ class perfilModel extends database
 
 
 		foreach ($user as $currentUser) {
-			$this->usuario = $currentUser['nombre_usuario'];
-			$this->cont = $currentUser['password_usuario'];
-			// var_dump($this->usuario);
-			// var_dump($this->cont);
+			$usuario = $currentUser['nombre_usuario'];
+			$cont = $currentUser['password_usuario'];
+			// var_dump($usuario);
+			// var_dump($cont);
 		}
-		if ($this->user == $this->usuario and $this->passw == $this->cont) {
-			// var_dump('hola');
+		if ($this->user == $usuario and $this->passw == $cont) {
 			$Result = array('msj' => "Good");		//Si todo esta correcto y consigue al usuario
 			$Result['data'] = $user;
-			// echo json_encode($Result);
-			// die();
 			return $Result;
 		} else {
 			$Result = array('msj' => "Usuario o contraseña invalido!");
-			// echo json_encode($Result);
-			// die();
 			return $Result;
 		}
 	}
 	
 	private function ModificarCorreo($datos){
-
-		try {
-			$query = parent::prepare('UPDATE usuarios SET correo=:correo WHERE cedula_usuario = :cedula_usuario');
+			try {
+			$query = parent::prepare('UPDATE usuarios SET cedula_usuario=:cedula_usuario, correo=:correo WHERE cedula_usuario = :codigo_usuario');
+			$query->bindValue(':codigo_usuario', $datos['id']);
 			$query->bindValue(':cedula_usuario', $datos['cedula']);
 			$query->bindValue(':correo', $datos['correo']);
 			$query->execute();

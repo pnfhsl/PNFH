@@ -55,6 +55,7 @@
                         ======================================-->
                         <div class="modal-header" style="background:#3c8dbc; color:white">
                           <button type="button" class="close" data-dismiss="modal" style="top:25px;" id="cerrarM">&times;</button>
+                          <input type="reset" class="btnReset d-none">
                           <h4 class="modal-title" style="text-align: left;">Agregar Periodo</h4>
                         </div>
 
@@ -72,7 +73,7 @@
                                   <!-- <input type="text" class="form-control input-lg" name="year" id="year" placeholder="Año (Ej.: 2000)" maxlength="4"  required> -->
                                   <select class="form-control select2 input-lg" style="width:100%;" name="year" id="year">
                                     <option value="">Año (Ej.: <?=date('Y'); ?>)</option>
-                                    <?php for ($i=date('Y'); $i >= 2015; $i--): ?>
+                                    <?php for ($i=(date('Y')+1); $i >= 2015; $i--): ?>
                                     <option value="<?=$i?>"><?=$i?></option>
                                     <?php endfor; ?>
                                   </select>
@@ -87,15 +88,15 @@
                                 <label for="periodo">Periodo</label>
                                 <div class="input-group" style="width:100%;">
                                   <span class="input-group-addon" style="width:5%;"><i class="fa fa-address-card"></i></span>
-                                  <input type="text" class="form-control input-lg" style="width:40%;background:none;" name="nuevoNombre" placeholder="Año (Ej.: <?=date('Y')?>)"  maxlength="6" id="nombrePr" readonly>
+                                  <input type="text" class="form-control input-lg" style="width:40%;background:none;" name="nuevoNombre" placeholder="Año (Ej.: <?=date('Y')?>)"  maxlength="4" id="nombrePr" readonly>
                                   <div style="width:10%;display:inline-block;">
                                     <input type="text" value="-" class="form-control input-lg" style="text-align:center;padding:0;background:none;width:100%;" readonly>
                                   </div>
                                   <div style="width:50%;display:inline-block;">
                                     <select class="form-control input-lg" style="width:100%;" id="numeroPr">
-                                      <option value="">Numero de Periodo</option>
-                                      <option value="I">I</option>
-                                      <option value="II">II</option>
+                                      <option class="numeroPr0"  value="">Numero de Periodo</option>
+                                      <option class="numeroPrI" value="I">I</option>
+                                      <option class="numeroPrII"  value="II">II</option>
                                     </select>
                                   </div>
                                 </div>
@@ -234,10 +235,10 @@
 
                                   <div class="modal-header" style="background:#3c8dbc; color:white">
 
-                                    <button type="button" class="close" data-dismiss="modal" style="top:25px;" >&times;</button>
-
+                                    <button type="button" class="close" data-dismiss="modal" class="cerrarVarios" name="<?=$data['id_periodo']?>" style="top:25px;" >&times;</button>
+                                    <input type="reset" id="btnReset<?=$data['id_periodo']?>" class="d-none">
                                     <h4 class="modal-title" style="text-align: left;">Modificar Periodo</h4>
-
+                                    <span class="d-none json_periodo<?=$data['id_periodo']?>"><?php echo json_encode($data); ?></span>
                                   </div>
 
                                   <!--=====================================
@@ -254,10 +255,9 @@
                                           <label for="year">Año del Periodo</label>
                                           <div class="input-group" style="width:100%;">
                                             <span class="input-group-addon" style="width:5%;"><i class="fa fa-user"></i></span> 
-                                            <!-- <input type="text" class="form-control input-lg" name="year" id="year" placeholder="Año (Ej.: 2000)" maxlength="4"  required> -->
                                             <select class="form-control select2 input-lg yearModificar" style="width:100%;" name="<?=$data['id_periodo']?>" id="year<?=$data['id_periodo']?>">
-                                              <option value="">Año (Ej.: <?=date('Y'); ?>)</option>
-                                              <?php for ($i=date('Y'); $i >= 2015; $i--): ?>
+                                              <option value="">Año (Ej.: <?=date('Y')+1; ?>)</option>
+                                              <?php for ($i=date('Y')+1; $i >= 2015; $i--): ?>
                                               <option <?php if($i==$data['year_periodo']){ ?> selected="selected" <?php } ?> value="<?=$i?>"><?=$i?></option>
                                               <?php endfor; ?>
                                             </select>
@@ -269,7 +269,7 @@
 
                                         
                                         <!--ENTRADA PARA EL NOMBRE DEL PERIODO-->
-                                        <div class="form-group col-xs-12 col-sm-12">
+                                        <div class="form-group col-xs-12 col-sm-12" style="margin-top:2%;">
                                           <label for="periodo">Periodo</label>
                                           <div class="input-group" style="width:100%;">
                                             <span class="input-group-addon" style="width:5%;"><i class="fa fa-address-card"></i></span>
@@ -278,10 +278,48 @@
                                               <input type="text" value="-" class="form-control input-lg" style="text-align:center;padding:0;background:none;width:100%;" readonly>
                                             </div>
                                             <div style="width:50%;display:inline-block;">
-                                              <select class="form-control input-lg numeroPrModificar" style="width:100%;" id="numeroPr<?=$data['id_periodo']?>">
-                                                <option value="">Numero de Periodo</option>
-                                                <option <?php if($data['nombre_periodo']=="I" || $data['nombre_periodo']=="i"){ ?> selected="selected" <?php } ?> value="I">I</option>
-                                                <option <?php if($data['nombre_periodo']=="II" || $data['nombre_periodo']=="ii" || $data['nombre_periodo']=="Ii" || $data['nombre_periodo']=="iI"){ ?> selected="selected" <?php } ?> value="II">II</option>
+                                              <select class="form-control input-lg numeroPrModificar" style="width:100%;" name="<?=$data['id_periodo']?>" id="numeroPr<?=$data['id_periodo']?>">
+                                                <option class="numeroPr0<?=$data['id_periodo']?>" value="">Numero de Periodo</option>
+
+                                                <option class="numeroPrI<?=$data['id_periodo']?>"
+                                                  <?php 
+                                                    foreach ($periodos as $data2) {
+                                                      if(!empty($data2['id_periodo'])){
+                                                        if($data['id_periodo']==$data2['id_periodo']){
+                                                          if(mb_strtoupper($data['nombre_periodo'])=="I"){
+                                                            echo "selected='selected'";
+                                                          }
+                                                        }else{
+                                                          if($data2['year_periodo']==$data['year_periodo']){
+                                                            if(mb_strtoupper($data['nombre_periodo'])=="II"){
+                                                              echo "disabled='disabled' style='color:#CCC'";
+                                                            }
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  ?>
+                                                  value="I" >I</option>
+                                                
+                                                <option class="numeroPrII<?=$data['id_periodo']?>" 
+                                                  <?php 
+                                                    foreach ($periodos as $data2) {
+                                                      if(!empty($data2['id_periodo'])){
+                                                        if($data['id_periodo']==$data2['id_periodo']){
+                                                          if(mb_strtoupper($data['nombre_periodo'])=="II"){
+                                                            echo "selected='selected'";
+                                                          }
+                                                        }else{
+                                                          if($data2['year_periodo']==$data['year_periodo']){
+                                                            if(mb_strtoupper($data['nombre_periodo'])=="I"){
+                                                              echo "disabled='disabled' style='color:#CCC'";
+                                                            }
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  ?>
+                                                  value="II">II</option>
                                               </select>
                                             </div>
                                           </div>
@@ -292,12 +330,31 @@
 
                                         
                                         <!-- ENTRADA PARA EL PERIODO DE APERTURA-->
-                                        <div class="form-group col-xs-12 col-sm-12">
+                                        <div class="form-group col-xs-12 col-sm-12" style="margin-top:2%;">
                                           <label for="fechaA">Fecha de apertura</label>
                                           <div class="input-group" style="width:100%;">
                                             <span class="input-group-addon" style="width:5%;"><i class="fa fa-user"></i></span> 
-                                            <input type="date" class="form-control input-lg fechaAModificar" min="<?=$data['year_periodo']?>-01-01" max="<?=$data['fecha_cierre']?>" value="<?=$data['fecha_apertura']?>" name="<?=$data['id_periodo']?>" id="fechaA<?=$data['id_periodo']?>" placeholder="Apertura" required>
+                                            <input type="date" class="form-control input-lg fechaAModificar" value="<?=$data['fecha_apertura']?>" name="<?=$data['id_periodo']?>" id="fechaA<?=$data['id_periodo']?>" 
+                                            <?php 
+                                              foreach ($periodos as $data2) {
+                                                if(!empty($data2['id_periodo'])){
+                                                  if($data['id_periodo']!=$data2['id_periodo']){
+                                                    if($data['year_periodo']==$data2['year_periodo']){
+                                                      if(mb_strtoupper($data2['nombre_periodo'])=="I"){
+                                                        echo "min='".$data2['fecha_cierre']."'";
+                                                        echo "max='".$data['fecha_cierre']."'";
+                                                      }
+                                                      if(mb_strtoupper($data2['nombre_periodo'])=="II"){
+                                                        echo "max='".$data['fecha_cierre']."'";
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            ?>
+                                            placeholder="Apertura" required>
                                           </div>
+                                            <!-- min="<?=$data['year_periodo']?>-01-01" max="<?=$data['fecha_cierre']?>" -->
                                           <div style="width:100%;text-align:right;">
                                             <span id="fechaAP<?=$data['id_periodo']?>" class="mensajeError"></span>
                                           </div>
@@ -305,12 +362,31 @@
 
                                         
                                         <!-- ENTRADA PARA EL PERIODO DE CIERRE-->
-                                        <div class="form-group col-xs-12 col-sm-12">
+                                        <div class="form-group col-xs-12 col-sm-12" style="margin-top:2%;">
                                           <label for="fechaC">Fecha de culminación</label>
                                           <div class="input-group" style="width:100%;">
                                             <span class="input-group-addon" style="width:5%;"><i class="fa fa-user"></i></span> 
-                                            <input type="date" class="form-control input-lg fechaCModificar" min="<?=$data['fecha_apertura']?>" max="<?=$data['year_periodo']?>-12-01" value="<?=$data['fecha_cierre']?>" name="<?=$data['id_periodo']?>" id="fechaC<?=$data['id_periodo']?>" placeholder="Cierre" required>
+                                            <input type="date" class="form-control input-lg fechaCModificar" name="<?=$data['id_periodo']?>" id="fechaC<?=$data['id_periodo']?>" value="<?=$data['fecha_cierre']?>"
+                                            <?php 
+                                              foreach ($periodos as $data2) {
+                                                if(!empty($data2['id_periodo'])){
+                                                  if($data['id_periodo']!=$data2['id_periodo']){
+                                                    if($data['year_periodo']==$data2['year_periodo']){
+                                                      if(mb_strtoupper($data2['nombre_periodo'])=="I"){
+                                                        echo "min='".$data['fecha_apertura']."'";
+                                                      }
+                                                      if(mb_strtoupper($data2['nombre_periodo'])=="II"){
+                                                        echo "min='".$data['fecha_apertura']."'";
+                                                        echo "max='".$data2['fecha_apertura']."'";
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            ?>
+                                            placeholder="Cierre" required>
                                           </div>
+                                            <!-- min="<?=$data['fecha_apertura']?>"   -->
                                           <div style="width:100%;text-align:right;">
                                             <span id="fechaCP<?=$data['id_periodo']?>" class="mensajeError"></span>
                                             <span id="fechaV<?=$data['id_periodo']?>" class="mensajeError"></span>

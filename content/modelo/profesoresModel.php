@@ -58,6 +58,29 @@
 			return $result;
 		}
 
+		public function limpiarPost($array){
+			$leng = [
+				0=>['campo'=>'cedula', 'length'=>8], 
+				1=>['campo'=>'nombre', 'length'=>25], 
+				2=>['campo'=>'apellido', 'length'=>25], 
+				3=>['campo'=>'telefono', 'length'=>11], 
+				4=>['campo'=>'codigo', 'length'=>8],
+				5=>['campo'=>'userDelete', 'length'=>8],
+				6=>['campo'=>'userNofif', 'length'=>8],
+			];
+			foreach($leng as $len){
+				if(!empty($array[$len['campo']])){
+					if(strlen($array[$len['campo']]) > $len['length']){
+						$array[$len['campo']] = substr($array[$len['campo']], 0, $len['length']);
+						$array[$len['campo']] = stripslashes($array[$len['campo']]);
+						$array[$len['campo']] = strip_tags($array[$len['campo']]);
+						$array[$len['campo']] = htmlspecialchars($array[$len['campo']]);
+					}
+				}
+			}
+			return $array;
+		}
+
 		private function Validate($campo, $valor){
 			$pattern = [
 				'0' => ['campo'=>"cedula",'expresion'=>'/[^0-9]/'],
@@ -92,7 +115,7 @@
 
 		private function getOne($cedula){
 		      try {
-		    	$query = parent::prepare('SELECT * FROM profesores WHERE cedula_profesor = :cedula and estatus = 1');
+		    	$query = parent::prepare('SELECT * FROM profesores WHERE cedula_profesor = :cedula');
 		    	$respuestaArreglo = '';
 		        $query->execute(['cedula'=>$cedula]);
 		        $respuestaArreglo = $query->fetchAll();
@@ -114,56 +137,18 @@
 		      }
 	    }
 
-		private function BuscarExcel($cedula)
-	{
-		try {
-			$query = parent::prepare("SELECT * FROM profesores WHERE cedula_profesor = :cedula");
-			$respuestaArreglo = '';
-			$query->execute(['cedula' => $cedula]);
-			$respuestaArreglo = $query->fetchAll();
-			if (count($respuestaArreglo) == 0) {
-				return true;
-			}
-			return false;
-		} catch (PDOException $e) {
-			return false;
-		}
-	}
-
-		public function Cargar($datos){
-			$error = 0;
-
-				if (!empty($datos['cedula'])) {
-					
-						$query = parent::prepare('INSERT INTO profesores (cedula_profesor, 
-																	  nombre_profesor, 
-																	  apellido_profesor,
-																	  telefono_profesor, 
-																	  estatus) 
-															   VALUES (:cedula_profesor, 
-																	   :nombre_profesor, 
-																	   :apellido_profesor,
-																	   :telefono_profesor, 
-																	   1)');
-						$query->bindValue(':cedula_profesor', $datos['cedula']);
-						$query->bindValue(':nombre_profesor', $datos['nombre']);
-						$query->bindValue(':apellido_profesor', $datos['apellido']);
-						$query->bindValue(':telefono_profesor', $datos['telef']);
-						$res = $query->execute();
-						if(!$res){
-							$error++;
-						}
-						$respuestaArreglo = $query->fetchAll();	
+		private function BuscarExcel($cedula){
+			try {
+				$query = parent::prepare("SELECT * FROM profesores WHERE cedula_profesor = :cedula");
+				$respuestaArreglo = '';
+				$query->execute(['cedula' => $cedula]);
+				$respuestaArreglo = $query->fetchAll();
+				if (count($respuestaArreglo) == 0) {
+					return true;
 				}
-			
-			if ($respuestaArreglo += ['estatus' => true]) {
-				$Result = array('msj' => "Good");		//Si todo esta correcto 
-				return $Result;
-			}
-			else{
-				$errorReturn = ['estatus' => false];
-				$errorReturn['msj'] = "Error";
-				return $errorReturn;
+				return false;
+			} catch (PDOException $e) {
+				return false;
 			}
 		}
 		
@@ -234,8 +219,6 @@
 	        return $errorReturn; ;
 	        }
 		}
-
-
 
 	}
 

@@ -24,6 +24,10 @@
 				$result = self::getOne($data, $data2);
 				return $result;
 			}
+			if($metodo=="getOneYear"){
+				$result = self::getOneYear($data);
+				return $result;
+			}
 			if($metodo=="getOneId"){
 				$result = self::getOneId($data);
 				return $result;
@@ -74,6 +78,26 @@
 			}
 		}
 		
+		public function limpiarPost($array){
+			$leng = [
+				0=>['campo'=>'numeroPr', 'length'=>2], 
+				1=>['campo'=>'yearPeriodo', 'length'=>4], 
+				2=>['campo'=>'fechaAP', 'length'=>10], 
+				3=>['campo'=>'fechaAC', 'length'=>10],
+			];
+			foreach($leng as $len){
+				if(!empty($array[$len['campo']])){
+					if(strlen($array[$len['campo']]) > $len['length']){
+						$array[$len['campo']] = substr($array[$len['campo']], 0, $len['length']);
+						$array[$len['campo']] = stripslashes($array[$len['campo']]);
+						$array[$len['campo']] = strip_tags($array[$len['campo']]);
+						$array[$len['campo']] = htmlspecialchars($array[$len['campo']]);
+					}
+				}
+			}
+			return $array;
+		}
+
 		private function Consultar(){
 			try {
 				$query = parent::prepare('SELECT * FROM periodos WHERE estatus = 1');
@@ -94,6 +118,29 @@
 			    $query = parent::prepare('SELECT * FROM periodos WHERE nombre_periodo = :numeroPr and year_periodo = :yearPR');
 			    $respuestaArreglo = '';
 				$query->execute([':numeroPr'=>$numero, ':yearPR'=>$year]);
+				$respuestaArreglo = $query->fetchAll();
+				if ($respuestaArreglo += ['estatus' => true]) {
+					$Result = array('msj' => "Good"); //Si todo esta correcto y consigue al usuario
+					$Result['data'] = ['ejecucion'=>true];
+					if(count($respuestaArreglo)>1){
+						$Result['data'] = $respuestaArreglo;
+					}
+					return $Result;
+				}
+			       	//return $respuestaArreglo;
+			      	//require_once 'Vista/usuarios.php';
+			} catch (PDOException $e) {
+				$errorReturn = ['estatus' => false];
+				$errorReturn += ['info' => "error sql:{$e}"];
+				return $errorReturn;
+			}
+		}
+
+		private function getOneYear($year){
+			try {
+			    $query = parent::prepare('SELECT * FROM periodos WHERE year_periodo = :yearPR');
+			    $respuestaArreglo = '';
+				$query->execute([':yearPR'=>$year]);
 				$respuestaArreglo = $query->fetchAll();
 				if ($respuestaArreglo += ['estatus' => true]) {
 					$Result = array('msj' => "Good"); //Si todo esta correcto y consigue al usuario

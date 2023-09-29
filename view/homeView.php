@@ -28,8 +28,18 @@
     <!-- Main content -->
     <section class="content">
       <div class="row">
-        
-
+        <?php 
+          // foreach ($_SERVER as $key => $value) {
+          //   // echo strpos($value, "PNFH", 0);
+          //   if(strpos($value, "PNFH", 0)!= ""){
+          //     print_r($key);
+          //     echo " | <span style='margin-left:150px;'></span>";
+          //     print_r($value);
+          //     echo strpos("PNFH", $value, 0);
+          //     echo "<br>";
+          //   }
+          // }
+         ?>
         <input type="hidden" id="url" value="<?= $this->encriptar($this->url); ?>">
         <div class="col-xs-12">
           <!-- /.box -->
@@ -146,8 +156,9 @@
 $(document).ready(function(){ 
 
   console.clear();
-  
-  console.log(<?=json_encode($_SESSION); ?>);
+  /*
+  // console.log(<?=json_encode($_SESSION); ?>);
+  */
   var url = $("#url").val();
 });  
 </script>

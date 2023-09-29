@@ -13,7 +13,7 @@
 
 <body class="hold-transition skin-blue sidebar-mini">
 
-    
+
   <style type="text/css">
     .zmdi-upload {
       padding: 0px 10px 0px 0px;
@@ -46,8 +46,9 @@
       background-color: #4245a8;
       box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.25);
     }
-    .clics:hover{
-      cursor:pointer;
+
+    .clics:hover {
+      cursor: pointer;
     }
   </style>
   <div class="wrapper">
@@ -67,8 +68,11 @@
         </h1>
         <ol class="breadcrumb">
           <li><a href="<?= _ROUTE_ . $this->encriptar('Home'); ?>"><i class="fa fa-dashboard"></i> Inicio </a></li>
-          <li><a href="<?= _ROUTE_ . $this->encriptar('Alumnos'); ?>"><?php echo $url; ?></a></li>
-          <li class="active"><?php if (!empty($action)) { echo $action; } echo " " . $url; ?></li>
+          <li><a href="<?= _ROUTE_ . $this->encriptar('Mantenimiento'); ?>"><?php echo $url; ?></a></li>
+          <li class="active"><?php if (!empty($action)) {
+                                echo $action;
+                              }
+                              echo " " . $url; ?></li>
         </ol>
       </section>
 
@@ -80,15 +84,17 @@
           <div class="col-xs-12">
             <!-- /.box -->
             <div class="box">
+            <br><br><br><br><br>
               <div class="box-header">
                 <br><br><br><br>
                 <div class="col-md-12">
-                 
+
 
                   <div class="row">
                     <!-- <div class="col-lg-3 col-xs-6"></div> -->
-
+                    <a href="" id="descargarBackup" download=""></a>
                     <div class="col-xs-12 col-sm-6 col-lg-3 col-lg-offset-3">
+      
                       <div class="small-box bg-green">
                         <div class="inner">
                           <h3 style="font-size: 26px;">Respaldar<sup style="font-size: 20px"></sup></h3>
@@ -98,9 +104,48 @@
                         <div class="icon">
                           <i class="fa fa-cloud-download" style="margin-top: 20px;"></i>
                         </div>
-                        <a id="respaldar" class="small-box-footer clics">
-                          <i class="fa fa-arrow-circle-right" style="font-size:1.7em;margin-top:10px;margin-bottom:10px;"></i>
+                        <a id="" class="small-box-footer clics ">
+                          <button value="respaldar" class="verify" style="background: transparent; border:none; outline: none;">
+                            <i class="fa fa-arrow-circle-right" style="font-size:1.7em;margin-top:10px;margin-bottom:10px;"></i>
+                          </button>
                         </a>
+
+                        <button type="button" id="verificarButton" class="btn enviar2 btn-next btn-fill btn btn-primary btn-wd btn-sm" data-toggle="modal" data-target="#modalVerificarDatos" style="display:none;">Verificar</button>
+                        <div id="modalVerificarDatos" class="modalVerificarDatos modal fade modalVerificarDatos" role="dialog">
+                          <div class="modal-dialog tamModals" style="text-align:left;">
+                            <div class="modal-content">
+                              <form role="form" method="post" enctype="multipart/form-data">
+                              <div class="modal-header" style="background:#3c8dbc; color:white">
+                                <button type="button" class="close verificarCerrar" data-dismiss="modal" style="top:25px;">&times;</button>
+                                <h4 class="modal-title" style="text-align: left;">Verificar cuenta de usuario</h4>
+                              </div>
+                              <div class="modal-body" style="max-height:70vh;overflow:auto;">
+                                <div class="box-body">
+                                  <div class="row">
+                                    <div class="form-group col-xs-12 col-sm-12">
+                                      <p style="font-size:1.2em; color:black;">Saludos, <b><?= $_SESSION['cuenta_persona']['nombre'] . " " . $_SESSION['cuenta_persona']['apellido']; ?></b> Por favor, ingresa la contraseña de su cuenta de usuario.</p>
+                                    </div>
+                                    <div class="form-group col-xs-12 col-sm-12">
+                                      <label for="passwordVerificar" style="color: black;">Contraseña</label>
+                                      <div class="input-group" style="width:100%;">
+                                        <span class="input-group-addon" style="width:5%;"><i class="fa fa-key"></i></span>
+                                        <input type="password" class="form-control input-lg passwordVerificar" id="passwordVerificar" style="width:100%;" placeholder="Ingresar su contraseña" required>
+                                      </div>
+                                      <div style="width:100%;text-align:right;">
+                                        <span id="passwordVerificarM" class="mensajeError"></span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-default pull-left verificarCerrar" data-dismiss="modal">Salir</button>
+                                <button type="submit" class="btn btn-primary passwordVerificarButtonModal" name="" id="verificar">Verificar</button>
+                              </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
@@ -114,9 +159,13 @@
                         <div class="icon">
                           <i class="fa fa-cloud-upload" style="margin-top: 20px;"></i>
                         </div>
-                        <a class="small-box-footer clics" data-toggle="modal" data-target="#modalAgregarArchivo">
-                          <i class="fa fa-arrow-circle-right" style="font-size:1.7em;margin-top:10px;margin-bottom:10px;"></i>
+                        <a id="" class="small-box-footer clics">
+                          <button value="restaurar" class="verify" style="background: transparent; border:none; outline: none;">
+                            <i class="fa fa-arrow-circle-right" style="font-size:1.7em;margin-top:10px;margin-bottom:10px;"></i>
+                          </button>
                         </a>
+                        <button type="button" id="verificarButton" class="btn enviar2 btn-next btn-fill btn btn-primary btn-wd btn-sm" data-toggle="modal" data-target="#modalVerificarDatos" style="display:none;">Verificar</button>
+                        <button type="button" id="archivo" class="btn enviar2 btn-next btn-fill btn btn-primary btn-wd btn-sm" data-toggle="modal" data-target="#modalAgregarArchivo" style="display:none;">Archivo</button>
                       </div>
                     </div>
 
@@ -124,10 +173,10 @@
 
                 </div>
 
-                <br><br><br><br>
-                <br><br><br><br>
                 <input type="hidden" id="url" value="<?= $this->encriptar($this->url); ?>">
+                <input type="hidden" id="urlUser" value="<?= $this->encriptar("Usuarios"); ?>">
                 
+
 
                 <div id="modalAgregarArchivo" class="#modalAgregarArchivo modal fade" role="dialog">
                   <div class="modal-dialog">
@@ -141,7 +190,7 @@
 
                           <button type="button" class="close" data-dismiss="modal" style="top:25px;">&times;</button>
 
-                          <h4 class="modal-title" style="text-align: left;">Agregar Data</h4>
+                          <h4 class="modal-title" style="text-align: left;">Respaldar Base de Datos | Archivo SQL</h4>
 
                         </div>
 
@@ -185,10 +234,11 @@
 
                   </div>
                 </div>
-
               </div>
-              <!-- /.box-header -->
 
+              <br><br><br><br><br>
+              <br><br><br><br><br>
+              <!-- /.box-header -->
 
               <!-- /.box-body -->
             </div>

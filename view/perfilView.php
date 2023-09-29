@@ -2,47 +2,9 @@
 <html>
 
 <head>
-    <title><?php echo _NAMESYSTEM_; ?> | <?php if (!empty($action)) {
-                                                echo $action;
-                                            } ?> <?php if (!empty($url)) {
-                                                        echo $url;
-                                                    } ?></title>
-    <?php //require_once('assets/headers.php'); 
-    ?>
+    <title><?php echo _NAMESYSTEM_; ?> | <?php if (!empty($action)) { echo $action; } ?> <?php if (!empty($url)) { echo $url; } ?></title>
+    <link rel="stylesheet" type="text/css" href="<?=_THEME_; ?>/css/inputFile.css">
 </head>
-<style type="text/css">
-    .zmdi-upload {
-        padding: 0px 10px 0px 0px;
-    }
-
-    .zmdi-upload:hover {
-        color: black;
-        transition: color 0.2s linear 0.2s;
-    }
-
-    .file-input__input {
-        width: 0.1px;
-        height: 0.1px;
-        opacity: 0;
-        overflow: hidden;
-        position: absolute;
-        z-index: -1;
-    }
-
-    .file-input__label {
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        border-radius: 4px;
-        font-size: 14px;
-        font-weight: 600;
-        color: #fff;
-        font-size: 14px;
-        padding: 10px 12px;
-        background-color: #4245a8;
-        box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.25);
-    }
-</style>
 
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
@@ -50,7 +12,6 @@
         <?php require_once('assets/top_menu.php'); ?>
 
         <?php require_once('assets/menu.php'); ?>
-
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
@@ -63,15 +24,10 @@
                 <ol class="breadcrumb">
                     <li><a href="<?= _ROUTE_ . $this->encriptar('Home'); ?>"><i class="fa fa-dashboard"></i> Inicio </a></li>
                     <li><a href="<?= _ROUTE_ . $this->encriptar('Perfil'); ?>"><?php echo $url; ?></a></li>
-                    <li class="active"><?php if (!empty($action)) {
-                                            echo $action;
-                                        }
-                                        echo " " . $url; ?></li>
+                    <li class="active"><?php if (!empty($action)) { echo $action; } echo " " . $url; ?></li>
                 </ol>
             </section>
-
             <br>
-
 
             <!-- Main content -->
             <section class="content">
@@ -83,8 +39,8 @@
                         <div class="box box-primary">
                             <div class="box-body box-profile user-header">
                                 <img class="profile-user-img img-responsive img-circle" style="border-radius:220px;width:25vh !important;height:25vh;" src="<?=$fotoPerfil; ?>" alt="User profile picture">
-
-                                <h3 class="profile-username text-center"> <?php echo $nombre . " " . $apellido; ?></h3>
+                                
+                                <h3 class="profile-username text-center"> <?php echo $nombreMostrar . " " . $apellidoMostrar; ?></h3>
 
                                 <p class="text-muted text-center"><?= $_SESSION['cuenta_usuario']['nombre_rol'] ?> </p>
                                 
@@ -147,6 +103,7 @@
                         </div>
 
                     </div>
+
                     <!-- /.col -->
                     <div class="col-md-8">
                         <div class="nav-tabs-custom">
@@ -349,6 +306,9 @@
                                                         <hr style="margin:5px 0px;border-bottom:1px solid #ccc;border-top:0px solid #ccc;">
                                                     </div>
                                                 </div>
+
+                                                    
+                                                <?php if ($_SESSION['cuenta_usuario']['nombre_rol']!="Alumnos"): ?>
                                                 <div class="form-group">
                                                     <label for="inputName" class="col-sm-3 control-label"><span style="color:#444;"><i class="fa fa-phone-square"></i> Teléfono</span></label>
                                                     <div class="col-sm-9">
@@ -357,6 +317,8 @@
                                                         <hr style="margin:5px 0px;border-bottom:1px solid #ccc;border-top:0px solid #ccc;">
                                                     </div>
                                                 </div>
+                                                <?php endif; ?>
+
                                                 <div class="form-group">
                                                     <label for="inputName" class="col-sm-3 control-label"><span style="color:#444"><i class="fa fa-envelope"></i> Correo</span></label>
                                                      <div class="col-sm-9">
@@ -432,7 +394,7 @@
                                                                                 </div>
                                                                             </div>
 
-
+                                                                            <?php if ($_SESSION['cuenta_usuario']['nombre_rol']!="Alumnos"): ?>
                                                                             <!--ENTRADA TELÉFONO -->
                                                                             <div class="form-group col-xs-12 col-sm-12">
                                                                                 <label for="telefono<?= $_SESSION['cuenta_persona']['cedula'] ?>"><span style="color:#444">Telefono</span></label>
@@ -444,11 +406,11 @@
                                                                                     <span id="telefonoS<?= $_SESSION['cuenta_persona']['cedula'] ?>" class="mensajeError"></span>
                                                                                 </div>
                                                                             </div>
-
+                                                                            <?php endif; ?>
 
                                                                             <!--ENTRADA DEL CORREO -->
                                                                             <div class="form-group col-xs-12 col-sm-12">
-                                                                                <label for="correo<?= $_SESSION['cuenta_usuario']['cedula'] ?>"><span style="color:#444">Correo</span></label>
+                                                                                <label for="correo<?= $_SESSION['cuenta_persona']['cedula'] ?>"><span style="color:#444">Correo</span></label>
                                                                                 <div class="input-group" style="width:100%;">
                                                                                     <span class="input-group-addon" style="width:5%;"><i class="fa fa-user"></i></span>
                                                                                     <input type="text" class="form-control input-lg correoModificar correoModificar<?= $_SESSION['cuenta_persona']['cedula'] ?>" maxlength="45" value="<?php echo $correo; ?>" name="<?= $_SESSION['cuenta_persona']['cedula'] ?>" id="correo<?= $_SESSION['cuenta_persona']['cedula'] ?>" placeholder="Ingrese su correo" required>
@@ -509,24 +471,27 @@
                                     <div>
                                         <div class="timeline-item ">
                                             <div class="box-body">
-                                                <h3 class="timeline-header"><a>Firma Digital</a></h3>
+                                                <label class=""><span style="color:#444;">Firma Digital</span></label>
                                                 <div class="timeline-body input-group " value="<?php echo $perfiles[0]['cedula_usuario']; ?>" style="width:100%;">
                                                     <?php //echo $perfiles[0]['cedula_usuario']; ?>
                                                         <!-- <?php print_r($perfiles[0]['cedula_usuario']); ?> -->
-                                                    <input type="text" class="form-control" id="firma<?php echo $perfiles[0]['cedula_usuario']; ?>1" value="<?=$perfiles[0]['firma_digital']; ?>1" readonly style="background:none;width:80%;">
+
+                                                    <input type="text" class="form-control" id="firma<?php echo $perfiles[0]['cedula_usuario']; ?>1" value="<?=$perfiles[0]['firma_digital']; ?>" readonly style="background:none;width:80%;">
                                                     <button class="btn form-control input-group-addon usuarioG" data-clipboard-target="#firma<?php echo $perfiles[0]['cedula_usuario']; ?>1" value="<?=$perfiles[0]['cedula_usuario']; ?>1" style="width:20%;" id="copyClip<?php echo $perfiles[0]['cedula_usuario']; ?>1" >Copiar <i class="fa fa-clipboard" style="color:#04a7c9"></i></button>
                                                     <!-- <span class="input-group-addon usuarioG" id="copyClip<?php echo $perfiles[0]['cedula_usuario']; ?>" data-clipboard-target="#firma<?php echo $perfiles[0]['cedula_usuario']; ?>" style="width:5%;"><a href="#"><i class="fa fa-clipboard" style="color:#04a7c9"></i></a></span> -->
                                                 </div>
+                                                <br>
 
-                                                <h3 class="timeline-header"><a>Llave publica</a></h3>
+                                                <label class=""><span style="color:#444;">Llave publica</span></label>
                                                 <div class="timeline-body input-group" style="width:100%;">
-                                                    <input type="text" class="form-control" id="llave_publica<?php echo $perfiles[0]['cedula_usuario']; ?>2" value="<?=$perfiles[0]['llave_publica']; ?>2" readonly style="background:none;width:80%;">
+                                                    <input type="text" class="form-control" id="llave_publica<?php echo $perfiles[0]['cedula_usuario']; ?>2" value="<?=$perfiles[0]['llave_publica']; ?>" readonly style="background:none;width:80%;">
                                                     <button class="btn form-control input-group-addon usuarioG" data-clipboard-target="#llave_publica<?php echo $perfiles[0]['cedula_usuario']; ?>2" value="<?=$perfiles[0]['cedula_usuario']; ?>2" style="width:20%;" id="copyClip<?php echo $perfiles[0]['cedula_usuario']; ?>2" >Copiar <i class="fa fa-clipboard" style="color:#04a7c9"></i></button>
                                                 </div>
+                                                <br>
 
-                                                <h3 class="timeline-header"><a>Llave privada</a></h3>
+                                                <label class=""><span style="color:#444;">Llave privada</span></label>
                                                 <div class="timeline-body input-group" style="width:100%;">
-                                                    <input type="text" class="form-control" id="llave_privada<?php echo $perfiles[0]['cedula_usuario']; ?>3" value="<?=$perfiles[0]['llave_privada']; ?>3" readonly style="background:none;width:80%;">
+                                                    <input type="text" class="form-control" id="llave_privada<?php echo $perfiles[0]['cedula_usuario']; ?>3" value="<?=$perfiles[0]['llave_privada']; ?>" readonly style="background:none;width:80%;">
                                                     <button class="btn form-control input-group-addon usuarioG" data-clipboard-target="#llave_privada<?php echo $perfiles[0]['cedula_usuario']; ?>3" value="<?=$perfiles[0]['cedula_usuario']; ?>3" style="width:20%;" id="copyClip<?php echo $perfiles[0]['cedula_usuario']; ?>3" >Copiar <i class="fa fa-clipboard" style="color:#04a7c9"></i></button>
                                                     <!-- <button class="btn form-control input-group-addon"  data-clipboard-action="cut"  data-clipboard-target="#llave_privada" style="width:20%;"  alt="Copy to clipboard">Copiar <i class="fa fa-clipboard" style="color:#04a7c9"></i></button> -->
                                                 </div>
@@ -642,7 +607,7 @@
         </div>
         <!-- /.content-wrapper -->
 
-
+        <input type="hidden" id="rolOculto" value="<?=$_SESSION['cuenta_usuario']['nombre_rol'];?>">
 
 
 

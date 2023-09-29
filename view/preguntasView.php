@@ -238,8 +238,7 @@ $(document).ready(function() { //Al Cargar la paginaZ
             let resp_uno = $("#resp_uno").val();     
             let resp_dos = $("#resp_dos").val();     
             let resp_tres = $("#resp_tres").val();
-            // alert(preg_uno + ' ' + preg_dos + ' ' + preg_tres);
-            // alert(resp_uno + ' ' + resp_dos + ' ' + resp_tres);
+              $(".box-cargando").show();
               $.ajax({
                 url: url + '/Agregar',    
                 type: 'POST',   
@@ -253,8 +252,9 @@ $(document).ready(function() { //Al Cargar la paginaZ
                   resp_tres: resp_tres,
                 },
                 success: function(resp){
-                  // alert(resp);
-                  // console.log(resp);
+                  $(".box-cargando").hide();
+                  // // alert(resp);
+                  // // console.log(resp);
                   var datos = JSON.parse(resp);     
                     if (datos.msj === "Good") {   
                       Swal.fire({
@@ -291,9 +291,10 @@ $(document).ready(function() { //Al Cargar la paginaZ
                       });
                     }     
                 },
-                error: function(respuesta){       
+                error: function(respuesta){
+                  $(".box-cargando").hide();
                   var datos = JSON.parse(respuesta);
-                  console.log(datos);
+                  // console.log(datos);
 
                 }
 
@@ -396,7 +397,7 @@ function validar(){
   if(rpreg1==true && rpreg2==true && rpreg3==true && rresp1==true && rresp2==true && rresp3==true){
     validado = true;
   }
-  // alert(validado);
+  // // alert(validado);
   return validado;
 
 }

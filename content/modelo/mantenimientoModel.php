@@ -39,8 +39,29 @@
 			}
 		}
 
-		public function Respaldar($tables = '*'){  
-
+		public function Respaldar($fechaAct="", $tables = '*'){  
+			$arrayTables = [
+				0=>'modulos',
+				1=>'permisos',
+				2=>'roles',
+				3=>'accesos',
+				4=>'alumnos',
+				5=>'profesores',
+				6=>'periodos',
+				7=>'saberes',
+				8=>'secciones',
+				9=>'seccion_alumno',
+				10=>'clases',
+				11=>'proyectos',
+				12=>'grupos',
+				13=>'notas',
+				14=>'notificaciones',
+				15=>'usuarios',
+				16=>'rsa',
+				17=>'bitacora',
+				18=>'preguntas',
+				19=>'respuestas',
+			];
 			$return='';
 			$link = new mysqli(_HOST_,_DB_USER_,_DB_PASS_,_DB_WEB_);
 			if($tables == '*'){
@@ -52,26 +73,36 @@
 			}else{
 				$tables = is_array($tables) ? $tables : explode(',',$tables);
 			}
-			foreach($tables as $table){
-				$result = $link->query('SELECT * FROM '.$table);
-				$num_fields = mysqli_num_fields($result);
-				$row2 = mysqli_fetch_row($link->query('SHOW CREATE TABLE '.$table));
-				$return.= "\n\n".$row2[1].";\n\n";
-				for ($i = 0; $i < $num_fields; $i++){
-					while($row = mysqli_fetch_row($result)){
-						$return.= 'INSERT INTO '.$table.' VALUES(';
-						for($j=0; $j<$num_fields; $j++) {
-							$row[$j] = addslashes($row[$j]);
-							$row[$j] = preg_replace("/\n/","\\n",$row[$j]);
-							if (isset($row[$j])) { $return.= '"'.$row[$j].'"' ; } else { $return.= '""'; }
-							if ($j<($num_fields-1)) { $return.= ','; }
+			foreach ($arrayTables as $tableFilt) {
+				foreach($tables as $table){
+					if($tableFilt==$table){
+						$result = $link->query('SELECT * FROM '.$table);
+						$num_fields = mysqli_num_fields($result);
+						$row2 = mysqli_fetch_row($link->query('SHOW CREATE TABLE '.$table));
+						$return.= "\n\n".$row2[1].";\n\n";
+						for ($i = 0; $i < $num_fields; $i++){
+							while($row = mysqli_fetch_row($result)){
+								$return.= 'INSERT INTO '.$table.' VALUES(';
+								for($j=0; $j<$num_fields; $j++) {
+									$row[$j] = addslashes($row[$j]);
+									$row[$j] = preg_replace("/\n/","\\n",$row[$j]);
+									if (isset($row[$j])) { $return.= '"'.$row[$j].'"' ; } else { $return.= '""'; }
+									if ($j<($num_fields-1)) { $return.= ','; }
+								}
+								$return.= ");\n";
+							}
 						}
-						$return.= ");\n";
+						$return.="\n\n\n";
 					}
 				}
-				$return.="\n\n\n";
 			}
+
 			try{
+				if($fechaAct==""){
+					$this->mysqlImportFilename = 'libs/backup/'._DB_WEB_."_".$this->fecha.'.sql';
+				}else{
+					$this->mysqlImportFilename = 'libs/backup/automatico/'._DB_WEB_."_".$fechaAct.'.sql';
+				}
 
 				$handle = fopen($this->mysqlImportFilename,'w+');
 				fwrite($handle,$return);
@@ -85,6 +116,7 @@
 				$resul = ['ejecucion'=>false];
 			}
 			return $resul;
+
 		}
 
 		public function Restaurar($file){

@@ -58,6 +58,7 @@
                           <div class="box-body">
                             <!-- ENTRADA PARA EL NOMBRE -->
                             <div class="form-group">
+                              <label for="nombre">Modulos</label>
                               <div class="input-group" style="width:100%;">
                                 <span class="input-group-addon" style="width:5%;"><i class="fa fa-user"></i></span> 
                                 <input type="text" class="form-control input-lg" style="width:100%;" name="nuevoNombre" id="nombre" placeholder="Ingresar nombre" maxlength="30" required>
@@ -149,9 +150,10 @@
                                   <!-- ENTRADA PARA EL NOMBRE -->
                                   
                                   <div class="form-group col-xs-12 col-sm-12">
+                                    <label for="nombre<?=$data['id_modulo']; ?>">Modulos</label>
                                     <div class="input-group" style="width:100%;">
                                       <span class="input-group-addon" style="width:5%;"><i class="fa fa-user"></i></span> 
-                                      <input type="text" class="form-control input-lg nombreModificar" style="width:100%;" value="<?=$data['nombre_modulo']?>" name="nuevoNombre" id="nombre<?=$data['id_modulo']?>" placeholder="Ingresar nombre" required>
+                                      <input type="text" class="form-control input-lg nombreModificar" style="width:100%;" value="<?=$data['nombre_modulo']?>" name="<?=$data['id_modulo']?>" id="nombre<?=$data['id_modulo']?>" placeholder="Ingresar nombre" required>
                                     </div>
                                     <div style="width: 100%; text-align: right;">
                                       <span id="nombreM<?=$data['id_modulo']?>" class="mensajeError"></span>                                  

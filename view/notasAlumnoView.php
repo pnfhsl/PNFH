@@ -65,6 +65,7 @@
                     <th>Sección</th>
                     <th>Saber</th>
                     <th>Nota</th>
+                    <th>Reporte</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -97,6 +98,18 @@
                       <?php echo number_format($data['nota'],1,',','.')." Puntos"; ?>
                     </span>
                   </td>
+                  <td style="width:40%">
+                    <form role="form" action="<?=_ROUTE_.$this->encriptar('Reportes')?>/Aprobacion" target="_blank" method="post" id="formAgregar" enctype="multipart/form-data">
+                      <input type="hidden" name="alumno" value="<?php echo $data['cedula_alumno'] ?>">
+                      <input type="hidden" name="saber" value="<?php echo $data['id_SC'] ?>">
+                      <button class="btn btn-primary">
+                      <input type="submit" style="display: none;" value="">
+                      <span class="contenido2 fa fa-file-pdf-o" style="color: #f8f8f8;">
+                        
+                      </button>
+                    </form>
+                    </span>
+                  </td>
                   
 
                       
@@ -111,6 +124,7 @@
                     <th>Sección</th>
                     <th>Saber</th>
                     <th>Nota</th>
+                    <th>Reporte</th>
                   </tr>
                 </tfoot>
               </table>

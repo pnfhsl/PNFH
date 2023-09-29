@@ -2,9 +2,11 @@
 
 	namespace content\modelo;
 	use content\config\conection\database as database;
+	use content\traits\Utility;
 	use PDOException;
 
 	class loginModel extends database{
+		use Utility;
 
 		private $con;
 		private $user;
@@ -19,62 +21,52 @@
 			$this->con = parent::__construct();
 		}
 
+		public function getCon(){
+			return $this->con;
+		}
+
 		public function getLoginSistema($user, $passw){
 			$this->user = $user;
 			$this->passw = $passw;
-
-			// $this->loginSistema();
 		}
-
-		// public function getRecuperarSistema($pass){
-		// 	$this->pass = $pass;
-
-		// 	$this->recuperarPass();
-		// }
-
 
 		public function loginSistema($user, $passw){		//Se hace una consulta de los usuarios recibidos
 			$this->user = $user;
 			$this->passw = $passw;
-			//$this->password = md5($this->passw);
-			// var_dump($this->user);
-			// var_dump($this->passw);
-			$sql = ('SELECT * FROM roles, usuarios WHERE usuarios.id_rol = roles.id_rol AND usuarios.nombre_usuario = :user AND usuarios.password_usuario = :password');
+
+			$sql = ('SELECT * FROM roles, usuarios WHERE usuarios.id_rol = roles.id_rol AND usuarios.nombre_usuario = :user');
 			$new = parent::prepare($sql);
 			$new->bindValue(':user', $this->user);
-			$new->bindValue(':password', $this->passw);
 			$new->execute();
 			$user = $new->fetchAll();
 			
 			foreach ($user as $currentUser) {
 				$this->usuario = $currentUser['nombre_usuario'];
 				$this->cont = $currentUser['password_usuario'];
-				// var_dump($this->usuario);
-				// var_dump($this->cont);
 			}
-				if ($this->user == $this->usuario AND $this->passw == $this->cont) {
-					// var_dump('hola');
+
+			if ($this->user == $this->usuario) {
+				if($this->verificarContrasena($this->passw,$this->cont)){
 					$Result = array('msj' => "Good");		//Si todo esta correcto y consigue al usuario
 					$Result['data'] = $user;
-					// echo json_encode($Result);
-					// die();
 					return $Result;
 				}else{
 					$Result = array('msj' => "Usuario o contraseña invalido!");
-					// echo json_encode($Result);
-					// die();
-					return $Result;
+					return $Result;	
 				}
-			
-
+			}else{
+				$Result = array('msj' => "Usuario o contraseña invalido!");
+				return $Result;
+			}
 		}
 
 		public function recuperarPass($user, $pass){		//Se hace una consulta de los usuarios recibidos
 			
 			try{
 				$this->pass_recuperar = $pass;
-				$sql = "UPDATE usuarios SET password_usuario = '{$this->pass_recuperar}' WHERE cedula_usuario = '{$user}'";
-				$query = parent::prepare($sql);
+				$query = parent::prepare("UPDATE usuarios SET password_usuario = :passN, estatus=1, intentos=0 WHERE cedula_usuario = :user");
+				$query->bindValue(":passN",$this->pass_recuperar);
+				$query->bindValue(":user",$user);
 				$query->execute();          
 				$respuestaArreglo = $query->fetchAll();
 				if ($respuestaArreglo += ['estatus' => true]) {
@@ -88,15 +80,13 @@
 		        $errorReturn += ['info' => "error sql:{$e}"];
 		        return $errorReturn;
 		    }
-			
-
 		}
 
 		public function Consultar($user){		//Se hace una consulta de los usuarios recibidos
 			
 			try{
-				$sql = "SELECT * FROM respuestas, preguntas WHERE respuestas.id_pregunta = preguntas.id AND cedula_usuario = '{$user}' AND estatus = 1";
-				$query = parent::prepare($sql);
+				$query = parent::prepare("SELECT * FROM respuestas, preguntas WHERE respuestas.id_pregunta = preguntas.id AND cedula_usuario = :user AND estatus = 1");
+				$query->bindValue(":user",$user);
 				$query->execute();          
 				$respuestaArreglo = $query->fetchAll();
 				//if ($respuestaArreglo += ['estatus' => true]) {
@@ -111,8 +101,6 @@
 		        $errorReturn += ['info' => "error sql:{$e}"];
 		        return $errorReturn;
 		    }
-			
-
 		}
 
 		public function busquedaCorreo($correo){
@@ -176,7 +164,6 @@
 		        return $errorReturn;
 		      }
 		}
-
 
 	}
 

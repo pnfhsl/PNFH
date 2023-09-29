@@ -100,6 +100,7 @@
                     $busquedaNotif1 = $this->notificacion->BuscarClasesPorNotificacion($notif);
                     $busquedaNotif2 = $this->notificacion->BuscarClasesPorNotificacionProfesor($notif, $_SESSION['cuenta_persona']['cedula']);
                     $busquedaNotif3 = $this->notificacion->BuscarClasesPorNotificacionTutor($notif, $_SESSION['cuenta_persona']['cedula']);
+
                     foreach ($busquedaNotif1 as $key) {
                       if(!empty($key['id_notificacion'])){
                         $busquedaNotif[$number] = $key;
@@ -119,14 +120,13 @@
                     foreach ($busquedaNotif3 as $key) {
                       if(!empty($key['id_notificacion'])){
                         $busquedaNotifAux = $this->notificacion->BuscarClasesPorNotificacionTutor($notif, $_SESSION['cuenta_persona']['cedula'], true);
-                        // $key['id_notificacion'] = $busquedaNotifAux[0]['id_notificacion'];
+                        $key['id_notificacion'] = $busquedaNotifAux[0]['id_notificacion'];
                         $key['fecha_notificacion'] = $busquedaNotifAux[0]['fecha_notificacion'];
                         $key['hora_notificacion'] = $busquedaNotifAux[0]['hora_notificacion'];
                         $key['visto_alumnos'] = $busquedaNotifAux[0]['visto_alumnos'];
                         $key['visto_profesores'] = $busquedaNotifAux[0]['visto_profesores'];
                         $key['visto_admin'] = $busquedaNotifAux[0]['visto_admin'];
                         $key['visto_superusuario'] = $busquedaNotifAux[0]['visto_superusuario'];
-                        // echo "<b>".$number."</b>";
                         $busquedaNotif[$number] = $key;
                         $busquedaNotif[$number] += ["lista"=>"tutor"];
                         $busquedaNotif[$number] += ["visto"=>'visto_profesores'];
@@ -164,6 +164,11 @@
                     }
                   }
                   if($myNombreRol=="Alumnos"){
+                    // print_r($notif);
+                    // echo "<br>";
+                    // echo $_SESSION['cuenta_persona']['cedula'];
+                    // echo "<br>";
+                    // echo "<br>";
                     $busquedaNotif4 = $this->notificacion->BuscarClasesPorNotificacionAlumno($notif, $_SESSION['cuenta_persona']['cedula']);
 
                     foreach ($busquedaNotif4 as $key) {

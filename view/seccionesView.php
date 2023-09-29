@@ -68,24 +68,18 @@
                             <!-- ENTRADA PARA EL USUARIO -->
                             <div class="row">
                               <div class="form-group col-xs-12 col-sm-12">
-                                <label for="periodo">Período</label>
+                                <label for="year">Año</label>
                                 <div class="input-group" style="width:100%;">
                                   <span class="input-group-addon" style="width:5%;"><i class="fa fa-address-card"></i></span> 
-                                  <select class="form-control select2 input-lg" style="width:100%;" name="periodo" placeholder="Ingresar periodo" id="periodo" required>
-                                    <option value="">Seleccione un periodo</option>
-                                    <?php
-                                    foreach ($periodos as $per):
-                                      if(!empty($per['id_periodo'])):
-                                    ?>
-                                    <option value="<?=$per['id_periodo']?>"><?=mb_strtoupper($per['year_periodo']."-".$per['nombre_periodo']); ?></option>
-                                    <?php 
-                                      endif;
-                                    endforeach;
-                                    ?>
+                                  <select class="form-control select2 input-lg" style="width:100%;" name="year" placeholder="Ingresar year" id="year" required>
+                                    <option value="">Año (Ej.: <?=date('Y'); ?>)</option>
+                                    <?php for ($i=(date('Y')+1); $i >= 2015; $i--){ ?>
+                                      <option value="<?=$i; ?>"><?=$i; ?></option>
+                                    <?php } ?>
                                   </select>
                                 </div>
                                 <div style="width:100%;text-align:right;">
-                                  <span id="periodoS" class="mensajeError"></span>
+                                  <span id="yearS" class="mensajeError"></span>
                                 </div>
                               </div>
 
@@ -170,7 +164,6 @@
                 <tr>
                   <th>Nº</th>
                   <th>Sección</th>
-                  <th>Periodo</th>
                   <th>Trayecto</th>
                   <?php if ($amSeccionesC==1||$amSeccionesE==1||$amSeccionesB==1): ?>
                   <th>Acciones</th>
@@ -193,12 +186,7 @@
                     <span class="contenido2">
                       <?php echo mb_strtoupper($data['nombre_seccion']); ?>
                       <br>
-                      <small>(<?=$data['year_periodo'];   ?>)</small>
-                    </span>
-                  </td>
-                  <td style="width:20%">
-                    <span class="contenido2">
-                      <?php echo $data['year_periodo']."-".mb_strtoupper($data['nombre_periodo']); ?>
+                      <small>(<?=$data['year_seccion'];   ?>)</small>
                     </span>
                   </td>
                   <td style="width:20%">
@@ -357,32 +345,24 @@
                                       <div class="row" style="">
                                         
                                         <div class="form-group col-xs-12 col-sm-12">
-                                          <label for="periodo<?=$data['cod_seccion']?>">Período</label>
+                                          <label for="year<?=$data['cod_seccion']?>">Período</label>
                                           <div class="input-group" style="width:100%;">
                                             <span class="input-group-addon" style="width:5%;"><i class="fa fa-address-card"></i></span> 
-                                            <select class="form-control select2 input-lg periodoModificar" style="width:100%;" name="<?=$data['cod_seccion']?>" placeholder="Ingresar periodo" id="periodo<?=$data['cod_seccion']?>" required readonly>
-                                              <!-- <option value="">Seleccione un periodo</option> Nuevo Que este comentado --> 
+                                            <select class="form-control select2 input-lg yearModificar" style="width:100%;" name="<?=$data['cod_seccion']?>" placeholder="Ingresar year" id="year<?=$data['cod_seccion']?>" required readonly>
+                                              <option value="">Año (Ej.: <?=date('Y'); ?>)</option>
                                               <?php
-                                              foreach ($periodos as $per):
-                                                if(!empty($per['id_periodo'])):
-                                                  if($data['id_periodo']==$per['id_periodo']){ //Nuevo
+                                                for ($i=(date('Y')+1); $i >= 2015; $i--){ 
                                               ?>
-                                              <option <?php if($data['id_periodo']==$per['id_periodo']){ echo "selected"; } ?> value="<?=$per['id_periodo']; ?>"><?=mb_strtoupper($per['year_periodo']."-".$per['nombre_periodo']); ?></option>
-                                              <?php
-
-                                                  } //Nuevo
-                                              
-                                                endif;
-                                              endforeach;
-                                              ?>
+                                                <option <?php if($data['year_seccion']==$i){ ?>selected <?php } ?> value="<?=$i; ?>"><?=$i; ?></option>
+                                              <?php } ?>
                                             </select>
                                           </div>
                                           <div style="width:100%;text-align:right;">
-                                            <span id="periodoS<?=$data['cod_seccion']?>" class="mensajeError"></span>
+                                            <span id="yearS<?=$data['cod_seccion']?>" class="mensajeError"></span>
                                           </div>
                                         </div>
 
-                                        <div class="form-group col-xs-12 col-sm-12" style="margin-top:;">
+                                        <div class="form-group col-xs-12 col-sm-12" style="margin-top:2%;">
                                           <label for="trayecto<?=$data['cod_seccion']?>">Trayecto</label>
                                           <div class="input-group " style="width:100%;">
                                             <span class="input-group-addon" style="width:5%;"><i class="fa fa-address-card"></i></span> 
@@ -399,7 +379,7 @@
                                           </div>
                                         </div>
 
-                                        <div class="form-group col-xs-12 col-sm-12" style="margin-top:;">
+                                        <div class="form-group col-xs-12 col-sm-12" style="margin-top:2%;">
                                           <label for="nombre<?=$data['cod_seccion']?>">Nombre</label>
                                           <div class="input-group" style="width:100%;">
                                             <span class="input-group-addon" style="width:7.5%;"><i class="fa fa-user"></i></span> 
@@ -410,7 +390,7 @@
                                           </div>
                                         </div>
                                         
-                                        <div class="form-group col-xs-12 col-sm-12" style="margin-top:;">
+                                        <div class="form-group col-xs-12 col-sm-12" style="margin-top:2%;">
                                           <label for="alumnos<?=$data['cod_seccion']?>">Alumnos</label>
                                           <div class="input-group " style="width:100%;">
                                             <span class="input-group-addon" style="width:8%;"><i class="fa fa-address-card"></i></span> 
@@ -424,7 +404,7 @@
                                               <option 
                                                 <?php foreach ($seccionAlumnos as $secAlum) {
                                                   if(!empty($secAlum['cedula_alumno'])){
-                                                    if( ($data['id_periodo']==$secAlum['id_periodo']) && ($alum['trayecto_alumno']==$secAlum['trayecto_alumno']) ){
+                                                    if( ($data['year_seccion']==$secAlum['year_seccion']) && ($alum['trayecto_alumno']==$secAlum['trayecto_alumno']) ){
                                                       if( ($data['cod_seccion']==$secAlum['cod_seccion']) && ($alum['cedula_alumno']==$secAlum['cedula_alumno']) ){
                                                         echo "selected";
                                                       }else if( ($data['cod_seccion']!=$secAlum['cod_seccion']) && ($alum['cedula_alumno']==$secAlum['cedula_alumno']) ){
@@ -445,7 +425,6 @@
                                             <span id="alumnosS<?=$data['cod_seccion']?>" class="mensajeError"></span>
                                           </div>
                                         </div>
-
                                       </div>
                                     </div>
                                   </div>
@@ -472,14 +451,6 @@
                         <?php endif; ?>
                   </td>
                   <?php endif; ?>
-
-
-                        
-
-
-                        
-                        
-                      
                       
                 </tr>
                 <?php
@@ -490,7 +461,6 @@
                 <tr>
                   <th>Nº</th>
                   <th>Sección</th>
-                  <th>Periodo</th>
                   <th>Trayecto</th>
                   <?php if ($amSeccionesC==1||$amSeccionesE==1||$amSeccionesB==1): ?>
                   <th>Acciones</th>

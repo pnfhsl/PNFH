@@ -44,6 +44,37 @@
               </div>
               <input type="hidden" id="url" value="<?= $this->encriptar($this->url); ?>">
             </div>
+
+            <div class="box-body">
+              <form action="" method="get">
+                <?php
+                  $lastDate = "";
+                  if(!empty($_GET['L'])){
+                    $lastDate = $_GET['L'];
+                  }
+                  $actualDate = "";
+                  if(!empty($_GET['A'])){
+                    $actualDate = $_GET['A'];
+                  }
+                ?>
+                <div class="row">
+                  <div class="col-xs-12 col-sm-6">
+                      <label>Desde:</label>
+                      <input class="form-control" type="date" name="L" max="<?=date('Y-m-d', time()); ?>" value="<?=$lastDate; ?>">
+                  </div>
+                  <div class="col-xs-12 col-sm-6">
+                      <label>Hasta:</label>
+                      <input class="form-control" type="date" name="A" max="<?=date('Y-m-d', time()); ?>" value="<?=$actualDate; ?>">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xs-12">
+                    <button class="btn enviar">Filtrar</button>
+                  </div>
+                </div>
+
+              </form>
+            </div>
             <!-- /.box-header -->
 
             <div class="box-body ">
@@ -76,7 +107,7 @@
 
                       <td style="width:20%">
                         <span class="contenido2">
-                          <?php echo $data['cedula_usuario']; ?>
+                          <?php echo $data['nombre_usuario']."<br>(<small>".number_format($data['cedula_usuario'],0,',','.')."</small>)"; ?>
                         </span>
                       </td>
 

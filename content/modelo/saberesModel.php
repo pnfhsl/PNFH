@@ -5,12 +5,11 @@
 	use content\config\conection\database as database;
 
 	class saberesModel extends database{
-        
-       // private $id_SC;
+
+		private $id_SC;
 		private $nombreSC; 
 		private $trayectoSC;
 		private $faseSC; 
-
 
 		public function __construct(){
 			// $this->con = parent::__construct();
@@ -59,6 +58,25 @@
 		public function validarEliminar($data){
 			$result = self::Eliminar($data);
 			return $result;
+		}
+
+		public function limpiarPost($array){
+			$leng = [
+				0=>['campo'=>'nombreSC', 'length'=>50], 
+				1=>['campo'=>'trayectoSC', 'length'=>1], 
+				2=>['campo'=>'faseSC', 'length'=>1], 
+			];
+			foreach($leng as $len){
+				if(!empty($array[$len['campo']])){
+					if(strlen($array[$len['campo']]) > $len['length']){
+						$array[$len['campo']] = substr($array[$len['campo']], 0, $len['length']);
+						$array[$len['campo']] = stripslashes($array[$len['campo']]);
+						$array[$len['campo']] = strip_tags($array[$len['campo']]);
+						$array[$len['campo']] = htmlspecialchars($array[$len['campo']]);
+					}
+				}
+			}
+			return $array;
 		}
 
 		private function Validate($campo, $valor){
@@ -117,20 +135,6 @@
 				return $errorReturn;
 			}
 		}
-		
-		private function getSaber($trayecto, $fase){
-			try {
-				$query = parent::prepare("SELECT * FROM saberes WHERE trayecto_SC = '{$trayecto}' and fase_SC = '{$fase}'");
-				$respuestaArreglo = '';
-				$query->execute();
-				$respuestaArreglo = $query->fetchAll(parent::FETCH_ASSOC); 
-				return $respuestaArreglo;
-			} catch (PDOException $e) {
-				$errorReturn = ['estatus' => false];
-				$errorReturn += ['info' => "error sql:{$e}"];
-				return $errorReturn;
-			}
-		}
 
 		private function getOneId($dato){
 		    try {
@@ -152,6 +156,22 @@
 				return $errorReturn;
 		    }
 	    }
+		
+		private function getSaber($trayecto, $fase){
+			try {
+				$query = parent::prepare("SELECT * FROM saberes WHERE trayecto_SC = :trayecto and fase_SC = :fase");
+				$query->bindValue(":trayecto", $trayecto);
+				$query->bindValue(":fase", $fase);
+				$respuestaArreglo = '';
+				$query->execute();
+				$respuestaArreglo = $query->fetchAll(parent::FETCH_ASSOC); 
+				return $respuestaArreglo;
+			} catch (PDOException $e) {
+				$errorReturn = ['estatus' => false];
+				$errorReturn += ['info' => "error sql:{$e}"];
+				return $errorReturn;
+			}
+		}
 
 		private function Agregar($datos){
 

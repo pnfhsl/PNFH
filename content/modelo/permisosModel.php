@@ -51,6 +51,23 @@
 			return $result;
 		}
 
+		public function limpiarPost($array){
+			$leng = [
+				0=>['campo'=>'nombre', 'length'=>30], 
+			];
+			foreach($leng as $len){
+				if(!empty($array[$len['campo']])){
+					if(strlen($array[$len['campo']]) > $len['length']){
+						$array[$len['campo']] = substr($array[$len['campo']], 0, $len['length']);
+						$array[$len['campo']] = stripslashes($array[$len['campo']]);
+						$array[$len['campo']] = strip_tags($array[$len['campo']]);
+						$array[$len['campo']] = htmlspecialchars($array[$len['campo']]);
+					}
+				}
+			}
+			return $array;
+		}
+
 		private function Validate($campo, $valor){
 			$pattern = [
 				'0' => ['campo'=>"nombre",'expresion'=>'/[^0-9 a-zA-Z ñ Ñ Á á É é Í í Ó ó Ú ú ]/'],

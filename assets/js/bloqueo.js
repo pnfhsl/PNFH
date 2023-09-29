@@ -30,13 +30,13 @@ $(document).ready(function () {
 
     var input = $("#myInput").val();
     // $(".myInputDos").val(input);
-    // alert(input);
+    // // alert(input);
 
     if (input === 'Administrador') {
         $(".usuarioG").attr('style', 'display:none');
     }
     if (input === 'Superusuario') {
-        $(".usuarioD").attr('style', 'display:none');
+        // $(".usuarioD").attr('style', 'display:none');
     }
 
 
@@ -55,6 +55,7 @@ $(document).ready(function () {
             // console.log(firma.length);
             var response = validar(id, "Admin");
             if (response) {
+                $(".box-cargando").show();
                 $.ajax({
                     url: url + '/Buscar',
                     type: 'POST',
@@ -63,9 +64,10 @@ $(document).ready(function () {
                         firma: firma,
                     },
                     success: function (resp) {
+                        $(".box-cargando").hide();
                         var datos = JSON.parse(resp);
                         console.log(datos);
-                        // alert(id);
+                        // // alert(id);
                         if (datos.datos && datos.datos != "" && (datos.datos[0].nombre_rol == "Administrador" || datos.datos[0].nombre_rol == "Superusuario")) {
 
                             $(".contadorGenerarBoxPassword" + id).click();
@@ -75,7 +77,7 @@ $(document).ready(function () {
                             $("#nombreAdmin" + id).html(datos.datos[0].nombre_profesor);
                             $("#apellidoAdmin" + id).html(datos.datos[0].apellido_profesor);
                             $("#telefAdmin" + id).html(datos.datos[0].telefono_profesor);
-                            // alert('Asina nona');
+                            // // alert('Asina nona');
 
                             $("#comprobarAdmin" + id).click(function () {
                                 var public = $("#publicAdmin" + id).val();
@@ -84,6 +86,7 @@ $(document).ready(function () {
                                 var valid = validarLlave(id);
                                 if (valid) {
                                     if (public == datos.datos[0].llave_publica) {
+                                        $(".box-cargando").show();
                                         $.ajax({
                                             url: url + '/Generar',
                                             type: 'POST',
@@ -93,6 +96,7 @@ $(document).ready(function () {
                                                 usuarioG: id,
                                             },
                                             success: function (resp) {
+                                                $(".box-cargando").hide();
                                                 console.log(resp);
                                                 var data = JSON.parse(resp);
                                                 if (data.result.msj === "Good") {
@@ -111,6 +115,7 @@ $(document).ready(function () {
 
                                             },
                                             error: function (respuesta) {
+                                                $(".box-cargando").hide();
                                                 var datos = JSON.parse(respuesta);
                                                 console.log(datos);
                                             }
@@ -144,6 +149,7 @@ $(document).ready(function () {
                         }
                     },
                     error: function (respuesta) {
+                        $(".box-cargando").hide();
                         var datos = JSON.parse(respuesta);
                         console.log(datos);
 
@@ -163,14 +169,15 @@ $(document).ready(function () {
             $(".collapseDesbloqueo").val("0");
         }
         
-        // alert('verifyOperador' + id);
+        // // alert('verifyOperador' + id);
         $("#verifyOperador" + id).click(function () {
             let url = $("#url").val();
             let firma = $("#firmaOperador" + id).val();
             console.log(firma);
             var response = validar(id, "Operador");
-            // alert(response);
+            // // alert(response);
             if (response) {
+                $(".box-cargando").show();
                 $.ajax({
                     url: url + '/Buscar',
                     type: 'POST',
@@ -179,8 +186,9 @@ $(document).ready(function () {
                         firma: firma,
                     },
                     success: function (resp) {
+                        $(".box-cargando").hide();
                         // console.log(resp); 
-                        // alert(resp);
+                        // // alert(resp);
                         var datos = JSON.parse(resp);
                         console.log(datos);
                         if (datos.datos && datos.datos != "" && datos.datos[0].nombre_rol == "Superusuario") {
@@ -198,9 +206,10 @@ $(document).ready(function () {
                                 let private = $("#privateOperador" + id).val();
 
                                 var valid = validarOperador(id);
-                                // alert(valid);
+                                // // alert(valid);
                                 if (valid) {
-                                    // alert(id);
+                                    // // alert(id);
+                                    $(".box-cargando").show();
                                     $.ajax({
                                         url: url + '/VerificarCodigo',
                                         type: 'POST',
@@ -209,13 +218,15 @@ $(document).ready(function () {
                                             usuarioD: id,
                                         },
                                         success: function (resp) {
+                                            $(".box-cargando").hide();
                                             // console.log(resp);
-                                            alert(resp);
+                                            // // alert(resp);
                                             var data = JSON.parse(resp);
                                             console.log(data);
                                             if (codigo === data.datos[0].codigo_desbloqueo) {
                                                 let admin = $("#admin").val();
-                                                // alert(admin);
+                                                // // alert(admin);
+                                                $(".box-cargando").show();
                                                 $.ajax({
                                                     url: url + '/VerificarClave',
                                                     type: 'POST',
@@ -224,14 +235,16 @@ $(document).ready(function () {
                                                         cedula: admin,
                                                     },
                                                     success: function (resp) {
+                                                        $(".box-cargando").hide();
                                                         console.log(resp);
-                                                        // alert(resp);
+                                                        // // alert(resp);
                                                         var data = JSON.parse(resp);
                                                         console.log(data);
-                                                        // alert(data.date[0].llave_privada);
+                                                        // // alert(data.date[0].llave_privada);
                                                         console.log(data.date[0].llave_privada);
                                                         if (private == data.date[0].llave_privada) {
-                                                            // alert('ciao');
+                                                            // // alert('ciao');
+                                                            $(".box-cargando").show();
                                                             $.ajax({
                                                                 url: url + '/Desbloquear',
                                                                 type: 'POST',
@@ -243,8 +256,9 @@ $(document).ready(function () {
                                                                     cedula: id,
                                                                 },
                                                                 success: function (resp) {
+                                                                    $(".box-cargando").hide();
                                                                     console.log(resp);
-                                                                    // alert(resp);
+                                                                    // // alert(resp);
                                                                     var data = JSON.parse(resp);
                                                                     console.log(data);
                                                                     console.log(data.look.msj);
@@ -258,7 +272,7 @@ $(document).ready(function () {
                                                                             showCloseButton: false,
                                                                             showConfirmButton: false,
                                                                         }).then((isConfirm) => {
-                                                                            location.reload();
+                                                                            // location.reload();
                                                                         })
                                                                     } else {
                                                                         Swal.fire({
@@ -274,6 +288,7 @@ $(document).ready(function () {
 
                                                                 },
                                                                 error: function (resp) {
+                                                                    $(".box-cargando").hide();
                                                                     var datos = JSON.parse(resp);
                                                                     console.log(datos);
 
@@ -294,6 +309,7 @@ $(document).ready(function () {
 
                                                     },
                                                     error: function (resp) {
+                                                        $(".box-cargando").hide();
                                                         var datos = JSON.parse(resp);
                                                         console.log(datos);
 
@@ -317,6 +333,7 @@ $(document).ready(function () {
 
                                         },
                                         error: function (resp) {
+                                            $(".box-cargando").hide();
                                             var datos = JSON.parse(resp);
                                             console.log(datos);
 
@@ -342,6 +359,7 @@ $(document).ready(function () {
 
                     },
                     error: function (respuesta) {
+                        $(".box-cargando").hide();
                         var datos = JSON.parse(respuesta);
                         console.log(datos);
 
@@ -356,7 +374,7 @@ $(document).ready(function () {
 
 
 
-})
+});
 
 function validar(id = "", acto) {
     var rfirma = false;
@@ -394,13 +412,13 @@ function validar(id = "", acto) {
     } else {
         validado = false;
     }
-    // alert(validado);
+    // // alert(validado);
     return validado;
 }
 
 function validarLlave(id = "") {
     var public = $("#publicAdmin" + id).val();
-    // alert(public);
+    // // alert(public);
     if (public.length >= 828) {
         rpublic = true;
         $("#publicF" + id).html("");
@@ -437,6 +455,6 @@ function validarOperador(id = "") {
     } else {
         validado = false;
     }
-    // alert(validado);
+    // // alert(validado);
     return validado;
 };

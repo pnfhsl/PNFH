@@ -31,7 +31,7 @@ $(document).ready(function () {
 
 
   $(".modificarBtn").click(function () {
-    // alert('Ajax');
+    // // alert('Ajax');
     let url = $("#url").val();
     swal.fire({
       title: "¿Desea modificar los datos?",
@@ -67,17 +67,23 @@ $(document).ready(function () {
         closeOnCancel: false
       }).then((isConfirm) => {
         if (isConfirm.value) {
-          // alert('Hello');     
+          // // alert('Hello');     
           let cedula = $("#cedula" + id).val();
           let nombre = $("#nombre" + id).val();
           let apellido = $("#apellido" + id).val();
-          let telefono = $("#telefono" + id).val();
+          var rolOculto = $("#rolOculto").val();
+          if(rolOculto!="Alumnos"){
+            var telefono = $("#telefono" + id).val();
+          }else{
+            var telefono = "00000000000";
+          }
+          // // alert(telefono);
           let correo = $("#correo" + id).val();
           let trayecto = $("#trayecto").val();
           // let rol = $("#rol").val();
-          // alert(correo);
-          // alert(cedula + ' ' + nombre + ' ' + apellido + ' ' +telefono);
-
+          // // alert(correo);
+          // // alert(codigo + '\n' + cedula + '\n' + nombre + '\n' + apellido + '\n' + telefono + '\n' + correo + '\n' + trayecto );
+          $(".box-cargando").show();
           $.ajax({
             url: url + '/Modificar',
             type: 'POST',
@@ -90,16 +96,15 @@ $(document).ready(function () {
               telefono: telefono,
               correo: correo,
               trayecto: trayecto,
-
             },
             success: function (resp) {
-              // alert(resp);
+              $(".box-cargando").hide();
+              // // alert(resp);
               // console.log(resp);
               var datos = JSON.parse(resp);
               // console.log(datos.exec.msj);
               // console.log(datos.email.msj);
-              // alert(datos);
-              if (datos.exec.msj === "Good" && datos.email.msj === "Good") {
+              if (datos.msj === "Good") {
                 Swal.fire({
                   type: 'success',
                   title: '¡Modificacion Exitosa!',
@@ -111,6 +116,37 @@ $(document).ready(function () {
                 }).then((isConfirm) => {
                   location.reload();
                 });
+              }
+              if (datos.msj == "NegadoDuplicado") {
+                  if(rolOculto!="Alumnos"){
+                    //Profesor
+                    var titulo = '¡Registro duplicado como Alumno!';
+                    var texto = '¡Un Profesor, no puede guardarse como Alumno!';
+                  }else{
+                    //Alumno
+                    var titulo = '¡Registro duplicado como Profesor!'; 
+                    var texto = '¡Un Alumno, no puede guardarse como Profesor!';
+                  }
+                  Swal.fire({
+                      type: 'error',
+                      title: titulo,
+                      text: texto,
+                      footer: 'SCHSL',
+                      timer: 5000,
+                      showCloseButton: false,
+                      showConfirmButton: false,
+                  });
+              }
+              if (datos.msj === "Invalido") {
+                  Swal.fire({
+                      type: 'warning',
+                      title: '¡Datos invalidos!',
+                      text: 'Los datos ingresados son invalidos',
+                      footer: 'SCHSL',
+                      timer: 3000,
+                      showCloseButton: false,
+                      showConfirmButton: false,
+                  });
               }
               if (datos.msj === "Repetido") {
                 Swal.fire({
@@ -146,6 +182,7 @@ $(document).ready(function () {
               }
             },
             error: function (respuesta) {
+              $(".box-cargando").hide();
               var datos = JSON.parse(respuesta);
               console.log(datos);
 
@@ -161,8 +198,6 @@ $(document).ready(function () {
       });
     }
   });
-
-
 
   $(".modificarBtnContraseña").click(function () {
 
@@ -189,15 +224,15 @@ $(document).ready(function () {
     });
   });
 
-
   $(".modificarButtonModalC").click(function () {
     var url = $("#url").val();
     var urlHome = $("#urlHome").val();
     // console.log("llego aquí");
     let user = $("#usuario").val();
     let pass = $("#password").val();
-    // alert(user);
-    // alert(pass);
+    // // alert(user);
+    // // alert(pass);
+    $(".box-cargando").show();
     $.ajax({
       url: url + '/Verificar',
       type: 'POST',
@@ -207,14 +242,15 @@ $(document).ready(function () {
         password: pass,
       },
       success: function (respuesta) {
-        // alert(respuesta);
+        $(".box-cargando").hide();
+        // // alert(respuesta);
         console.log(respuesta);
         var data = JSON.parse(respuesta);
         // console.log(data);
-        // alert(data.msj);
+        // // alert(data.msj);
 
         if (data.msj === "Good") {
-          // alert("hola");
+          // // alert("hola");
           // let userModif = $(this).val();
           $("#modificarButtonContraseña").click();
           // $("#modificarButtonContraseña" + userModif).click();
@@ -242,16 +278,15 @@ $(document).ready(function () {
     });
   });
 
-
   $(".modificarButtonModalContraseñaLista").click(function () {
     var url = $("#url").val();
     var id = $(this).val();
-    // alert(id);
+    // // alert(id);
 
     var response = validarContras(id);
     /*console.log(response);
-    window.alert(response);*/
-    // alert(response);
+    window.// alert(response);*/
+    // // alert(response);
     if (response) {
       swal.fire({
         title: "¿Desea guardar los datos?",
@@ -264,22 +299,22 @@ $(document).ready(function () {
         closeOnCancel: false
       }).then((isConfirm) => {
         if (isConfirm.value) {
-          // alert('Hello');
+          // // alert('Hello');
           let rol = $("#rol").val();
           let cedula = $("#cedula" + id).val();
-          let nombre = $("#usuario").val();
+          let nombre = $("#username").val();
           let nuevoPassword = $("#nuevoPassword").val();
           let confirmarPassword = $("#confirmarPassword").val();
           let correo = $("#correoHiddenContras").val();
           // let pass = $("#password").val();    
-          // alert( cedula + ' ' + nombre + ' ' + rol );
-          // alert( nuevoPassword + ' ' + confirmarPassword);
+          // // alert( cedula + ' ' + nombre + ' ' + rol );
+          // // alert( nuevoPassword + ' ' + confirmarPassword);
 
           // if (nuevoPassword == confirmarPassword) {
           //   let password = nuevoPassword;
-          //   alert(password + 'hola');
+          //   // alert(password + 'hola');
           // }
-
+          $(".box-cargando").show();
           $.ajax({
             url: url + '/ModificarUsuario',
             type: 'POST',
@@ -289,21 +324,21 @@ $(document).ready(function () {
               cedula: cedula,
               nombre: nombre,
               correo: correo,
-              // password: pass,  
               rol: rol,
               nuevoPassword: nuevoPassword,
 
             },
             success: function (resp) {
-              // alert(resp);
-              // window.alert("Hola mundo");   
+              $(".box-cargando").hide();
+              // // alert(resp);
+              // window.// alert("Hola mundo");   
               // console.log(resp); 
-              // window.alert(resp);
+              // window.// alert(resp);
               var datos = JSON.parse(resp);
               if (datos.msj === "Good") {
                 Swal.fire({
                   type: 'success',
-                  title: '¡Registro Exitoso!',
+                  title: '¡Modificacion Exitoso!',
                   text: 'Se ha modificado el usuario ' + nombre + ' en el sistema',
                   footer: 'SCHSL', timer: 3000, showCloseButton: false, showConfirmButton: false,
                 }).then((isConfirm) => {
@@ -335,6 +370,7 @@ $(document).ready(function () {
               }
             },
             error: function (respuesta) {
+              $(".box-cargando").hide();
               var datos = JSON.parse(respuesta);
               console.log(datos);
 
@@ -351,11 +387,10 @@ $(document).ready(function () {
     }
   });
 
-
   $(".modificarFotoBtn").click(function () {
-    // alert('Ajax');
+    // // alert('Ajax');
     let url = $("#url").val();
-    // alert("llego aquí");
+    // // alert("llego aquí");
     swal.fire({
       title: "¿Desea modificar los datos?",
       text: "Se movera al formulario para modificar los datos, ¿desea continuar?",
@@ -377,10 +412,10 @@ $(document).ready(function () {
 
   $("#imagen").click(function () {
     let url = $("#url").val();
-    // alert(img);
-    // alert(url);
+    // // alert(img);
     var formData = new FormData($(form_data)[0]);
     // console.log(formData);
+    $(".box-cargando").show();
     $.ajax({
       url: url + '/Guardar',
       type: 'POST',
@@ -389,9 +424,10 @@ $(document).ready(function () {
       contentType: false,
       processData: false,
       success: function (resp) {
-        // alert(resp);
+        $(".box-cargando").hide();
+        // // alert(resp);
         var data = JSON.parse(resp);
-        // console.log(data.msj);
+        console.log(data.msj);
         if (data.msj === "Good") {
           Swal.fire({
             type: 'success',
@@ -418,6 +454,7 @@ $(document).ready(function () {
 
       },
       error: function (respuesta) {
+        $(".box-cargando").hide();
         var datos = JSON.parse(respuesta);
         console.log(datos);
       }
@@ -427,9 +464,45 @@ $(document).ready(function () {
   $('#file-input').on('change', function () {
     var name = $(this).get(0).files[0].name;
     $('#archivoSeleccionado').text(name);
-
   });
 
+  $('.cedulaModificar').on('input', function () {
+    var id = $(this).attr("name");
+    this.value = this.value.replace(/[^0-9]/g, '');
+    if (this.value.length >= 8 && this.value.length <= 8) {
+      $("#cedulaS"+id).html("");
+    } else {
+      $("#cedulaS"+id).html("La cédula debe contener 8 caracteres");
+    }
+  });
+
+  $('.nombreModificar').on('input', function () {
+    var id = $(this).attr("name");
+    this.value = this.value.replace(/[^a-zA-Z ñ Ñ Á á É é Í í Ó ó Ú ú ]/g, '');
+    if(this.value.length > 2 ){
+      $("#nombreS"+id).html("");
+    }else{
+      if(this.value.length == 0 ){
+        $("#nombreS"+id).html("Debe ingresar el nombre");
+      }else{
+        $("#nombreS"+id).html("Debe ingresar un nombre valido");
+      } 
+    }
+  });
+
+  $('.apellidoModificar').on('input', function () {
+    var id = $(this).attr("name");
+    this.value = this.value.replace(/[^a-zA-Z ñ Ñ Á á É é Í í Ó ó Ú ú ]/g, '');
+    if(this.value.length > 2 ){
+        $("#apellidoS"+id).html("");
+    }else{
+      if(this.value.length == 0 ){
+        $("#apellidoS"+id).html("Debe ingresar el apellido");
+      }else{
+        $("#apellidoS"+id).html("Debe ingresar un apellido valido");
+      } 
+    }
+  });
 
   $('.telefonoModificar').on('input', function () {
     var id = $(this).attr("name");
@@ -444,30 +517,29 @@ $(document).ready(function () {
     }
   });
 
-
-  $('.correoModificar').on('input', function () {
+  $('.correoModificar').on('input', function () {      
     var id = $(this).attr("name");
     // var ids = $(this).attr("id");
     // var index = ids.indexOf(" ");
     // var id = ids.substring(index+1);
-    this.value = this.value.replace(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,4}\.[0-9]{1,4}\.[0-9]{1,4}\.[0-9]{1,4}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{4,6}))$/, '');
+    this.value = this.value.replace(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,4}\.[0-9]{1,4}\.[0-9]{1,4}\.[0-9]{1,4}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{4,6}))$/,'');
     let pos1 = this.value.indexOf("@");
     let pos = this.value.indexOf(".com");
-    if ((pos > 1) && (pos1 > 1) && (pos > pos1)) {
+    if((pos > 1) && (pos1 > 1) && (pos > pos1)){
       let maxleng = this.value.length;
-      $(this).attr("maxlength", maxleng);
-      $("#correoS" + id).html("");
-    } else {
-      $("#correoS" + id).html("Ingresar una dirección de correo electronico valida");
-      $(this).attr("maxlength", "");
+      $(this).attr("maxlength",maxleng);
+      $("#correoS"+id).html("");
+    }else{
+      $("#correoS"+id).html("Ingresar una dirección de correo electronico valida");
+      $(this).attr("maxlength","");
     }
   });
-
 
   $(".correoModificar").blur(function () {
     var url = $("#url").val();
     var id = $(this).attr("name");
     var correo = $(this).val().trim();
+    $(".box-cargando").show();
     $.ajax({
       url: url + '/Verificar',
       type: 'POST',
@@ -477,7 +549,8 @@ $(document).ready(function () {
         id: id,
       },
       success: function (respuesta) {
-        // alert(respuesta); 
+        $(".box-cargando").hide();
+        // // alert(respuesta); 
         var resp = JSON.parse(respuesta);
         if (resp.msj == "Good") {
           var valido = resp.valido;
@@ -491,48 +564,12 @@ $(document).ready(function () {
         }
       },
       error: function (respuesta) {
+        $(".box-cargando").hide();
         var resp = JSON.parse(respuesta);
         console.log(resp);
       }
     });
   });
-
-
-
-  // $(".nuevoPassword").keyup(function () {
-  //   // var id = $(this).attr("name");
-  //   var pass1 = $("#nuevoPassword").val();
-  //   var pass2 = $("#confirmarPassword").val();
-  //   // alert(id);
-  //   // alert(pass1);
-  //   // alert(pass2);
-  //   if (pass1.trim() != "") {
-  //     $("#nombreP").html("");
-  //   }
-  //   if (pass1 == pass2) {
-  //     $("#nombrePC").html("Las contraseñas coinciden");
-  //     $("#nombrePC").attr("style", "color:green !important");
-  //   } else {
-  //     $("#nombrePC").html("Las contraseñas no coinciden");
-  //     $("#nombrePC").removeAttr("style");
-  //   }
-  // });
-  // $(".confirmarPassword").keyup(function () {
-  //   // var id = $(this).attr("name");
-  //   var pass1 = $("#nuevoPassword").val();
-  //   var pass2 = $("#confirmarPassword").val();
-  //   if (pass2.trim() != "") {
-  //     $("#nombrePC").html("");
-  //     $("#nombrePC").removeAttr("style");
-  //   }
-  //   if (pass1 == pass2) {
-  //     $("#nombrePC").html("Las contraseñas coinciden");
-  //     $("#nombrePC").attr("style", "color:green !important");
-  //   } else {
-  //     $("#nombrePC").html("Las contraseñas no coinciden");
-  //     $("#nombrePC").removeAttr("style");
-  //   }
-  // });
 
   $(".nuevoPassword").keyup(function(){
     var pass = $("#nuevoPassword").val();
@@ -610,7 +647,8 @@ $(document).ready(function () {
     var url = $("#url").val();
     var id = $(this).attr("name");
     var username = $(this).val().trim();
-    // alert(username);
+    // // alert(username);
+    $(".box-cargando").show();
     $.ajax({
       url: url + '/Verificar',
       type: 'POST',
@@ -620,7 +658,8 @@ $(document).ready(function () {
         id: id,
       },
       success: function (respuesta) {
-        // alert(respuesta); 
+        $(".box-cargando").hide();
+        // // alert(respuesta); 
         var resp = JSON.parse(respuesta);
         // console.log(resp);
         if (resp.msj == "Good") {
@@ -635,6 +674,7 @@ $(document).ready(function () {
         }
       },
       error: function (respuesta) {
+        $(".box-cargando").hide();
         var resp = JSON.parse(respuesta);
         console.log(resp);
       }
@@ -677,15 +717,19 @@ function validarModificarPerfil(id = "") {
   } else {
     $(form + " #apellidoS" + id).html("Debe ingresar el apellido del alumno");
   }
-
-  var telefono = $(form + " #telefono" + id).val();
-  var rtelefono = false;
-  // alert(telefono);
-  if (telefono.length >= 11 && telefono.length <= 11) {
-    $(form + " #telefonoS" + id).html("");
-    rtelefono = true;
-  } else {
-    $(form + " #telefonoS" + id).html("La telefono debe contener 11 caracteres");
+  var rolOculto = $("#rolOculto").val();
+  if(rolOculto!="Alumnos"){
+    var telefono = $(form + " #telefono" + id).val();
+    var rtelefono = false;
+    // // alert(telefono);
+    if (telefono.length >= 11 && telefono.length <= 11) {
+      $(form + " #telefonoS" + id).html("");
+      rtelefono = true;
+    } else {
+      $(form + " #telefonoS" + id).html("La telefono debe contener 11 caracteres");
+    }
+  }else{
+    var rtelefono = true;
   }
 
   var correo = $(form + " #correo" + id).val();
@@ -727,7 +771,7 @@ function validarContras(id = "") {
 
 
   var nombre = $(form + " #username").val();
-  // alert(nombre);
+  // // alert(nombre);
   var rnombre = false;
   if (nombre.length > 2) {
     rnombre = true;
@@ -760,8 +804,8 @@ function validarContras(id = "") {
   var rpass = checkPassword(pass);
   var passConfirm = $(form + " #confirmarPassword").val();
   var rpassConfirm = checkPassword(passConfirm);
-  // alert(rpass);
-  // alert(rpassConfirm);
+  // // alert(rpass);
+  // // alert(rpassConfirm);
   var rpass3 = false;
   if (rpass == true && rpassConfirm == true) {
     // var rpass = false;
@@ -778,19 +822,19 @@ function validarContras(id = "") {
   }else{
     if(rpass==false){
       if(pass.trim()==""){
-        // alert('Pass Esta vacio');
+        // // alert('Pass Esta vacio');
         $(form+" #nombreP"+id).html("Debe ingresar su nueva contraseña");
       }else{
-        // alert('Pass No esta vacio');
+        // // alert('Pass No esta vacio');
         $(form+" #nombreP"+id).html("La contraseña debe contener al menos 8 digitos, una letra en minuscula, una letra en mayuscula, un numero y un caracter especial");
       }
     }
     if(rpassConfirm==false){
       if(passConfirm.trim()==""){
-        // alert('PassConfirm Esta vacio');
+        // // alert('PassConfirm Esta vacio');
         $(form+" #nombrePC"+id).html("Debe confirmar su nueva contraseña");
       }else{
-        // alert('PassConfirm No esta vacio');
+        // // alert('PassConfirm No esta vacio');
         $(form+" #nombreP"+id).html("Al confirmar la contraseña debe contener al menos 8 digitos, una letra en minuscula, una letra en mayuscula, un numero y un caracter especial");
       }
     }
@@ -809,9 +853,9 @@ function validarContras(id = "") {
     }
   }
 
-  // alert("DAta: "+nombre+ " | "+rnombre);
-  // alert("DAta: "+pass+ " | "+rpass);
-  // alert("DAta: "+valnombre);
+  // // alert("DAta: "+nombre+ " | "+rnombre);
+  // // alert("DAta: "+pass+ " | "+rpass);
+  // // alert("DAta: "+valnombre);
 
   var validado = false;
   if (rnombre == true && rpass == true && rpassConfirm == true && rpass3 == true && valnombre == "1") {
@@ -819,6 +863,6 @@ function validarContras(id = "") {
   } else {
     validado = false;
   }
-  // alert(validado);
+  // // alert(validado);
   return validado;
 }

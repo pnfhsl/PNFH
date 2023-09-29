@@ -55,35 +55,140 @@
   $(function () {
     $(".datatable").DataTable({
       "language": {
-        "url": "'._ROUTE_.'view/vendor/plugins/DataTables/spanish.json",
+        "sProcessing":     "Procesando...",
+        "sLengthMenu":     "Mostrar _MENU_ registros",
+        "sZeroRecords":    "No se encontraron resultados",
+        "sEmptyTable":     "Ningún dato disponible en esta tabla",
+        "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+        "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+        "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+        "sInfoPostFix":    "",
+        "sSearch":         "Buscar:",
+        "sUrl":            "",
+        "sInfoThousands":  ",",
+        "sLoadingRecords": "Cargando...",
+        "oPaginate": {
+            "sFirst":    "Primero",
+            "sLast":     "Último",
+            "sNext":     "Siguiente",
+            "sPrevious": "Anterior"
+        },
+        "oAria": {
+            "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+        },
         "info": true,
       },
       responsive: true,
     });
     $(".datatable2").DataTable({
       "language": {
-        "url": "'._ROUTE_.'view/vendor/plugins/DataTables/spanish.json",
+        "sProcessing":     "Procesando...",
+        "sLengthMenu":     "Mostrar _MENU_ registros",
+        "sZeroRecords":    "No se encontraron resultados",
+        "sEmptyTable":     "Ningún dato disponible en esta tabla",
+        "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+        "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+        "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+        "sInfoPostFix":    "",
+        "sSearch":         "Buscar:",
+        "sUrl":            "",
+        "sInfoThousands":  ",",
+        "sLoadingRecords": "Cargando...",
+        "oPaginate": {
+            "sFirst":    "Primero",
+            "sLast":     "Último",
+            "sNext":     "Siguiente",
+            "sPrevious": "Anterior"
+        },
+        "oAria": {
+            "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+        },
       },
       "order": [[ 0, "desc" ]],
       responsive: true,
     });
     $("#datatable").DataTable({
       "language": {
-        "url": "'._ROUTE_.'view/vendor/plugins/DataTables/spanish.json",
+        "sProcessing":     "Procesando...",
+        "sLengthMenu":     "Mostrar _MENU_ registros",
+        "sZeroRecords":    "No se encontraron resultados",
+        "sEmptyTable":     "Ningún dato disponible en esta tabla",
+        "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+        "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+        "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+        "sInfoPostFix":    "",
+        "sSearch":         "Buscar:",
+        "sUrl":            "",
+        "sInfoThousands":  ",",
+        "sLoadingRecords": "Cargando...",
+        "oPaginate": {
+            "sFirst":    "Primero",
+            "sLast":     "Último",
+            "sNext":     "Siguiente",
+            "sPrevious": "Anterior"
+        },
+        "oAria": {
+            "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+        },
         "info": true,
       },
       responsive: true,
     });
     $("#datatable2").DataTable({
       "language": {
-        "url": "'._ROUTE_.'view/vendor/plugins/DataTables/spanish.json",
+        "sProcessing":     "Procesando...",
+        "sLengthMenu":     "Mostrar _MENU_ registros",
+        "sZeroRecords":    "No se encontraron resultados",
+        "sEmptyTable":     "Ningún dato disponible en esta tabla",
+        "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+        "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+        "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+        "sInfoPostFix":    "",
+        "sSearch":         "Buscar:",
+        "sUrl":            "",
+        "sInfoThousands":  ",",
+        "sLoadingRecords": "Cargando...",
+        "oPaginate": {
+            "sFirst":    "Primero",
+            "sLast":     "Último",
+            "sNext":     "Siguiente",
+            "sPrevious": "Anterior"
+        },
+        "oAria": {
+            "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+        },
       },
       "order": [[ 0, "desc" ]],
       responsive: true,
     });
     $("#mini-datatable").DataTable({
       "language": {
-        "url": "'._ROUTE_.'view/vendor/plugins/DataTables/spanish.json",
+        "sProcessing":     "Procesando...",
+        "sLengthMenu":     "Mostrar _MENU_ registros",
+        "sZeroRecords":    "No se encontraron resultados",
+        "sEmptyTable":     "Ningún dato disponible en esta tabla",
+        "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+        "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+        "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+        "sInfoPostFix":    "",
+        "sSearch":         "Buscar:",
+        "sUrl":            "",
+        "sInfoThousands":  ",",
+        "sLoadingRecords": "Cargando...",
+        "oPaginate": {
+            "sFirst":    "Primero",
+            "sLast":     "Último",
+            "sNext":     "Siguiente",
+            "sPrevious": "Anterior"
+        },
+        "oAria": {
+            "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+        },
         "info": true,
         "pageLength": 5,
       },
@@ -91,7 +196,28 @@
     });
     $("#datatableOrder").DataTable({
       "language": {
-        "url": "'._ROUTE_.'view/vendor/plugins/DataTables/spanish.json",
+        "sProcessing":     "Procesando...",
+        "sLengthMenu":     "Mostrar _MENU_ registros",
+        "sZeroRecords":    "No se encontraron resultados",
+        "sEmptyTable":     "Ningún dato disponible en esta tabla",
+        "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+        "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+        "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+        "sInfoPostFix":    "",
+        "sSearch":         "Buscar:",
+        "sUrl":            "",
+        "sInfoThousands":  ",",
+        "sLoadingRecords": "Cargando...",
+        "oPaginate": {
+            "sFirst":    "Primero",
+            "sLast":     "Último",
+            "sNext":     "Siguiente",
+            "sPrevious": "Anterior"
+        },
+        "oAria": {
+            "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+        },
       },
       "order": [[ 2, "desc" ],[ 3, "desc" ]],
       responsive: true,
@@ -135,55 +261,3 @@
 
 
 ?>
-
-
-
-
-
-
-				
-				<!--
-    var rolhidden = $(".rolhidden").val();
-    if(rolhidden != "Vendedor"){
-      verifyNotifyAdmin();
-    }
-    if(rolhidden == "Vendedor"){
-      verifyNotifyVendedor();
-    } 
-
-    verPedidoPendiente();
-    verPlanesAgregados();
-    verTiempoDeDesperfectos();
-
-
-
-
-
-
-    
-				<script src="'._ROUTE_.'view/vendor/dist/js/pages/dashboard.js"></script>
-
-				
-				<link rel="stylesheet" href="'._ROUTE_.'view/vendor/bower_components/jvectormap/jquery-jvectormap.css">
-				<script src="'._ROUTE_.'assets/js/adminlte.js"></script>
-				<script src="'._ROUTE_.'assets/js/Foto.js"></script>
-				<script src="'._ROUTE_.'assets/plugins/bootstrap/js/bootstrap.js"></script>
-
-				<script>$.widget.bridge("uibutton", $.ui.button);</script>
-
-				<script src="'._ROUTE_.'view/vendor/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
-				<script src="'._ROUTE_.'view/vendor/bower_components/fastclick/lib/fastclick.js"></script>
- 				
- 				<script src="'._ROUTE_.'view/vendor/bower_components/jquery-sparkline/dist/jquery.sparkline.min.js"></script>
-				<script src="'._ROUTE_.'view/vendor/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
-				<script src="'._ROUTE_.'assets/plugins/jquery/jquery.min.js"></script>
-				<script src="'._ROUTE_.'view/vendor/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
-				<script src="'._ROUTE_.'view/vendor/bower_components/jquery-knob/dist/jquery.knob.min.js"></script>
-				<script src="'._ROUTE_.'view/vendor/bower_components/moment/min/moment.min.js"></script>
-				<script src="'._ROUTE_.'view/vendor/bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
-				<script src="'._ROUTE_.'view/vendor/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
-				<script src="'._ROUTE_.'view/vendor/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
-				<script src="'._ROUTE_.'view/vendor/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
-				<script src="'._ROUTE_.'view/vendor/bower_components/fastclick/lib/fastclick.js"></script>
-				
-				-->

@@ -26,11 +26,11 @@ class preguntasModel extends database
 
 	public function ValidarAgregarOModificar($datos, $metodo){
 		if($metodo=="Agregar" || $metodo=="agregar"){
-			$result = self::Agregar();
+			$result = self::Agregar($datos);
 			return $result;
 		}
 		if($metodo=="Modificar" || $metodo=="modificar"){
-			$result = self::Modificar($data);
+			$result = self::Modificar($datos);
 			return $result;
 		}
 	}
@@ -82,7 +82,7 @@ class preguntasModel extends database
 
 	private function Agregar($datos){
 		try {
-			$query = parent::prepare("INSERT INTO respuestas (id_respuesta, cedula_usuario, id_pregunta, respuesta, estatus) VALUES (DEFAULT, :cedula_usuario, :id_pregunta, :respuesta, 1)");
+			$query = parent::prepare("INSERT INTO respuestas (id_respuesta, cedula_usuario, id_pregunta, respuestas, estatus) VALUES (DEFAULT, :cedula_usuario, :id_pregunta, :respuesta, 1)");
 			for ($i = 0; $i < 3; $i++) {
 				# code...
 				// var_dump($datos['preg'][$i] . ' ' . $datos['resp'][$i] . ' ' . $datos['llaves'][$i]);
@@ -138,7 +138,7 @@ class preguntasModel extends database
 		try {
 			// $query = parent::prepare('UPDATE respuestas SET estatus = 0 WHERE cedula_usuario = :cedula_usuario');
 			$query = parent::prepare("DELETE FROM respuestas WHERE cedula_usuario = :cedula_usuario");
-			$query->execute(['cedula_usuario'=>$cedula]);
+			$query->execute([':cedula_usuario'=>$cedula]);
 			$query->setFetchMode(parent::FETCH_ASSOC);
 			$respuestaArreglo = $query->fetchAll(parent::FETCH_ASSOC);
 			if ($respuestaArreglo += ['estatus' => true]) {
@@ -152,7 +152,5 @@ class preguntasModel extends database
 			return $errorReturn; ;
 		}
 	}
-
-	
 
 }

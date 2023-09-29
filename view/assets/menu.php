@@ -8,32 +8,13 @@
         </div>
         <div class="pull-left info">
           <p>
-            <?= $_SESSION['cuenta_persona']['nombre'] ?> <?= $_SESSION['cuenta_persona']['apellido'] ?>
+            <?=$nombreMostrar; ?> <?=$apellidoMostrar; ?>
           </p>
           <a href="#"><i class="fa fa-circle text-success"></i> En linea</a>
         </div>
       </div>
-      <!-- search form -->
-      <!-- <form action="#" method="get" class="sidebar-form">
-        <div class="input-group">
-          <input type="text" name="q" class="form-control" placeholder="Buscar...">
-          <span class="input-group-btn">
-            <button type="submit" name="search" id="search-btn" class="btn btn-flat">
-              <i class="fa fa-search"></i>
-            </button>
-          </span>
-        </div>
-      </form> -->
-      <!-- /.search form -->
-      <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
         <style>
-          /*.skin-blue .wrapper,.skin-blue .main-sidebar,.skin-blue .left-side {  background-color: #000;} 
-.skin-blue .sidebar-menu > li:hover > a,.skin-blue .sidebar-menu > li.active > a,.skin-blue .sidebar-menu > li.menu-open > a {  color: #DDD;  background:#111;}
-.skin-blue .sidebar-menu > li > .treeview-menu {  margin: 0 1px;  background: #333;}
-.skin-blue .sidebar-menu > li.header {  color: #ddd;  background: #111;}
-.skin-blue .sidebar-menu > li.active > a {  border-left-color: #333;}*/
-
           .skin-blue .wrapper,
           .skin-blue .main-sidebar,
           .skin-blue .left-side {
@@ -384,7 +365,7 @@
                                   <?php } else { ?>
                                   <li class="">
                                   <?php } ?>
-                                  <a href="<?= _ROUTE_ . $this->encriptar('Bitacora'); ?>">
+                                  <a href="<?= _ROUTE_ . $this->encriptar('Bitacora'); ?>?L=<?=date('Y-m-d', time()-((3600*24)*7)); ?>&A=<?=date('Y-m-d', time()); ?>">
                                     <i class="fa fa-paperclip"></i> <span>Bitacora</span>
                                   </a>
                                   </li>
