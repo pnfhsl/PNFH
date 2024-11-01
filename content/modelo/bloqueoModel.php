@@ -137,7 +137,7 @@ class bloqueoModel extends database{
         openssl_public_encrypt(json_encode($codigo), $mensajeEncriptado, $public_key);
         $salida = base64_encode($mensajeEncriptado);
         return $salida;
-    } 
+    }
 
     public function Decrypt($codigo, $llave){
         // var_dump($codigo);
@@ -146,7 +146,7 @@ class bloqueoModel extends database{
         // var_dump($decode);
         $private_key = openssl_pkey_get_private($llave);
         // var_dump($private_key);
-        $rs = openssl_private_decrypt($decode, $decrypted, $private_key);
+        $rs = openssl_private_decrypt($decode, $decrypted, $private_key); 
         // var_dump($rs);
         // var_dump($decrypted);
         return $decrypted;
